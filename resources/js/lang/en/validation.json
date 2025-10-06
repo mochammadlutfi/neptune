@@ -1,0 +1,56 @@
+{
+    "common": {
+      "required": "{attribute} is required.",
+      "email": "{attribute} must be a valid email address.",
+      "min": "{attribute} must be at least {min} characters.",
+      "max": "{attribute} must not exceed {max} characters.",
+      "unique": "{attribute} is already taken.",
+      "between": "{attribute} must be between {min} and {max} characters.",
+      "numeric": "{attribute} must be a number.",
+      "positive": "{attribute} must be a positive number.",
+      "greater_than": "{attribute} must be greater than {value}.",
+      "date_valid": "Please enter a valid date.",
+      "url_valid": "Please enter a valid URL.",
+      "phone_valid": "Please enter a valid phone number.",
+      "confirmed": "{attribute} confirmation does not match.",
+      "password_mismatch": "The password confirmation does not match.",
+      "in": "The selected {attribute} is invalid.",
+      "boolean": "{attribute} must be true or false.",
+      "integer": "{attribute} must be an integer.",
+      "decimal": "{attribute} must be a decimal number.",
+      "after": "{attribute} must be a date after {date}.",
+      "before": "{attribute} must be a date before {date}.",
+      "image": "{attribute} must be an image.",
+      "file": "{attribute} must be a file.",
+      "size": "{attribute} must be {size} KB.",
+      "max_size": "{attribute} may not be greater than {max} KB.",
+      "min_size": "{attribute} must be at least {min} KB."
+    },
+
+    "business": {
+      "amount_positive": "Amount must be positive",
+      "quantity_positive": "Quantity must be positive",
+      "price_positive": "Price must be positive",
+      "date_future": "Date must be in the future",
+      "date_past": "Date must be in the past",
+      "balance_required": "Balance is required",
+      "lines_required": "At least one line item is required",
+      "account_required": "Account is required",
+      "partner_required": "Partner is required",
+      "product_required": "Product is required",
+      "location_required": "Location is required",
+      "method_required": "Method is required",
+      "status_valid": "Invalid status selected",
+      "reference_unique": "Reference must be unique",
+      "insufficient_stock": "Insufficient stock available",
+      "invalid_operation": "This operation is not allowed"
+    },
+
+    "accounting": {
+      "debit_credit_exclusive": "Only one of Debit or Credit can be filled.",
+      "debit_credit_required": "Either Debit or Credit must be filled.",
+      "debit_credit_balance": "Debit and credit must be balanced",
+      "account_code_unique": "Account code must be unique",
+      "tax_rate_valid": "Tax rate must be between 0 and 100"
+    }
+}

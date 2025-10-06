@@ -1,0 +1,109 @@
+<template>
+    <el-select 
+        v-model="value" 
+        value-key="id" 
+        class="w-100"
+        filterable 
+        clearable 
+        remote
+        :placeholder="placeholder"
+        @change="selectChange"
+        autocomplete="off"
+        :loading="isLoading"
+    >
+        <el-option
+            v-for="item in dataList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+        >
+            <div class="flex justify-between items-center">
+                <span>{{ item.name }}</span>
+                <el-tag :type="getEquipmentTypeColor(item.type)" size="small">
+                {{ $t(`equipment.types.${item.type}`) }}
+                </el-tag>
+            </div>
+        </el-option>
+    </el-select>
+</template>
+
+<script setup>
+import { ref, watch, onMounted } from 'vue';
+import axios from 'axios';
+
+const emit = defineEmits(['update:modelValue', 'data'])
+
+// Define props
+const props = defineProps({
+    modelValue: {
+        type: [Number, String],
+    },
+    placeholder: {
+        type: String,
+        default: 'Select Equipment'
+    },
+    status: {
+        type: String,
+        default: null // active, inactive, all
+    }
+});
+
+// Define data
+const dataList = ref([]);
+const value = ref(props.modelValue);
+const isLoading = ref(false);
+
+// Watch for changes to modelValue
+watch(() => props.modelValue, (newValue) => {
+    value.value = newValue;
+});
+
+const getEquipmentTypeColor = (type) => {
+  const colors = {
+    gas_turbine: 'danger',
+    generator: 'warning',
+    compressor: 'primary',
+    pump: 'success',
+    motor: 'info'
+  }
+  return colors[type] || 'info'
+}
+
+// Fetch data on mounted
+const fetchData = async () => {
+    try {
+        isLoading.value = true;
+        
+        const response = await axios.get('/master/equipment', {
+            params: {
+                status: props.status,
+                per_page: 100 // Get more contracts for selection
+            }
+        });
+        
+        if (response.status === 200) {
+            dataList.value = response.data.data || response.data;
+        }
+        isLoading.value = false;
+    } catch (error) {
+        console.error('Error fetching equipment:', error);
+        isLoading.value = false;
+    }
+};
+
+onMounted(() => {
+    fetchData();
+});
+
+// Emit value change
+const selectChange = (newValue) => {
+    value.value = newValue;
+    emit('update:modelValue', newValue);
+    
+    // Emit selected contract data
+    const selectedEquipment = dataList.value.find(item => item.id === newValue);
+    if (selectedEquipment) {
+        emit('data', selectedEquipment);
+    }
+};
+</script>

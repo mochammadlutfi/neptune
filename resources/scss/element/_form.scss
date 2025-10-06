@@ -1,0 +1,60 @@
+// .el-input > .el-input__wrapper{
+//     padding:  6px 11px !important;
+// }
+ 
+// .el-select > .el-select__wrapper{
+//     padding:  7px 11px !important;
+// }
+.el-form-item.is-error .el-input-tag {
+    border-color: #f56c6c;
+}
+
+.input-tag-wrapper {
+    position: relative;
+    font-size: 14px;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    outline: none;
+    padding: 1px 12px;
+    transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+    width: 100%;
+}
+
+.el-tag {
+    margin-right: 4px;
+}
+
+.tag-input {
+    background: transparent;
+    border: 0;
+    font-size: inherit;
+    outline: none;
+    padding-left: 0;
+    width: 100px;
+}
+
+.el-input-tag {
+    min-height: 32px;
+    line-height: 26px;
+}
+
+.el-input-tag--mini {
+    min-height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+}
+
+.el-input-tag--small {
+    min-height: 32px;
+    line-height: 32px;
+}
+
+.el-input-tag--medium {
+    min-height: 36px;
+    line-height: 36px;
+}

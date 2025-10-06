@@ -1,0 +1,1972 @@
+{
+  "info": {
+    "name": "Neptune DVR-DCR Management System API",
+    "description": "API endpoints for Neptune oil & gas operations management system - Pakarti Tirtoagung",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Neptune Development Team",
+      "email": "dev@pakarti.com"
+    }
+  },
+  "folders": [
+    {
+      "name": "🌐 Base - Public Endpoints",
+      "description": "Public endpoints that don't require authentication"
+    },
+    {
+      "name": "🔐 Authentication",
+      "description": "Login and logout endpoints with rate limiting"
+    },
+    {
+      "name": "👤 Profile Management",
+      "description": "User profile and vessel management"
+    },
+    {
+      "name": "📊 Dashboard",
+      "description": "Dashboard data and KPI endpoints"
+    },
+    {
+      "name": "⚙️ Settings",
+      "description": "System settings and configuration"
+    },
+    {
+      "name": "📋 Master Data",
+      "description": "Master data management endpoints"
+    },
+    {
+      "name": "🏭 Production Operations",
+      "description": "Production data management"
+    },
+    {
+      "name": "⚙️ Equipment & Resources",
+      "description": "Equipment status, maintenance, spare parts, fuel management"
+    },
+    {
+      "name": "🛡️ HSE Operations",
+      "description": "Health, Safety, Environment operations"
+    },
+    {
+      "name": "🚢 Marine Operations",
+      "description": "Marine and vessel operations"
+    },
+    {
+      "name": "🧪 Laboratory",
+      "description": "Laboratory analysis and testing"
+    },
+    {
+      "name": "⛽ Fuel Management",
+      "description": "Fuel operations and inventory management"
+    },
+    {
+      "name": "🔥 Flare Operations",
+      "description": "Flare system operations"
+    },
+    {
+      "name": "📄 Contract Management",
+      "description": "Contract and revenue management"
+    },
+    {
+      "name": "📈 Reports & Analytics",
+      "description": "Reports generation and analytics"
+    },
+    {
+      "name": "📝 Activity Logs",
+      "description": "System activity logging and tracking"
+    },
+    {
+      "name": "🌍 Localization",
+      "description": "Language and localization endpoints"
+    }
+  ],
+  "requests": [
+    {
+      "name": "Get Base Info",
+      "folder": "🌐 Base - Public Endpoints",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/base",
+      "description": "Get basic system information and configuration"
+    },
+    {
+      "name": "Set Language",
+      "folder": "🌐 Base - Public Endpoints",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/base/set-lang/{lang}",
+      "pathVariables": [
+        {
+          "key": "lang",
+          "value": "en",
+          "description": "Language code (en, id)"
+        }
+      ],
+      "description": "Set application language preference"
+    },
+    {
+      "name": "Get Barcode",
+      "folder": "🌐 Base - Public Endpoints",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/base/barcode",
+      "description": "Generate barcode for system identification"
+    },
+    {
+      "name": "Get Menu Structure",
+      "folder": "🌐 Base - Public Endpoints",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/base/menu",
+      "description": "Get application menu structure"
+    },
+    {
+      "name": "Get Timezone List",
+      "folder": "🌐 Base - Public Endpoints",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/base/timezone",
+      "description": "Get available timezone list"
+    },
+    {
+      "name": "Get CSRF Cookie",
+      "folder": "🌐 Base - Public Endpoints",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/base/csrf-cookie",
+      "description": "Initialize CSRF protection cookie"
+    },
+    {
+      "name": "Login",
+      "folder": "🔐 Authentication",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/login",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "email": "user@example.com",
+          "password": "password",
+          "remember": false
+        }
+      },
+      "description": "User login with rate limiting (5 attempts per minute)\n\nResponse includes:\n- access_token (Bearer token)\n- user information\n- vessel access"
+    },
+    {
+      "name": "Logout",
+      "folder": "🔐 Authentication",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/logout",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "description": "Logout user and invalidate token"
+    },
+    {
+      "name": "Get Profile",
+      "folder": "👤 Profile Management",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/profile",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "description": "Get current user profile information"
+    },
+    {
+      "name": "Update Profile",
+      "folder": "👤 Profile Management",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/profile/update",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "name": "User Name",
+          "email": "user@example.com",
+          "phone": "+62812345678",
+          "position": "Equipment Technician"
+        }
+      },
+      "description": "Update user profile information"
+    },
+    {
+      "name": "Change Password",
+      "folder": "👤 Profile Management",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/profile/password",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "current_password": "current_password",
+          "password": "new_password",
+          "password_confirmation": "new_password"
+        }
+      },
+      "description": "Change user password"
+    },
+    {
+      "name": "Get User Vessels",
+      "folder": "👤 Profile Management",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/profile/vessels",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "description": "Get vessels accessible by current user"
+    },
+    {
+      "name": "Update User Vessel",
+      "folder": "👤 Profile Management",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/profile/vessel",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "vessel_id": 1
+        }
+      },
+      "description": "Switch user's active vessel context"
+    },
+    {
+      "name": "Get Device Info",
+      "folder": "👤 Profile Management",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/profile/device",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "description": "Get current device and session information"
+    },
+    {
+      "name": "Disconnect Device",
+      "folder": "👤 Profile Management",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/profile/device/disconect",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "description": "Disconnect device and invalidate session"
+    },
+    {
+      "name": "Get Dashboard Overview",
+      "folder": "📊 Dashboard",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/dashboard",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "date",
+          "value": "2024-01-15",
+          "description": "Dashboard date (Y-m-d)"
+        },
+        {
+          "key": "vessel_id",
+          "value": "",
+          "description": "Filter by vessel"
+        }
+      ],
+      "description": "Get dashboard overview with key metrics"
+    },
+    {
+      "name": "Get Dashboard KPIs",
+      "folder": "📊 Dashboard",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/dashboard/kpi",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "period",
+          "value": "daily",
+          "description": "daily, weekly, monthly"
+        }
+      ],
+      "description": "Get key performance indicators"
+    },
+    {
+      "name": "Get Dashboard Widgets",
+      "folder": "📊 Dashboard",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/dashboard/widgets",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "description": "Get dashboard widget data"
+    },
+    {
+      "name": "Get All Users",
+      "folder": "⚙️ Settings",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/settings/user",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "page",
+          "value": "1",
+          "description": "Page number"
+        },
+        {
+          "key": "limit",
+          "value": "20",
+          "description": "Items per page (max 100)"
+        },
+        {
+          "key": "search",
+          "value": "",
+          "description": "Search by name, email"
+        },
+        {
+          "key": "role",
+          "value": "",
+          "description": "Filter by role"
+        },
+        {
+          "key": "is_active",
+          "value": "",
+          "description": "Filter by active status"
+        },
+        {
+          "key": "sort",
+          "value": "name",
+          "description": "Sort field"
+        },
+        {
+          "key": "sortDir",
+          "value": "asc",
+          "description": "Sort direction (asc, desc)"
+        }
+      ],
+      "description": "Get paginated list of users with filtering"
+    },
+    {
+      "name": "Create User",
+      "folder": "⚙️ Settings",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/settings/user/store",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "name": "New User",
+          "email": "newuser@example.com",
+          "password": "password123",
+          "password_confirmation": "password123",
+          "role": "user",
+          "position": "Operator",
+          "vessel_access": [1, 2],
+          "is_active": true
+        }
+      },
+      "description": "Create new user account"
+    },
+    {
+      "name": "Get User Details",
+      "folder": "⚙️ Settings",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/settings/user/{id}",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "id",
+          "value": "1",
+          "description": "User ID"
+        }
+      ],
+      "description": "Get detailed user information"
+    },
+    {
+      "name": "Update User",
+      "folder": "⚙️ Settings",
+      "method": "PUT",
+      "url": "{{baseUrl}}/api/settings/user/{id}/update",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "id",
+          "value": "1",
+          "description": "User ID"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "name": "Updated User",
+          "email": "updated@example.com",
+          "role": "admin",
+          "position": "Supervisor",
+          "vessel_access": [1],
+          "is_active": true
+        }
+      },
+      "description": "Update user information"
+    },
+    {
+      "name": "Delete User",
+      "folder": "⚙️ Settings",
+      "method": "DELETE",
+      "url": "{{baseUrl}}/api/settings/user/{id}/delete",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "id",
+          "value": "1",
+          "description": "User ID"
+        }
+      ],
+      "description": "Delete user account"
+    },
+    {
+      "name": "Bulk Delete Users",
+      "folder": "⚙️ Settings",
+      "method": "DELETE",
+      "url": "{{baseUrl}}/api/settings/user/bulk-delete",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "ids": [1, 2, 3]
+        }
+      },
+      "description": "Delete multiple users at once"
+    },
+    {
+      "name": "Get User Statistics",
+      "folder": "⚙️ Settings",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/settings/user/stats",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "description": "Get user statistics and metrics"
+    },
+    {
+      "name": "Get Permissions List",
+      "folder": "⚙️ Settings",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/settings/permissions",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "description": "Get all system permissions"
+    },
+    {
+      "name": "Get Equipment Status List",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/status",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "page",
+          "value": "1",
+          "description": "Page number"
+        },
+        {
+          "key": "limit",
+          "value": "20",
+          "description": "Items per page (max 100)"
+        },
+        {
+          "key": "vessel_id",
+          "value": "",
+          "description": "Filter by vessel"
+        },
+        {
+          "key": "equipment_id",
+          "value": "",
+          "description": "Filter by equipment"
+        },
+        {
+          "key": "operational_status",
+          "value": "",
+          "description": "Running, Standby, Shutdown"
+        },
+        {
+          "key": "shift",
+          "value": "",
+          "description": "Day, Night"
+        },
+        {
+          "key": "date_from",
+          "value": "",
+          "description": "Filter from date (Y-m-d)"
+        },
+        {
+          "key": "date_to",
+          "value": "",
+          "description": "Filter to date (Y-m-d)"
+        },
+        {
+          "key": "search",
+          "value": "",
+          "description": "Search term"
+        },
+        {
+          "key": "sort",
+          "value": "reading_time",
+          "description": "Sort field"
+        },
+        {
+          "key": "sortDir",
+          "value": "desc",
+          "description": "Sort direction"
+        }
+      ],
+      "description": "Get paginated list of equipment status readings"
+    },
+    {
+      "name": "Create Equipment Status",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/equipment/status/store",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "equipment_id": 1,
+          "reading_time": "2024-01-15 14:30:00",
+          "shift": "Day",
+          "operational_status": "Running",
+          "running_hours": 8.5,
+          "parameters": {
+            "temperature_c": 75.5,
+            "pressure_psi": 120.0,
+            "vibration_mm_s": 2.8,
+            "oil_pressure_psi": 65.0,
+            "rpm": 1800
+          }
+        }
+      },
+      "description": "Create new equipment status reading"
+    },
+    {
+      "name": "Get Equipment Status Details",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/status/{id}",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "id",
+          "value": "1",
+          "description": "Equipment Status ID"
+        }
+      ],
+      "description": "Get detailed equipment status information"
+    },
+    {
+      "name": "Update Equipment Status",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "PUT",
+      "url": "{{baseUrl}}/api/equipment/status/{id}/update",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "id",
+          "value": "1",
+          "description": "Equipment Status ID"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "equipment_id": 1,
+          "reading_time": "2024-01-15 14:30:00",
+          "shift": "Day",
+          "operational_status": "Running",
+          "running_hours": 9.0,
+          "parameters": {
+            "temperature_c": 76.0,
+            "pressure_psi": 121.0,
+            "vibration_mm_s": 2.9
+          }
+        }
+      },
+      "description": "Update equipment status reading"
+    },
+    {
+      "name": "Delete Equipment Status",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "DELETE",
+      "url": "{{baseUrl}}/api/equipment/status/{id}/delete",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "id",
+          "value": "1",
+          "description": "Equipment Status ID"
+        }
+      ],
+      "description": "Delete equipment status reading"
+    },
+    {
+      "name": "Get Equipment Status Statistics",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/status/stats",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "date",
+          "value": "2024-01-15",
+          "description": "Statistics date (Y-m-d)"
+        },
+        {
+          "key": "vessel_id",
+          "value": "",
+          "description": "Filter by vessel"
+        }
+      ],
+      "description": "Get equipment status statistics and analytics"
+    },
+    {
+      "name": "Get Equipment Status by Vessel",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/status/vessel/{vesselId}",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "vesselId",
+          "value": "1",
+          "description": "Vessel ID"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "date",
+          "value": "2024-01-15",
+          "description": "Filter by date"
+        }
+      ],
+      "description": "Get equipment status for specific vessel"
+    },
+    {
+      "name": "Get Latest Equipment Status",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/status/equipment/{equipmentId}/latest",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "equipmentId",
+          "value": "1",
+          "description": "Equipment ID"
+        }
+      ],
+      "description": "Get latest status for specific equipment"
+    },
+    {
+      "name": "Get Maintenance Activities List",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/maintenance",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "page",
+          "value": "1"
+        },
+        {
+          "key": "limit",
+          "value": "20"
+        },
+        {
+          "key": "vessel_id",
+          "value": ""
+        },
+        {
+          "key": "equipment_id",
+          "value": ""
+        },
+        {
+          "key": "work_type",
+          "value": "",
+          "description": "Preventive, Corrective, Breakdown, Inspection, Calibration"
+        },
+        {
+          "key": "status",
+          "value": "",
+          "description": "Planned, In Progress, Completed, Deferred, Cancelled"
+        },
+        {
+          "key": "date_from",
+          "value": ""
+        },
+        {
+          "key": "date_to",
+          "value": ""
+        },
+        {
+          "key": "search",
+          "value": ""
+        }
+      ],
+      "description": "Get paginated list of maintenance activities"
+    },
+    {
+      "name": "Create Maintenance Activity",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/equipment/maintenance/store",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "equipment_id": 1,
+          "activity_date": "2024-01-15",
+          "work_order_no": "WO-2024-001",
+          "work_type": "Preventive",
+          "description": "Monthly PM inspection for GTG-A including oil change, filter replacement, and general inspection",
+          "work_hours": 4.0,
+          "manpower_count": 2,
+          "status": "Planned"
+        }
+      },
+      "description": "Create new maintenance activity"
+    },
+    {
+      "name": "Complete Maintenance Activity",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "PUT",
+      "url": "{{baseUrl}}/api/equipment/maintenance/{id}/complete",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "id",
+          "value": "1",
+          "description": "Maintenance Activity ID"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "completed_by": "John Doe",
+          "work_hours": 4.5,
+          "completion_notes": "All checks completed successfully. Oil changed, filters replaced."
+        }
+      },
+      "description": "Mark maintenance activity as completed"
+    },
+    {
+      "name": "Get Maintenance Activities by Equipment",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/maintenance/equipment/{equipmentId}",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "equipmentId",
+          "value": "1",
+          "description": "Equipment ID"
+        }
+      ],
+      "description": "Get maintenance history for specific equipment"
+    },
+    {
+      "name": "Get Maintenance Statistics",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/maintenance/stats",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "date",
+          "value": "2024-01-15"
+        },
+        {
+          "key": "vessel_id",
+          "value": ""
+        }
+      ],
+      "description": "Get maintenance activities statistics"
+    },
+    {
+      "name": "Get Spare Parts List",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/spare-parts",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "page",
+          "value": "1"
+        },
+        {
+          "key": "limit",
+          "value": "20"
+        },
+        {
+          "key": "vessel_id",
+          "value": ""
+        },
+        {
+          "key": "equipment_id",
+          "value": ""
+        },
+        {
+          "key": "part_category",
+          "value": "",
+          "description": "Engine, Electrical, Mechanical, Instrumentation, Safety"
+        },
+        {
+          "key": "manufacturer",
+          "value": ""
+        },
+        {
+          "key": "search",
+          "value": ""
+        }
+      ],
+      "description": "Get paginated list of spare parts"
+    },
+    {
+      "name": "Create Spare Part",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/equipment/spare-parts/store",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "part_number": "OF-2024-001",
+          "part_name": "Oil Filter Element",
+          "part_description": "High-efficiency oil filter for GTG engine",
+          "equipment_id": 1,
+          "part_category": "Engine",
+          "manufacturer": "Caterpillar",
+          "supplier": "PT. Supplier ABC",
+          "unit_cost": 125.50,
+          "currency": "USD",
+          "unit_measure": "Each",
+          "min_stock_level": 5,
+          "reorder_point": 10
+        }
+      },
+      "description": "Create new spare part record"
+    },
+    {
+      "name": "Get Spare Parts by Equipment",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/spare-parts/equipment/{equipmentId}",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "equipmentId",
+          "value": "1",
+          "description": "Equipment ID"
+        }
+      ],
+      "description": "Get spare parts for specific equipment"
+    },
+    {
+      "name": "Get Spare Parts Statistics",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/spare-parts/stats",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "vessel_id",
+          "value": ""
+        }
+      ],
+      "description": "Get spare parts statistics and analysis"
+    },
+    {
+      "name": "Get Spare Parts Inventory List",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/inventory",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "page",
+          "value": "1"
+        },
+        {
+          "key": "limit",
+          "value": "20"
+        },
+        {
+          "key": "vessel_id",
+          "value": ""
+        },
+        {
+          "key": "spare_part_id",
+          "value": ""
+        },
+        {
+          "key": "condition_status",
+          "value": "",
+          "description": "New, Used, Repair Required, Obsolete"
+        },
+        {
+          "key": "low_stock",
+          "value": "",
+          "description": "true to filter low stock items"
+        },
+        {
+          "key": "date_from",
+          "value": ""
+        },
+        {
+          "key": "date_to",
+          "value": ""
+        }
+      ],
+      "description": "Get spare parts inventory records"
+    },
+    {
+      "name": "Create Spare Parts Inventory",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/equipment/inventory/store",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "spare_part_id": 1,
+          "inventory_date": "2024-01-15",
+          "quantity_onboard": 15,
+          "min_stock_level": 5,
+          "reorder_point": 10,
+          "reorder_quantity": 20,
+          "storage_location": "Warehouse A-01",
+          "condition_status": "New",
+          "remarks": "Monthly inventory count"
+        }
+      },
+      "description": "Create spare parts inventory record"
+    },
+    {
+      "name": "Get Inventory Alerts",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/inventory/alerts",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "vessel_id",
+          "value": ""
+        }
+      ],
+      "description": "Get low stock and reorder alerts"
+    },
+    {
+      "name": "Get Latest Inventory by Spare Part",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/inventory/spare-part/{sparePartId}/latest",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "sparePartId",
+          "value": "1",
+          "description": "Spare Part ID"
+        }
+      ],
+      "description": "Get latest inventory for specific spare part"
+    },
+    {
+      "name": "Get Inventory Statistics",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/inventory/stats",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "date",
+          "value": "2024-01-15"
+        },
+        {
+          "key": "vessel_id",
+          "value": ""
+        }
+      ],
+      "description": "Get inventory statistics and analytics"
+    },
+    {
+      "name": "Get Fuel Tanks List",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/fuel-tanks",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "vessel_id",
+          "value": ""
+        },
+        {
+          "key": "fuel_type",
+          "value": "",
+          "description": "Diesel, MGO, HFO, Lube Oil"
+        },
+        {
+          "key": "search",
+          "value": ""
+        }
+      ],
+      "description": "Get fuel tanks configuration"
+    },
+    {
+      "name": "Create Fuel Tank",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/equipment/fuel-tanks/store",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "tank_name": "Storage Tank #22",
+          "tank_number": "22",
+          "capacity_liters": 63359.5,
+          "fuel_type": "Diesel",
+          "tank_location": "Port Side Fuel Storage"
+        }
+      },
+      "description": "Create new fuel tank configuration"
+    },
+    {
+      "name": "Get Fuel Tanks by Vessel",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/fuel-tanks/vessel/{vesselId}",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "vesselId",
+          "value": "1",
+          "description": "Vessel ID"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "fuel_type",
+          "value": ""
+        }
+      ],
+      "description": "Get fuel tanks for specific vessel"
+    },
+    {
+      "name": "Get Fuel Inventory List",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/fuel-inventory",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "page",
+          "value": "1"
+        },
+        {
+          "key": "limit",
+          "value": "20"
+        },
+        {
+          "key": "vessel_id",
+          "value": ""
+        },
+        {
+          "key": "tank_id",
+          "value": ""
+        },
+        {
+          "key": "date_from",
+          "value": ""
+        },
+        {
+          "key": "date_to",
+          "value": ""
+        }
+      ],
+      "description": "Get fuel inventory records"
+    },
+    {
+      "name": "Create Fuel Inventory",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/equipment/fuel-inventory/store",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "tank_id": 1,
+          "inventory_date": "2024-01-15",
+          "opening_volume_liters": 45000.0,
+          "received_volume_liters": 0.0,
+          "consumed_volume_liters": 2002.0,
+          "rob_volume_liters": 42998.0,
+          "ullage_level": 125.5,
+          "temperature": 28.5,
+          "density": 845.2,
+          "water_content": 0.05,
+          "remarks": "Normal daily consumption"
+        }
+      },
+      "description": "Create fuel inventory record"
+    },
+    {
+      "name": "Get Fuel Inventory by Tank",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/fuel-inventory/tank/{tankId}",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "tankId",
+          "value": "1",
+          "description": "Tank ID"
+        }
+      ],
+      "description": "Get fuel inventory history for specific tank"
+    },
+    {
+      "name": "Get Latest Fuel Inventory by Tank",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/fuel-inventory/tank/{tankId}/latest",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "tankId",
+          "value": "1",
+          "description": "Tank ID"
+        }
+      ],
+      "description": "Get latest fuel inventory for specific tank"
+    },
+    {
+      "name": "Get Fuel Inventory Statistics",
+      "folder": "⚙️ Equipment & Resources",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/equipment/fuel-inventory/stats",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "date",
+          "value": "2024-01-15"
+        },
+        {
+          "key": "vessel_id",
+          "value": ""
+        }
+      ],
+      "description": "Get fuel inventory statistics and analytics"
+    },
+    {
+      "name": "Get Activity Logs",
+      "folder": "📝 Activity Logs",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/activity-log",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "queryParams": [
+        {
+          "key": "page",
+          "value": "1"
+        },
+        {
+          "key": "limit",
+          "value": "20"
+        },
+        {
+          "key": "causer_id",
+          "value": "",
+          "description": "Filter by user ID"
+        },
+        {
+          "key": "subject_type",
+          "value": "",
+          "description": "Filter by model type"
+        },
+        {
+          "key": "event",
+          "value": "",
+          "description": "created, updated, deleted"
+        },
+        {
+          "key": "date_from",
+          "value": ""
+        },
+        {
+          "key": "date_to",
+          "value": ""
+        }
+      ],
+      "description": "Get system activity logs with filtering"
+    },
+    {
+      "name": "Get Activity Log Details",
+      "folder": "📝 Activity Logs",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/activity-log/{id}",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "id",
+          "value": "1",
+          "description": "Activity Log ID"
+        }
+      ],
+      "description": "Get detailed activity log information"
+    },
+    {
+      "name": "Get Activity Statistics",
+      "folder": "📝 Activity Logs",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/activity-log/statistics",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "description": "Get activity log statistics and metrics"
+    },
+    {
+      "name": "Get Activity Log for Model",
+      "folder": "📝 Activity Logs",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/activity-log/model/{modelType}/{modelId}",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "modelType",
+          "value": "EquipmentStatus",
+          "description": "Model type name"
+        },
+        {
+          "key": "modelId",
+          "value": "1",
+          "description": "Model ID"
+        }
+      ],
+      "description": "Get activity logs for specific model instance"
+    },
+    {
+      "name": "Get Activity Log for User",
+      "folder": "📝 Activity Logs",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/activity-log/user/{userId}",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "pathVariables": [
+        {
+          "key": "userId",
+          "value": "1",
+          "description": "User ID"
+        }
+      ],
+      "description": "Get activity logs for specific user"
+    },
+    {
+      "name": "Get Current Locale",
+      "folder": "🌍 Localization",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/localization/current",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "description": "Get current user's locale settings"
+    },
+    {
+      "name": "Get Supported Locales",
+      "folder": "🌍 Localization",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/localization/supported",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "description": "Get list of supported locales"
+    },
+    {
+      "name": "Set Locale",
+      "folder": "🌍 Localization",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/localization/set",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "locale": "id"
+        }
+      },
+      "description": "Set user's locale preference"
+    },
+    {
+      "name": "Format Number",
+      "folder": "🌍 Localization",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/localization/format-number",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "number": 1234.56,
+          "decimals": 2
+        }
+      },
+      "description": "Format number according to locale"
+    },
+    {
+      "name": "Format Currency",
+      "folder": "🌍 Localization",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/localization/format-currency",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "amount": 1234.56,
+          "currency": "USD"
+        }
+      },
+      "description": "Format currency according to locale"
+    },
+    {
+      "name": "Format Date",
+      "folder": "🌍 Localization",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/localization/format-date",
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "json",
+        "json": {
+          "date": "2024-01-15 14:30:00",
+          "format": "short"
+        }
+      },
+      "description": "Format date according to locale"
+    }
+  ],
+  "variables": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "description": "Base URL for the API"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "description": "Bearer token from login response"
+    }
+  ],
+  "environments": [
+    {
+      "name": "🔧 Development",
+      "variables": [
+        {
+          "key": "baseUrl",
+          "value": "http://localhost:8000"
+        }
+      ]
+    },
+    {
+      "name": "🌐 Production",
+      "variables": [
+        {
+          "key": "baseUrl",
+          "value": "https://neptune.pakarti.com"
+        }
+      ]
+    },
+    {
+      "name": "🧪 Testing",
+      "variables": [
+        {
+          "key": "baseUrl",
+          "value": "http://neptune.test"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+
+@forward 'element-plus/theme-chalk/src/dark/var.scss' with (
+  $bg-color: (
+    'page': #1f2937,
+    '': #1f2937,
+    'overlay': #1f2937,
+  ),
+  $fill-color : (
+    '': #f0f2f5,
+    'light': rgba(30, 133, 255, 0.1),
+    'lighter': #fafafa,
+    'extra-light': #fafcff,
+    'dark': blue,
+    'darker': orange,
+    'blank': #1f2937,
+  ),
+  $mask-color: (
+    '': rgba(17, 28, 41, 0.9),
+    'extra-light': rgba(255, 255, 255, 0.3),
+  ),
+);
+
+@use "element-plus/theme-chalk/src/dark/css-vars.scss";

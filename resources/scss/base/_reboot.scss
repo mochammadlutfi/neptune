@@ -1,0 +1,21 @@
+@use "variables" as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// scss-docs-start reboot-body-rules
+body {
+    margin: 0;
+    overflow-x: hidden;
+    color: $body-color;
+    background-color: $body-bg;
+    font-family: $body-font-family;
+    -webkit-tap-highlight-color: transparent;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}

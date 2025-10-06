@@ -1,0 +1,355 @@
+@use "../base/variables" as *;
+
+.base-table {
+    font-size: 0.8rem !important;
+    thead {
+        .el-table__cell {
+            // background-color: $body-bg !important;
+            @apply bg-background !important;
+        }
+    }
+}
+
+/* Global CSS Override untuk El-Table Flexible */
+/* File: assets/css/flexible-table.css atau di main.css */
+
+/* ========================================
+   EL-TABLE FLEXIBLE OVERRIDE
+   ======================================== */
+
+/* Base table container - pastikan mengikuti parent width */
+.el-table {
+    /* Force table untuk tidak exceed parent width */
+    width: 100% !important;
+    max-width: 100% !important;
+    
+    /* Table layout auto untuk content-based width */
+    table-layout: auto !important;
+    
+    /* Prevent table dari memiliki fixed minimum width */
+    min-width: unset !important;
+    
+    /* Smooth transition saat perubahan ukuran */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  
+  /* Table wrapper - pastikan overflow handled dengan baik */
+  .el-table__body-wrapper,
+  .el-table__header-wrapper,
+  .el-table__footer-wrapper {
+    /* Responsive overflow handling */
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    
+    /* Smooth scrolling di mobile */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Table inner - remove fixed widths */
+  .el-table__body,
+  .el-table__header,
+  .el-table__footer {
+    /* Pastikan table inner juga flexible */
+    width: 100% !important;
+    min-width: 100% !important;
+    table-layout: auto !important;
+  }
+  
+  /* Column cells - flexible width dengan intelligent constraints */
+  .el-table th,
+  .el-table td {
+    /* Remove any forced width constraints */
+    width: auto !important;
+    
+    /* Intelligent min-width berdasarkan content */
+    min-width: fit-content !important;
+    
+    /* Smart max-width untuk prevent overflow */
+    max-width: calc(50vw - 100px) !important;
+    
+    /* Better text handling */
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    
+    /* Consistent padding */
+    padding: 8px 12px !important;
+    
+    /* Smooth transitions */
+    transition: all 0.3s ease !important;
+  }
+  
+  /* Cell content wrapper */
+  .el-table .cell {
+    /* Remove fixed constraints */
+    width: auto !important;
+    min-width: unset !important;
+    
+    /* Better content handling */
+    overflow: visible !important;
+    text-overflow: unset !important;
+    white-space: normal !important;
+    
+    /* Enhanced readability */
+    line-height: 1.4 !important;
+    
+    /* Smart padding */
+    padding: 4px 0 !important;
+  }
+  
+  /* Special handling untuk columns dengan specific content types */
+  .el-table .cell:has(.el-tag),
+  .el-table .cell:has(.el-button),
+  .el-table .cell:has(.el-dropdown) {
+    /* Prevent shrinking untuk action elements */
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+  
+  /* Fixed columns - maintain functionality tapi flexible */
+  .el-table__fixed,
+  .el-table__fixed-right {
+    /* Maintain fixed behavior tapi dengan flexible width */
+    position: absolute !important;
+    top: 0 !important;
+    z-index: 10 !important;
+    
+    /* Shadow untuk visual separation */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.12) !important;
+  }
+  
+  .el-table__fixed-right {
+    right: 0 !important;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.12) !important;
+  }
+  
+  /* ========================================
+     RESPONSIVE BREAKPOINTS
+     ======================================== */
+  
+  /* Mobile devices */
+  @media screen and (max-width: 640px) {
+    .el-table {
+      font-size: 0.8rem !important;
+    }
+    
+    .el-table th,
+    .el-table td {
+      padding: 6px 8px !important;
+      max-width: calc(80vw - 60px) !important;
+    }
+    
+    .el-table .cell {
+      padding: 2px 0 !important;
+      font-size: 0.8rem !important;
+    }
+    
+    /* Hide less important columns di mobile */
+    .el-table__column--hidden-mobile {
+      display: none !important;
+    }
+  }
+  
+  /* Tablet devices */
+  @media screen and (min-width: 641px) and (max-width: 1024px) {
+    .el-table {
+      font-size: 0.8rem !important;
+    }
+    
+    .el-table th,
+    .el-table td {
+      padding: 7px 10px !important;
+      max-width: calc(60vw - 80px) !important;
+    }
+    
+    /* Hide medium priority columns di tablet */
+    .el-table__column--hidden-tablet {
+      display: none !important;
+    }
+  }
+  
+  /* Desktop and larger */
+  @media screen and (min-width: 1025px) {
+    .el-table {
+      font-size: 0.8rem !important;
+    }
+    
+    .el-table th,
+    .el-table td {
+      max-width: calc(40vw - 100px) !important;
+    }
+  }
+  
+  /* ========================================
+     SIDEBAR STATE SPECIFIC ADJUSTMENTS
+     ======================================== */
+  
+  /* Ketika sidebar collapsed/mini - table mendapat lebih banyak space */
+  .sidebar-mini .el-table,
+  .sidebar-collapsed .el-table {
+    /* Table bisa expand lebih lebar */
+    max-width: calc(100vw - 80px) !important;
+  }
+  
+  .sidebar-mini .el-table th,
+  .sidebar-mini .el-table td,
+  .sidebar-collapsed .el-table th,
+  .sidebar-collapsed .el-table td {
+    /* Columns bisa lebih lebar saat sidebar collapsed */
+    max-width: calc(45vw - 80px) !important;
+  }
+  
+  /* Ketika sidebar expanded - table space lebih terbatas */
+  .sidebar-o .el-table,
+  .sidebar-expanded .el-table {
+    max-width: calc(100vw - 280px) !important;
+  }
+  
+  .sidebar-o .el-table th,
+  .sidebar-o .el-table td,
+  .sidebar-expanded .el-table th,
+  .sidebar-expanded .el-table td {
+    max-width: calc(35vw - 120px) !important;
+  }
+  
+  /* ========================================
+     UTILITY CLASSES UNTUK SPECIFIC COLUMNS
+     ======================================== */
+  
+  /* Date columns - monospace dan nowrap */
+  .el-table .cell--date {
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace !important;
+    white-space: nowrap !important;
+    font-variant-numeric: tabular-nums !important;
+  }
+  
+  /* Numeric columns - right align dan monospace */
+  .el-table .cell--numeric {
+    text-align: right !important;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace !important;
+    white-space: nowrap !important;
+    font-variant-numeric: tabular-nums !important;
+  }
+  
+  /* Action columns - center dan fixed width */
+  .el-table .cell--action {
+    text-align: center !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    width: auto !important;
+    min-width: 80px !important;
+    max-width: 120px !important;
+  }
+  
+  /* Status columns - center dan optimal width */
+  .el-table .cell--status {
+    text-align: center !important;
+    white-space: nowrap !important;
+    min-width: 80px !important;
+    max-width: 150px !important;
+  }
+  
+  /* Name/Title columns - allow wrapping tapi with constraints */
+  .el-table .cell--name {
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+    max-width: 250px !important;
+  }
+  
+  /* Description columns - allow full wrapping */
+  .el-table .cell--description {
+    white-space: normal !important;
+    line-height: 1.4 !important;
+    max-width: 300px !important;
+  }
+  
+  /* ========================================
+     ENHANCED VISUAL IMPROVEMENTS
+     ======================================== */
+  
+  /* Better hover effects */
+  .el-table__row:hover {
+    background-color: var(--el-table-row-hover-bg-color) !important;
+    transition: background-color 0.2s ease !important;
+  }
+  
+  /* Enhanced striped rows */
+  .el-table--striped .el-table__row:nth-child(even) {
+    background-color: var(--el-table-striped-bg-color) !important;
+  }
+  
+  /* Better border handling */
+  .el-table--border {
+    border: 1px solid var(--el-table-border-color) !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+  }
+  
+  .el-table--border th,
+  .el-table--border td {
+    border-right: 1px solid var(--el-table-border-color) !important;
+  }
+  
+  .el-table--border th:last-child,
+  .el-table--border td:last-child {
+    border-right: none !important;
+  }
+  
+  /* ========================================
+     PERFORMANCE OPTIMIZATIONS
+     ======================================== */
+  
+  /* GPU acceleration untuk smooth transitions */
+  .el-table {
+    transform: translateZ(0) !important;
+    will-change: transform !important;
+  }
+  
+  /* Smooth scrolling untuk table body */
+  .el-table__body-wrapper {
+    scroll-behavior: smooth !important;
+  }
+  
+  /* ========================================
+     DEBUGGING HELPERS (Remove in production)
+     ======================================== */
+  
+  /* Uncomment untuk debugging layout issues */
+  /*
+  .el-table * {
+    border: 1px dashed red !important;
+  }
+  
+  .el-table th::before,
+  .el-table td::before {
+    content: attr(class) !important;
+    font-size: 8px !important;
+    color: red !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: yellow !important;
+  }
+  */
+  
+  /* ========================================
+     PRINT STYLES
+     ======================================== */
+  
+  @media print {
+    .el-table {
+      font-size: 10px !important;
+      page-break-inside: avoid !important;
+    }
+    
+    .el-table th,
+    .el-table td {
+      padding: 4px 6px !important;
+      max-width: none !important;
+    }
+    
+    .el-table .cell--action {
+      display: none !important;
+    }
+  }

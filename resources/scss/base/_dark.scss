@@ -1,0 +1,45 @@
+@use 'sass:color';
+@use "variables" as *;
+
+html.dark {
+    body {
+        background-color: hsl(var(--background)) !important;
+        color: hsl(var(--foreground)) !important;
+    }
+
+    #page-container #page-header{
+        background-color: hsl(var(--background)) !important;
+        color: hsl(var(--foreground)) !important;
+        border-bottom: 1px solid hsl(var(--border)) !important;
+    }
+
+    // Sidebar dark mode
+    #page-sidebar {
+        background-color: hsl(var(--card)) !important;
+        color: hsl(var(--card-foreground)) !important;
+        border-right: 1px solid hsl(var(--border)) !important;
+    }
+
+    // Menu items dark mode
+    .menu-main-link {
+        color: hsl(var(--muted-foreground)) !important;
+        
+        &:hover,
+        &:focus {
+            color: hsl(var(--accent-foreground)) !important;
+            background-color: hsl(var(--accent)) !important;
+        }
+
+        &.active {
+            color: hsl(var(--primary-foreground)) !important;
+            background-color: hsl(var(--primary)) !important;
+        }
+    }
+
+    // Cards dan components
+    .el-card {
+        background-color: hsl(var(--card)) !important;
+        border-color: hsl(var(--border)) !important;
+        color: hsl(var(--card-foreground)) !important;
+    }
+}

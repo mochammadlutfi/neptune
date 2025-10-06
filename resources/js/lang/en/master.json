@@ -1,0 +1,229 @@
+{
+  "title": "Master Data",
+  "description": "Manage core system data including vessels, contracts, wells, equipment, and personnel",
+  "contracts_desc": "Contract management and commercial terms tracking",
+  "vessels_desc": "Vessel registry with technical specifications and capabilities",
+  "wells_desc": "Well master data including completion details and production parameters",
+  "equipment_desc": "Equipment registry with maintenance schedules and criticality rankings",
+  "personnel_desc": "Personnel positions with certification requirements and experience levels",
+  "fuel_types_desc": "Fuel type specifications and storage requirements",
+  "chemicals_desc": "Chemical inventory with safety data and supplier information",
+  "vessels": {
+    "title": "Vessels",
+    "create": "Add Vessel",
+    "edit": "Edit Vessel",
+    "detail": "Vessel Detail",
+    "list": "Vessels",
+    "fields": {
+      "code": "Code",
+      "name": "Name",
+      "type": "Type",
+      "oim_id": "OIM",
+      "client_name": "Client Name",
+      "client_oim": "Client OIM",
+      "status": "Status"
+    },
+    "placeholders" : {
+      "code" : "Enter vessel code",
+      "name" : "Enter vessel name",
+      "type" : "Select vessel type",
+      "oim_id" : "Select OIM",
+      "client_name" : "Enter client",
+      "client_oim" : "Enter client OIM",
+      "is_active" : "Select vessel status"
+    },
+    "status" : {
+      "active" : "Active",
+      "inactive" : "Inactive"
+    }
+  },
+  "wells": {
+    "title": "Wells Master",
+    "create": "Add New Well",
+    "edit": "Edit Well",
+    "detail": "Well Detail",
+    "fields": {
+      "vessel_id": "Vessel",
+      "code": "Well Code",
+      "name": "Well Name",
+      "max_oil_rate": "Max Oil Rate",
+      "max_gas_rate": "Max Gas Rate",
+      "max_water_rate": "Max Water Rate",
+      "type": "Well Type",
+      "status": "Status"
+    },
+    "placeholders" : {
+      "vessel_id": "Select Vessel",
+      "code": "Enter Well Code",
+      "name": "Enter Well Name",
+      "max_oil_rate": "Enter Max Oil Rate",
+      "max_gas_rate": "Enter Max Gas Rate",
+      "max_water_rate": "Enter Max Water Rate",
+      "type": "Select Well Type",
+      "status": "Select Status"
+    },
+    "status": {
+      "active": "Active",
+      "shut_in": "Shut-in",
+      "abandoned": "Abandoned",
+      "suspended": "Suspended",
+      "testing": "Testing",
+      "workover": "Workover"
+    }
+  },
+  "equipment": {
+    "title": "Equipment Registry",
+    "create": "Add Equipment",
+    "edit": "Edit Equipment",
+    "detail": "Equipment Detail",
+    "list": "Equipment",
+    "type_category": "Type/Category",
+    "capacity": "Capacity",
+    "critical": "Critical",
+    "critical_yes": "Critical",
+    "critical_no": "Standard",
+    "fields": {
+      "vessel_id": "Vessel",
+      "code": "Equipment Code",
+      "tag": "Equipment Tag",
+      "name": "Equipment Name",
+      "type": "Type",
+      "type_category" : "Type/Category",
+      "category": "Category",
+      "sub_category": "Sub Category",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
+      "serial_number": "Serial Number",
+      "installation_date": "Installation Date",
+      "is_critical": "Critical Equipment",
+      "status": "Status"
+    },
+    "status" : {
+      "running" : "Running",
+      "stopped" : "Stopped",
+      "standby" : "Standby",
+      "maintenance" : "Maintenance",
+      "out_of_service" : "Out of Service"
+    },
+    "type" : {
+      "gas_turbine" : "Gas Turbine",
+      "generator" : "Generator",
+      "compressor" : "Compressor",
+      "pump" : "Pump",
+      "valve" : "Valve",
+      "separator" : "Separator",
+      "heat_exchanger" : "Heat Exchanger",
+      "instrument" : "Instrument",
+      "electrical" : "Electrical",
+      "structural" : "Structural",
+      "piping" : "Piping",
+      "other" : "Other"
+    }
+  },
+  "contracts": {
+    "title": "Contracts Master",
+    "create": "Add Contract Master",
+    "edit": "Edit Contract Master",
+    "detail": "Contract Master Detail",
+    "list": "Contracts Master",
+    "basic_information": "Basic Contract Information",
+    "basic_info_desc": "Enter essential contract identification and classification details",
+    "contract_dates": "Contract Dates",
+    "contract_dates_desc": "Define contract validity and important milestone dates",
+    "field_information": "Field Information",
+    "field_info_desc": "Specify field location and operational area details",
+    "commercial_terms": "Commercial Terms",
+    "commercial_terms_desc": "Define revenue sharing and commercial arrangements",
+    "commitments_financial": "Commitments & Financial",
+    "commitments_desc": "Specify work commitments and financial obligations",
+    "oil_shares": "Oil Revenue Shares",
+    "gas_shares": "Gas Revenue Shares",
+    "days_to_expiry": "Days to Expiry",
+    "expiring_soon": "Expiring Soon",
+    "terms_valid": "Terms Valid",
+    "terms_invalid": "Terms Invalid",
+    "general_terms": "General Terms",
+    "contractor_share": "Contractor Share",
+    "government_share": "Government Share",
+    "total": "Total",
+    "work_commitments": "Work Commitments",
+    "no_work_commitment": "No work commitment specified",
+    "performance_bond": "Performance Bond",
+    "bond_amount": "Bond Amount",
+    "no_partners": "No partner companies",
+    "fields": {
+      "contract_number": "Number",
+      "contract_name": "Name",
+      "contract_type": "Type",
+      "operator_name": "Operator",
+      "kkks_representative": "KKKS Representative",
+      "partner_companies": "Partner Companies",
+      "effective_date": "Effective Date",
+      "expiry_date": "Expiry Date",
+      "extension_options": "Extension Options",
+      "field_name": "Field Name",
+      "block_name": "Block Name",
+      "working_area_km2": "Working Area (km²)",
+      "cost_recovery_limit_pct": "Cost Recovery Limit (%)",
+      "ftp_share_pct": "FTP Share (%)",
+      "contractor_share_oil_pct": "Contractor Oil Share (%)",
+      "contractor_share_gas_pct": "Contractor Gas Share (%)",
+      "government_share_oil_pct": "Government Oil Share (%)",
+      "government_share_gas_pct": "Government Gas Share (%)",
+      "minimum_work_commitment": "Minimum Work Commitment",
+      "minimum_expenditure_usd": "Minimum Expenditure (USD)",
+      "local_content_requirement_pct": "Local Content Requirement (%)",
+      "performance_bond_amount_usd": "Performance Bond Amount (USD)",
+      "bond_expiry_date": "Bond Expiry Date",
+      "contract_status": "Contract Status"
+    }
+  },
+  "chemicals": {
+    "title": "Chemicals Registry",
+    "create": "Add Chemical",
+    "edit": "Edit Chemical",
+    "detail": "Chemical Detail",
+    "list": "Chemicals",
+    "fields": {
+      "code": "Code",
+      "name": "Name",
+      "type": "Type",
+      "unit": "Unit",
+      "specific_gravity": "Specific Gravity",
+      "is_active": "Active"
+    },
+    "placeholders" : {
+      "code" : "Enter chemicals code",
+      "name" : "Enter chemicals name",
+      "type" : "Enter chemicals type",
+      "unit" : "Enter chemicals unit",
+      "specific_gravity" : "Enter chemicals specific gravity",
+      "is_active" : "Enter chemicals active status"
+    }
+  },
+  "gas_buyer" : {
+    "title" : "Gas Buyer",
+    "create" : "Add Gas Buyer",
+    "edit" : "Edit Gas Buyer",
+    "delete" : "Delete Gas Buyer",
+    "detail" : "Gas Buyer Detail",
+    "list" : "Gas Buyers",
+    "fields" : {
+      "vessel_id" : "Vessel",
+      "code" : "Code",
+      "name" : "Name",
+      "type" : "Type",
+      "is_active" : "Status"
+    },
+    "placeholders" : {
+      "vessel_id" : "Select Vessel",
+      "code" : "Enter gas buyer code",
+      "name" : "Enter gas buyer name",
+      "type" : "Enter gas buyer type"
+    },
+    "status" : {
+      "active" : "Active",
+      "inactive" : "Inactive"
+    }
+  }
+}

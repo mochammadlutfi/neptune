@@ -1,0 +1,188 @@
+// Theme Utilities
+// File ini berisi utility classes yang menggunakan CSS variables dinamis
+
+// Font utilities
+.font-dynamic {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+}
+
+// Spacing utilities dengan scale dinamis
+.space-dynamic {
+  --space-xs: calc(0.25rem * var(--spacing-scale));
+  --space-sm: calc(0.5rem * var(--spacing-scale));
+  --space-md: calc(1rem * var(--spacing-scale));
+  --space-lg: calc(1.5rem * var(--spacing-scale));
+  --space-xl: calc(2rem * var(--spacing-scale));
+  --space-2xl: calc(3rem * var(--spacing-scale));
+}
+
+// Padding utilities dengan spacing scale
+.p-dynamic-xs { padding: var(--space-xs); }
+.p-dynamic-sm { padding: var(--space-sm); }
+.p-dynamic-md { padding: var(--space-md); }
+.p-dynamic-lg { padding: var(--space-lg); }
+.p-dynamic-xl { padding: var(--space-xl); }
+
+.px-dynamic-xs { padding-left: var(--space-xs); padding-right: var(--space-xs); }
+.px-dynamic-sm { padding-left: var(--space-sm); padding-right: var(--space-sm); }
+.px-dynamic-md { padding-left: var(--space-md); padding-right: var(--space-md); }
+.px-dynamic-lg { padding-left: var(--space-lg); padding-right: var(--space-lg); }
+
+.py-dynamic-xs { padding-top: var(--space-xs); padding-bottom: var(--space-xs); }
+.py-dynamic-sm { padding-top: var(--space-sm); padding-bottom: var(--space-sm); }
+.py-dynamic-md { padding-top: var(--space-md); padding-bottom: var(--space-md); }
+.py-dynamic-lg { padding-top: var(--space-lg); padding-bottom: var(--space-lg); }
+
+// Margin utilities dengan spacing scale
+.m-dynamic-xs { margin: var(--space-xs); }
+.m-dynamic-sm { margin: var(--space-sm); }
+.m-dynamic-md { margin: var(--space-md); }
+.m-dynamic-lg { margin: var(--space-lg); }
+.m-dynamic-xl { margin: var(--space-xl); }
+
+.mx-dynamic-xs { margin-left: var(--space-xs); margin-right: var(--space-xs); }
+.mx-dynamic-sm { margin-left: var(--space-sm); margin-right: var(--space-sm); }
+.mx-dynamic-md { margin-left: var(--space-md); margin-right: var(--space-md); }
+.mx-dynamic-lg { margin-left: var(--space-lg); margin-right: var(--space-lg); }
+
+.my-dynamic-xs { margin-top: var(--space-xs); margin-bottom: var(--space-xs); }
+.my-dynamic-sm { margin-top: var(--space-sm); margin-bottom: var(--space-sm); }
+.my-dynamic-md { margin-top: var(--space-md); margin-bottom: var(--space-md); }
+.my-dynamic-lg { margin-top: var(--space-lg); margin-bottom: var(--space-lg); }
+
+// Shadow utilities
+.shadow-dynamic {
+  box-shadow: var(--shadow-default);
+}
+
+.shadow-dynamic-sm {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.shadow-dynamic-lg {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+// Border radius utilities
+.rounded-dynamic {
+  border-radius: var(--radius);
+}
+
+.rounded-dynamic-sm {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.rounded-dynamic-lg {
+  border-radius: calc(var(--radius) + 2px);
+}
+
+// Component-specific utilities
+.card-dynamic {
+  @extend .space-dynamic;
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-default);
+  padding: var(--space-md);
+}
+
+.button-dynamic {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  border-radius: var(--radius);
+  padding: var(--space-sm) var(--space-md);
+  transition: all 0.2s ease;
+}
+
+.input-dynamic {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  padding: var(--space-sm);
+  
+  &:focus {
+    outline: none;
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+  }
+}
+
+// Layout utilities dengan spacing dinamis
+.container-dynamic {
+  @extend .space-dynamic;
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  
+  @media (min-width: 640px) {
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
+  }
+  
+  @media (min-width: 1024px) {
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
+  }
+}
+
+.section-dynamic {
+  @extend .space-dynamic;
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+  
+  @media (min-width: 1024px) {
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-2xl);
+  }
+}
+
+// Text utilities dengan font dinamis
+.text-dynamic {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  color: hsl(var(--foreground));
+}
+
+.text-dynamic-sm {
+  font-family: var(--font-family);
+  font-size: calc(var(--font-size-base) * 0.875);
+  font-weight: var(--font-weight-base);
+}
+
+.text-dynamic-lg {
+  font-family: var(--font-family);
+  font-size: calc(var(--font-size-base) * 1.125);
+  font-weight: var(--font-weight-base);
+}
+
+.text-dynamic-xl {
+  font-family: var(--font-family);
+  font-size: calc(var(--font-size-base) * 1.25);
+  font-weight: var(--font-weight-base);
+}
+
+// Element Plus integration utilities
+.el-dynamic {
+  // Override Element Plus variables dengan theme variables
+  --el-font-family: var(--font-family);
+  --el-font-size-base: var(--font-size-base);
+  --el-border-radius-base: var(--radius);
+  --el-box-shadow: var(--shadow-default);
+}
+
+// Apply dynamic theme to body
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  
+  // Apply spacing scale to all elements
+  @extend .space-dynamic;
+}

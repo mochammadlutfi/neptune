@@ -1,0 +1,181 @@
+@use "../base/variables" as *;
+
+.dropdown-action{
+    min-width: 150px !important;
+
+    ul.el-dropdown-menu > li {
+        &:not(:has(> a)) {
+            display: flex !important;
+            justify-content: space-between;
+        }
+        &:has(> a) {
+            > a {
+                width: 100%;
+                display: flex !important;
+                justify-content: space-between;
+            }
+        }
+    }
+}
+
+
+.slide-down-enter-active, .slide-down-leave-active {
+    transition: opacity 0.3s, transform 0.3s ease-out; 
+}
+
+.slide-down-enter, .slide-down-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.button-box {
+    @apply flex relative;
+
+    .el-button {
+        // @apply align-middle flex-row !rounded-none;
+        align-items: center;
+        flex-direction: row;
+        border-radius: 0 !important;
+        padding: 10px !important;
+
+        &:first-child{
+            border-top-left-radius: 0.256rem !important;
+            border-bottom-left-radius: 0.256rem !important;
+        }
+
+        &:last-child{
+            border-top-right-radius: 0.256rem !important;
+            border-bottom-right-radius: 0.256rem !important;
+        }
+        + .el-button {
+            margin-left: 0px !important;
+        }
+    }
+}
+.stepbar {
+    width: 100%;
+    position: relative;
+    list-style: none;
+    padding: 0;
+    text-align: center;
+    overflow: hidden;
+  
+    .step {
+      position: relative;
+      float: left;
+      display: inline-block;
+      line-height: 32px;
+      padding: 0 38px 0 8px;
+      background-color: hsl(var(--accent));
+      box-sizing: border-box;
+  
+      &:not(:first-child)::before,
+      &:not(:first-child)::after {
+        content: '';
+        position: absolute;
+        left: -16px;
+        display: block;
+        background-color: hsl(var(--accent));
+        border-left: 4px solid $body-bg;
+        width: 20px;
+        height: 16px;
+      }
+  
+      &:not(:first-child)::after {
+        top: 0;
+        transform: skew(30deg);
+      }
+  
+      &:not(:first-child)::before {
+        bottom: 0;
+        transform: skew(-30deg);
+      }
+
+      &:first-child{
+        padding-left : 20px;
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+      }
+
+      &:last-child{
+        padding-right: 16px;
+        padding-left: 8px;
+        border-bottom-right-radius: 4px;
+        border-top-right-radius: 4px;
+      }
+  
+      &.is-current {
+        color: #ffffff;
+        background-color: $primary;
+  
+        &::before,
+        &::after {
+          background-color: $primary;
+        }
+      }
+    }
+  }
+  
+
+  
+// .status-bar {
+//     display: flex;
+//     position: relative;
+  
+//     .el-button {
+//       position: relative;
+//       flex: 1;
+//       border-radius: 0 !important; /* Menghilangkan radius tombol */
+//       text-align: center;
+//       z-index: 1; /* Untuk mengatur urutan tumpukan */
+//         padding-left: 1.5em;
+  
+//       &:first-child {
+//         border-top-left-radius: 0.256rem !important;
+//         border-bottom-left-radius: 0.256rem !important;
+        
+//       }
+  
+//       &:last-child {
+//         border-top-right-radius: 0.256rem !important;
+//         border-bottom-right-radius: 0.256rem !important;
+//       }
+
+//       &:not(:first-child){
+//         border-top-right-radius: 0.25rem;
+//         border-bottom-right-radius: 0.25rem;
+//         padding-right: 16px;
+//         overflow: hidden;
+//         flex-grow: 1;
+//       }
+
+      
+//       &:not(:last-child)::before, &:not(:last-child)::after  {
+//         content: "";
+//         position: absolute;
+//         top: 0;
+//         right: -15px; /* Posisi segitiga */
+//         border-top: 16px solid transparent;
+//         border-bottom: 16px solid transparent;
+//         border-left: 15px solid #fff; /* Warna putih sebagai separator */
+//         z-index: 1; /* Separator berada di bawah */
+//       }
+  
+//       /* Mengatur jarak antar tombol */
+//       & + .el-button {
+//         margin-left: 0px; /* Tumpang tindih antar tombol */
+//         z-index: 0; /* Tombol sebelumnya tetap di bawah */
+//       }
+  
+//       /* Untuk segitiga di tengah tombol */
+  
+//       /* Warna dan gaya tombol aktif */
+//       &.active {
+//         background-color: var(--el-color-primary);
+//         color: #fff;
+//         z-index: 3;
+//       }
+//     }
+//   }
+  
+  

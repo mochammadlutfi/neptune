@@ -1,0 +1,28 @@
+
+.img-upload {
+    @apply block w-36 h-36 !mb-0;
+
+    &--mini {
+        @apply block !w-20 !h-20;
+    }
+
+    &--small{
+        @apply block !w-28 !h-28;
+    }
+
+    &--large{
+        @apply block !w-28 !h-28;
+    }
+
+    &__wrapper{
+        @apply relative flex items-center justify-center w-full h-full bg-transparent border-2 border-dashed border-gray-300 hover:border-primary rounded-lg text-gray-600;
+    
+        &__input{
+            @apply flex items-center justify-center w-8 h-8 bg-gray-200 rounded-lg;
+        }
+    }
+
+    &__actions {
+        @apply absolute inset-0 flex justify-center items-center bg-black bg-opacity-60 text-white transition-opacity duration-300 opacity-0 hover:opacity-100;
+    }
+}

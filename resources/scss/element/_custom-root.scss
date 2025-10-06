@@ -1,0 +1,23 @@
+:root {
+    /* Element Plus Menu Colors - mengikuti shadcn-vue */
+    --el-menu-active-color: var(--el-color-primary);
+    --el-menu-text-color: hsl(var(--foreground));
+    --el-menu-hover-text-color: var(--el-color-primary);
+    --el-menu-bg-color: hsl(var(--card));
+    --el-menu-hover-bg-color: hsl(var(--accent));
+    --el-menu-item-height: 40px;
+    --el-menu-sub-item-height: calc(var(--el-menu-item-height) - 6px);
+    --el-menu-horizontal-height: 60px;
+    --el-menu-horizontal-sub-item-height: 36px;
+    --el-menu-item-font-size: var(--el-font-size-base);
+    --el-menu-item-hover-fill: hsl(var(--accent));
+    --el-menu-border-color: hsl(var(--border));
+    --el-menu-base-level-padding: 20px;
+    --el-menu-level-padding: 20px;
+    --el-menu-icon-width: 24px;
+
+    /* Element Plus Box Shadow */
+    --el-box-shadow-light: 0 0 #0000,0 0 #0000,0 1px 3px 0rgb(0 0 0 / 0.1),0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Dark mode untuk Element Plus sudah didefinisikan di shadcn-variables.scss */

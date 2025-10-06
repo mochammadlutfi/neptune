@@ -1,0 +1,152 @@
+{
+  "title": "Dashboard",
+  "welcome": "Welcome to NEPTUNE DVR System",
+  "overview": "Operations Overview",
+  "subtitle": "FPU Trunojoyo-01 Operations Center",
+  "last_updated": "Last Updated",
+  "online_systems": "Online Systems",
+  "operational_status": "Operational Status",
+  "fleet_overview": "Fleet Overview",
+  "vessel_selection": "Vessel Selection",
+  "all_vessels": "All Vessels",
+  "fleet_view": "Fleet View",
+  "kpi": {
+    "title": "Key Performance Indicators",
+    "fleet_title": "Fleet Performance Indicators",
+    "production": "Production",
+    "fleet_production": "Fleet Production",
+    "oil_production": "Oil Production",
+    "gas_production": "Gas Production",
+    "water_production": "Water Production",
+    "total_production": "Total Production",
+    "daily_target": "Daily Target",
+    "equipment_availability": "Equipment Availability",
+    "operational_efficiency": "Operational Efficiency",
+    "safety_performance": "Safety Performance",
+    "personnel_onboard": "Personnel on Board",
+    "wells_producing": "Wells Producing",
+    "uptime": "Uptime",
+    "utilization": "Utilization",
+    "incidents_today": "Incidents Today",
+    "days_without_incident": "Days Without Incident",
+    "unit": {
+      "bopd": "BOPD",
+      "scfd": "SCFD",
+      "bwpd": "BWPD",
+      "percent": "%",
+      "days": "Days",
+      "hours": "Hours",
+      "wells": "Wells",
+      "personnel": "Personnel"
+    }
+  },
+  "widgets": {
+    "production_summary": "Production Summary",
+    "fleet_production_summary": "Fleet Production Summary",
+    "equipment_status": "Equipment Status",
+    "fleet_equipment_status": "Fleet Equipment Status",
+    "recent_incidents": "Recent HSE Events",
+    "fleet_hse_events": "Fleet HSE Events",
+    "weather_conditions": "Weather & Marine",
+    "fleet_weather_conditions": "Fleet Weather Conditions",
+    "daily_reports": "Daily Reports Status",
+    "well_performance": "Well Performance",
+    "system_alerts": "System Alerts",
+    "maintenance_schedule": "Maintenance Schedule"
+  },
+  "production": {
+    "oil": "Oil",
+    "gas": "Gas",
+    "water": "Water",
+    "total_wells": "Total Wells",
+    "producing_wells": "Producing Wells",
+    "shut_in_wells": "Shut-in Wells",
+    "efficiency": "Production Efficiency",
+    "target_achieved": "Target Achieved",
+    "yesterday": "Yesterday",
+    "today": "Today",
+    "this_month": "This Month",
+    "trend": "Trend"
+  },
+  "equipment": {
+    "online": "Online",
+    "offline": "Offline",
+    "maintenance": "Under Maintenance",
+    "critical": "Critical",
+    "gas_turbines": "Gas Turbines",
+    "compressors": "Compressors",
+    "pumps": "Pumps",
+    "separators": "Separators",
+    "total_equipment": "Total Equipment",
+    "availability": "Availability",
+    "reliability": "Reliability"
+  },
+  "weather": {
+    "temperature": "Temperature",
+    "wind_speed": "Wind Speed",
+    "wave_height": "Wave Height",
+    "visibility": "Visibility",
+    "sea_state": "Sea State",
+    "weather_condition": "Weather Condition",
+    "forecast": "24h Forecast"
+  },
+  "safety": {
+    "ltif": "LTIF",
+    "incidents_mtd": "Incidents MTD",
+    "near_misses": "Near Misses",
+    "safety_meetings": "Safety Meetings",
+    "compliance_score": "Compliance Score",
+    "last_incident": "Last Incident"
+  },
+  "reports": {
+    "pending_reports": "Pending Reports",
+    "completed_today": "Completed Today",
+    "overdue": "Overdue",
+    "dvr_status": "DVR Status",
+    "dcr_status": "DCR Status",
+    "submission_rate": "Submission Rate"
+  },
+  "quick_actions": {
+    "title": "Quick Actions",
+    "create_dvr": "Create DVR",
+    "production_entry": "Production Entry",
+    "incident_report": "HSE Incident Report",
+    "maintenance_log": "Maintenance Log",
+    "equipment_override": "Equipment Override",
+    "view_reports": "View Reports",
+    "export_data": "Export Data"
+  },
+  "vessel": {
+    "select_vessel": "Select Vessel",
+    "all_vessels": "All Vessels",
+    "fleet_view": "Fleet View", 
+    "current_vessel": "Current Vessel",
+    "vessel_status": "Vessel Status",
+    "vessel_overview": "Vessel Overview",
+    "fleet_overview": "Fleet Overview"
+  },
+  "alerts": {
+    "maintenance_due": "Maintenance Due",
+    "weather_advisory": "Weather Advisory",
+    "system_alert": "System Alert",
+    "critical_alert": "Critical Alert"
+  },
+  "status": {
+    "normal": "Normal",
+    "warning": "Warning",
+    "critical": "Critical",
+    "offline": "Offline",
+    "maintenance": "Maintenance",
+    "good": "Good",
+    "fair": "Fair",
+    "poor": "Poor",
+    "excellent": "Excellent"
+  },
+  "time": {
+    "current_shift": "Current Shift",
+    "day_shift": "Day Shift",
+    "night_shift": "Night Shift",
+    "shift_handover": "Shift Handover",
+    "next_handover": "Next Handover"
+  }
+}

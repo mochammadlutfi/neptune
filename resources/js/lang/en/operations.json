@@ -1,0 +1,31 @@
+{
+    "title": "Operation | Operations",
+    "sales_gas_metering" : {
+        "title": "Sales Gas Metering",
+        "fields" : {
+
+        }
+    },
+    "vessel_operation" : {
+        "title": "Vessel Operation",
+        "fields" : {
+            
+        },
+        "type" : {
+            "fpu" : "FPU Operation",
+            "mopu" : "MOPU Operation"
+        }
+    },
+    "sales_gas_allocation" : {
+        "title": "Sales Gas Allocation",
+        "fields" : {
+
+        }
+    },
+    "daily_production" : {
+        "title": "Daily Production",
+        "fields" : {
+            
+        }
+    }
+}

@@ -1,0 +1,350 @@
+{
+  "title": "Production | Productions",
+  "sales_gas_metering" : {
+      "title": "Sales Gas Metering",
+      "fields" : {
+
+      }
+  },
+  "sales_gas_nomination" : {
+      "title": "Sales Gas Nomination",
+      "create" : "Add Sales Gas Nomination",
+      "edit" : "Edit Sales Gas Nomination",
+      "delete" : "Delete Sales Gas Nomination",
+      "fields" : {
+        "date" : "Date",
+        "vessel_id" : "Vessel",
+        "total_nomination" : "Total Nomination",
+        "total_confirmed" : "Total Confirmed",
+        "gas_buyer" : "Gas Buyer",
+        "nomination" : "Nomination",
+        "confirmed" : "Confirmed",
+        "status" : "Status",
+        "remarks" : "Remarks"
+      },
+      "placeholder" : {
+        "vessel_id" : "Select Vessel",
+        "date" : "Select Date",
+        "total_nomination" : "Enter Total Nomination",
+        "total_confirmed" : "Enter Total Confirmed",
+        "nomination" : "Enter Nomination",
+        "confirmed" : "Enter Confirmed",
+        "status" : "Select Status",
+        "remarks" : "Enter Remarks"
+      },
+      "status" : {
+        "draft" : "Draft",
+        "confirmed" : "Confirmed"
+      }
+  },
+  "sales_gas_allocation" : {
+      "title": "Sales Gas Allocation",
+      "create" : "Add Sales Gas Allocation",
+      "edit" : "Edit Sales Gas Allocation",
+      "delete" : "Delete Sales Gas Allocation",
+      "fields" : {
+        "vessel_id" : "Vessel",
+        "date" : "Date",
+        "allocation" : "Allocation",
+        "total" : "Total"
+      },
+      "status" : {
+        "draft" : "Draft",
+        "confirmed" : "Confirmed"
+      }
+  },
+  "operation" : {
+      "title": "Operation | Operations",
+      "create" : "Add Operation",
+      "edit" : "Edit Operation",
+      "delete" : "Delete Operation",
+      "fields" : {
+          "vessel_id" : "Vessel",
+          "date" : "Date",
+          "inlet_pressure_psi" : "Inlet Pressure (PSI)",
+          "inlet_temp_f" : "Inlet Temperature (°F)",
+          "status" : "Status"
+          
+      },
+      "type" : {
+          "fpu" : "FPU Operation",
+          "mopu" : "MOPU Operation"
+      }
+  },
+  "daily_production" : {
+      "title": "Daily Production",
+      "fields" : {
+          
+      }
+  },
+
+  "wells": {
+    "title": "Well Production",
+    "subtitle": "Monitor and record well production data",
+    "create": "Add Well Production",
+    "edit": "Edit Well Production",
+    "detail": "Well Production Detail",
+    "list": "Production",
+    "fields": {
+      "well_id": "Well",
+      "production_date": "Production Date",
+      "shift": "Shift",
+      "oil_rate_bph": "Oil Rate (BPH)",
+      "gas_rate_mscfh": "Gas Rate (MSCFH)",
+      "water_rate_bph": "Water Rate (BPH)",
+      "total_liquid_rate": "Total Liquid Rate",
+      "water_cut_percent": "Water Cut (%)",
+      "day_shift" : "Day Shift",
+      "night_shift" : "Night Shift",
+      "gor": "GOR (SCF/STB)",
+      "wellhead_pressure_psi": "Wellhead Pressure (PSI)",
+      "wellhead_temp_f": "Wellhead Temperature (°F)",
+      "separator_pressure_psi": "Separator Pressure (PSI)",
+      "choke_size": "Choke Size",
+      "api_gravity": "API Gravity",
+      "bs_w_percent": "BS&W (%)",
+      "remarks": "Remarks",
+      "vessel_name": "Vessel Name",
+      "well_name": "Well Name",
+      "well_code": "Well Code",
+      "recorded_date": "Recorded Date",
+      "recorded_time": "Recorded Time",
+      "recorded_by": "Recorded By",
+      "reading_datetime": "Reading Date & Time",
+      "wellhead_pressure": "Wellhead Pressure",
+      "wellhead_temperature": "Wellhead Temperature",
+      "wellhead_temperature_f": "Wellhead Temperature (°F)",
+      "choke_size_64th": "Choke Size (64th)",
+      "flow_hours": "Flow Hours"
+    },
+    "placeholder": {
+      "well_id": "Select Well",
+      "production_date": "Select production date",
+      "shift": "Select shift",
+      "oil_rate_bph": "Enter oil rate (BPH)",
+      "gas_rate_mscfh": "Enter gas rate (MSCFH)",
+      "water_rate_bph": "Enter water rate (BPH)",
+      "choke_size": "Enter Choke Size",
+      "api_gravity": "Enter API gravity",
+      "bs_w_percent": "Enter BS&W",
+      "remarks": "Enter remarks"
+    },
+    "sections": {
+      "basic_info": "Basic Information",
+      "production_rates": "Production Rates",
+      "well_parameters": "Well Parameters",
+      "quality_parameters": "Quality Parameters",
+      "additional_info": "Additional Information",
+      "well_vessel_information": "Well & Vessel Information",
+      "recording_information": "Recording Information",
+      "rates": "Production Rates",
+      "parameters": "Well Parameters",
+      "fluid_properties": "Fluid Properties"
+    }
+  },
+  "fpu": {
+    "title": "FPU Operation",
+    "create": "Add FPU Operation",
+    "edit": "Edit FPU Operation",
+    "detail": "FPU Operation Detail",
+    "list": "FPU Operation",
+    "fields": {
+      "reading_date": "Reading Date",
+      "reading_hour": "Reading Hour",
+      "operator": "Operator",
+      "inlet_pressure_psi": "Inlet Pressure (PSI)",
+      "inlet_temp_f": "Inlet Temperature (°F)",
+      "outlet_pressure_psi": "Outlet Pressure (PSI)",
+      "outlet_temp_f": "Outlet Temperature (°F)",
+      "total_gas_rate_mmscfd": "Total Gas Rate (MMSCFD)",
+      "fuel_gas_rate_mmscfd": "Fuel Gas Rate (MMSCFD)",
+      "flare_hp_rate_mmscfd": "Flare HP Rate (MMSCFD)",
+      "flare_lp_rate_mmscfd": "Flare LP Rate (MMSCFD)",
+      "total_flare_rate": "Total Flare Rate",
+      "export_gas_rate": "Export Gas Rate",
+      "flare_percentage": "Flare Percentage",
+      "gas_balance": "Gas Balance",
+      "contactor_pressure_psi": "Contactor Pressure (PSI)",
+      "reboiler_temp_f": "Reboiler Temperature (°F)",
+      "circulation_rate_gph": "Circulation Rate (GPH)",
+      "gtc_a_seal_gas": "GTC A Seal Gas",
+      "gtc_b_seal_gas": "GTC B Seal Gas",
+      "remarks": "Remarks",
+      "reading_datetime": "Reading Time",
+      "shift": "Shift",
+      "well_id": "Well",
+      "oil_rate": "Oil Rate",
+      "gas_rate": "Gas Rate",
+      "water_rate": "Water Rate",
+      "wellhead_pressure": "Wellhead Pressure",
+      "wellhead_temperature": "Wellhead Temperature",
+      "choke_size": "Choke Size",
+      "flow_hours": "Flow Hours",
+      "data_quality": "Data Quality"
+    },
+    "placeholder" : {
+      "reading_date" : "Select reading date",
+      "reading_hour" : "Select reading hour",
+      "operator" : "Current operator",
+      "remarks" : "Enter remarks"
+    },
+    "sections": {
+      "basic_info": "Basic Information",
+      "process_parameters": "Process Parameters",
+      "gas_flow_rates": "Gas Flow Rates",
+      "teg_system": "TEG System",
+      "compression_system": "Compression System",
+      "additional_info": "Additional Information"
+    },
+    "actions": {
+      "copy_previous": "Copy Previous Reading"
+    }
+  },
+  "sales_gas": {
+    "title": "Sales Gas Metering",
+    "subtitle": "Real-time sales gas metering status and performance monitoring",
+    "create": "Add Gas Reading",
+    "edit": "Edit Gas Reading",
+    "detail": "Gas Reading Detail",
+    "list": "Gas Readings",
+    "search_placeholder": "Search by vessel, well, meter ID...",
+    "no_readings_found": "No gas readings found",
+    "fields": {
+      "buyer_id": "Gas Buyer",
+      "sales_date": "Sales Date",
+      "export_pressure_psi": "Export Pressure (PSI)",
+      "export_temp_f": "Export Temperature (°F)",
+      "nomination_mmscf": "Nomination (MMSCF)",
+      "actual_delivery_mmscf": "Actual Delivery (MMSCF)",
+      "variance_percent": "Variance (%)",
+      "heating_value_btu": "Heating Value (BTU)",
+      "specific_gravity": "Specific Gravity",
+      "h2s_content_ppm": "H2S Content (PPM)",
+      "co2_content_pct": "CO2 Content (%)",
+      "moisture_content_ppm": "Moisture Content (PPM)",
+      "remarks": "Remarks"
+    },
+    "placeholder": {
+      "sales_date": "Select sales date",
+      "export_pressure_psi": "Enter export pressure in PSI",
+      "export_temp_f": "Enter export temperature in °F",
+      "nomination_mmscf": "Enter nomination in MMSCF",
+      "actual_delivery_mmscf": "Enter actual delivery in MMSCF",
+      "variance_percent": "Calculated automatically",
+      "heating_value_btu": "Enter heating value in BTU",
+      "specific_gravity": "Enter specific gravity",
+      "h2s_content_ppm": "Enter H2S content in PPM",
+      "co2_content_pct": "Enter CO2 content in %",
+      "moisture_content_ppm": "Enter moisture content in PPM",
+      "remarks": "Enter additional remarks or notes"
+    },
+    "sections": {
+      "general_info": "General Information",
+      "export_conditions": "Export Conditions",
+      "volume_delivery": "Volume & Delivery",
+      "quality_parameters": "Gas Quality Parameters",
+      "additional_info": "Additional Information"
+    },
+    "filters": {
+      "by_vessel": "Filter by Vessel",
+      "by_date": "Filter by Date"
+    },
+    "warnings": {
+      "pressure_out_of_typical": "Tekanan di luar kisaran tipikal pipeline (200–1500 psi). Periksa konfigurasi/alat.",
+      "hv_out_of_typical": "Heating value di luar 950–1050 BTU/SCF (cek GC/komposisi).",
+      "sg_out_of_typical": "Specific gravity di luar 0.55–0.87 (cek komposisi gas).",
+      "h2s_over_spec": "H₂S melebihi 4 ppm (umum batas pipeline).",
+      "co2_over_spec": "CO₂ melebihi 3% (umum batas pipeline).",
+      "nomination_missing_for_variance": "Variance tidak dihitung karena nomination kosong atau 0."
+    }
+  },
+  "summary": {
+    "title": "Production Summary",
+    "subtitle": "Daily production summary and performance analysis",
+    "description": "Comprehensive overview of daily production performance with key metrics and trends",
+    "daily_overview": "Daily Overview",
+    "production_metrics": "Production Metrics",
+    "well_status": "Well Status",
+    "efficiency_analysis": "Efficiency Analysis",
+    "quality_parameters": "Quality Parameters",
+    "deferment_analysis": "Deferment Analysis",
+    "fields": {
+      "summary_date": "Summary Date",
+      "vessel_name": "Vessel",
+      "total_wells": "Total Wells",
+      "active_wells": "Active Wells",
+      "shut_in_wells": "Shut-in Wells",
+      "testing_wells": "Testing Wells",
+      "gross_oil_bbl": "Gross Oil (BBL)",
+      "net_oil_bbl": "Net Oil (BBL)",
+      "oil_target_bbl": "Oil Target (BBL)",
+      "oil_variance_bbl": "Oil Variance (BBL)",
+      "oil_efficiency_pct": "Oil Efficiency (%)",
+      "gross_gas_mmscf": "Gross Gas (MMSCF)",
+      "fuel_gas_mmscf": "Fuel Gas (MMSCF)",
+      "flare_gas_mmscf": "Flare Gas (MMSCF)",
+      "export_gas_mmscf": "Export Gas (MMSCF)",
+      "gas_target_mmscf": "Gas Target (MMSCF)",
+      "gas_efficiency_pct": "Gas Efficiency (%)",
+      "produced_water_bbl": "Produced Water (BBL)",
+      "water_cut_pct": "Water Cut (%)",
+      "water_injection_bbl": "Water Injection (BBL)",
+      "overboard_water_bbl": "Overboard Water (BBL)",
+      "average_api_gravity": "Average API Gravity",
+      "average_bs_w_pct": "Average BS&W (%)",
+      "average_gor_scf_bbl": "Average GOR (SCF/BBL)",
+      "production_uptime_pct": "Production Uptime (%)",
+      "planned_deferment_bbl": "Planned Deferment (BBL)",
+      "unplanned_deferment_bbl": "Unplanned Deferment (BBL)",
+      "off_spec_production_bbl": "Off-spec Production (BBL)",
+      "calculation_status": "Calculation Status",
+      "calculated_by": "Calculated By",
+      "last_calculated_at": "Last Calculated",
+      "approved_by": "Approved By",
+      "approved_at": "Approved At"
+    },
+    "metrics": {
+      "oil_production": "Oil Production",
+      "gas_production": "Gas Production",
+      "water_production": "Water Production",
+      "production_efficiency": "Production Efficiency",
+      "well_performance": "Well Performance",
+      "vs_target": "vs Target",
+      "vs_yesterday": "vs Yesterday",
+      "mtd_average": "MTD Average",
+      "ytd_average": "YTD Average"
+    },
+    "status": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "completed": "Completed",
+      "error": "Error"
+    },
+    "actions": {
+      "refresh_data": "Refresh Data",
+      "export_summary": "Export Summary",
+      "generate_report": "Generate Report",
+      "view_details": "View Details",
+      "approve_data": "Approve Data",
+      "recalculate": "Recalculate"
+    },
+    "filters": {
+      "by_vessel": "Filter by Vessel",
+      "by_date_range": "Filter by Date Range",
+      "by_status": "Filter by Status"
+    },
+    "charts": {
+      "production_trend": "Production Trend",
+      "efficiency_trend": "Efficiency Trend",
+      "well_status_distribution": "Well Status Distribution",
+      "deferment_analysis": "Deferment Analysis"
+    },
+    "daily_total": "Daily Total",
+    "water_cut": "Water Cut (%)",
+    "gor": "Gas-Oil Ratio",
+    "uptime": "Uptime (Hours)",
+    "efficiency": "Efficiency (%)",
+    "production_target": "Production Target",
+    "actual_vs_target": "Actual vs Target"
+  }
+}

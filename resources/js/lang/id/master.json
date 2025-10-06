@@ -1,0 +1,119 @@
+{
+  "title": "Data Master",
+  "description": "Kelola data inti sistem termasuk kapal, kontrak, sumur, peralatan, dan personel",
+  "contracts_desc": "Manajemen kontrak dan pelacakan syarat komersial",
+  "vessels_desc": "Registri kapal dengan spesifikasi teknis dan kemampuan",
+  "wells_desc": "Data master sumur termasuk detail penyelesaian dan parameter produksi",
+  "equipment_desc": "Registri peralatan dengan jadwal pemeliharaan dan peringkat kritikalitas",
+  "personnel_desc": "Posisi personel dengan persyaratan sertifikasi dan tingkat pengalaman",
+  "fuel_types_desc": "Spesifikasi jenis bahan bakar dan persyaratan penyimpanan",
+  "chemicals_desc": "Inventaris kimia dengan data keselamatan dan informasi pemasok",
+  "vessels": {
+    "title": "Kapal",
+    "create": "Tambah Kapal",
+    "edit": "Edit Kapal",
+    "detail": "Detail Kapal",
+    "list": "Kapal",
+    "fields": {
+      "code": "Kode",
+      "name": "Nama",
+      "type": "Tipe",
+      "operator": "Operator",
+      "field_name": "Nama Lapangan",
+      "block_name": "Nama Blok",
+      "status": "Status"
+    },
+    "placeholders": {
+      "code": "Masukkan kode kapal",
+      "name": "Masukkan nama kapal",
+      "type": "Pilih tipe kapal",
+      "operator": "Masukkan nama operator",
+      "field_name": "Masukkan nama lapangan",
+      "block_name": "Masukkan nama blok",
+      "status": "Pilih status kapal"
+    }
+  },
+  "wells": {
+    "title": "Master Sumur",
+    "create": "Tambah Sumur Baru",
+    "edit": "Edit Sumur",
+    "detail": "Detail Sumur",
+    "fields": {
+      "vessel_id": "Kapal",
+      "code": "Kode Sumur",
+      "name": "Nama Sumur",
+      "max_oil_rate": "Laju Minyak Maksimal",
+      "max_gas_rate": "Laju Gas Maksimal",
+      "max_water_rate": "Laju Air Maksimal",
+      "type": "Tipe Sumur",
+      "status": "Status"
+    },
+    "placeholders": {
+      "vessel_id": "Pilih Kapal",
+      "code": "Masukkan Kode Sumur",
+      "name": "Masukkan Nama Sumur",
+      "max_oil_rate": "Masukkan Laju Minyak Maksimal",
+      "max_gas_rate": "Masukkan Laju Gas Maksimal",
+      "max_water_rate": "Masukkan Laju Air Maksimal",
+      "type": "Pilih Tipe Sumur",
+      "status": "Pilih Status"
+    },
+    "status": {
+      "active": "Aktif",
+      "shut_in": "Ditutup",
+      "abandoned": "Ditinggalkan",
+      "suspended": "Ditangguhkan",
+      "testing": "Pengujian",
+      "workover": "Workover"
+    }
+  },
+  "equipment": {
+    "title": "Registri Peralatan",
+    "create": "Tambah Peralatan",
+    "edit": "Edit Peralatan",
+    "detail": "Detail Peralatan",
+    "list": "Peralatan",
+    "type_category": "Tipe/Kategori",
+    "capacity": "Kapasitas",
+    "critical": "Kritis",
+    "critical_yes": "Kritis",
+    "critical_no": "Standar",
+    "fields": {
+      "vessel_id": "Kapal",
+      "code": "Kode Peralatan",
+      "tag": "Tag Peralatan",
+      "name": "Nama Peralatan",
+      "type": "Tipe",
+      "type_category": "Tipe/Kategori",
+      "category": "Kategori",
+      "sub_category": "Sub Kategori",
+      "manufacturer": "Pabrikan",
+      "model": "Model",
+      "serial_number": "Nomor Seri",
+      "installation_date": "Tanggal Instalasi",
+      "is_critical": "Peralatan Kritis",
+      "status": "Status"
+    },
+    "status": {
+      "running": "Berjalan",
+      "stopped": "Berhenti",
+      "standby": "Siaga",
+      "maintenance": "Pemeliharaan",
+      "out_of_service": "Tidak Beroperasi"
+    },
+    "type": {
+      "gas_turbine": "Turbin Gas",
+      "generator": "Generator",
+      "compressor": "Kompresor",
+      "pump": "Pompa",
+      "valve": "Katup",
+      "separator": "Separator",
+      "heat_exchanger": "Heat Exchanger",
+      "instrument": "Instrumen",
+      "electrical": "Elektrikal",
+      "structural": "Struktural",
+      "piping": "Perpipaan",
+      "other": "Lainnya"
+    }
+  }
+}

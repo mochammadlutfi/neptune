@@ -1,0 +1,28 @@
+// Element Plus dynamic theme integration
+:root {
+  // Override Element Plus CSS variables dengan theme variables
+  --el-font-family: var(--font-family);
+  --el-font-size-base: var(--font-size-base);
+  --el-border-radius-base: var(--radius);
+  --el-box-shadow: var(--shadow-default);
+  
+  // Apply spacing scale to Element Plus components
+  --el-component-size-large: calc(40px * var(--spacing-scale));
+  --el-component-size: calc(32px * var(--spacing-scale));
+  --el-component-size-small: calc(24px * var(--spacing-scale));
+  
+  // Element Plus color integration with dynamic theme
+  --el-color-primary: hsl(var(--primary));
+  --el-color-success: hsl(var(--success, 142 76% 36%));
+  --el-color-warning: hsl(var(--warning, 38 92% 50%));
+  --el-color-danger: hsl(var(--destructive));
+  --el-color-info: hsl(var(--info, 200 100% 80%));
+}
+
+// Dark mode Element Plus integration
+[data-theme="dark"] {
+  --el-bg-color: hsl(var(--background));
+  --el-text-color-primary: hsl(var(--foreground));
+  --el-border-color: hsl(var(--border));
+  --el-fill-color: hsl(var(--muted));
+}

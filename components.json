@@ -1,0 +1,18 @@
+{
+  "$schema": "https://shadcn-vue.com/schema.json",
+  "style": "new-york",
+  "typescript": false,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "resources/scss/base/_shadcn-variables.scss",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/Components",
+    "composables": "@/Composables",
+    "utils": "@/Plugins/utils",
+    "ui": "@/Components/ui",
+    "lib": "@/Plugins"
+  }
+}

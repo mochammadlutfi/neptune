@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  php:
+    build:
+      context: ./docker/php
+    container_name: neptune-php
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - APP_ENV=local
+    networks:
+      - neptune
+    depends_on:
+      - mysql
+      - redis
+    user: "${UID:-1000}:${GID:-1000}"
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: neptune-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html:rw
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - neptune
+    depends_on:
+      - php
+
+  mysql:
+    image: mysql:8.0
+    container_name: neptune-mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "${DB_DATABASE:-laravel}"
+    ports:
+      - "33060:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - neptune
+
+  redis:
+    image: redis:7-alpine
+    container_name: neptune-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - neptune
+
+  mailpit:
+    image: mailpit/mailpit:latest
+    container_name: neptune-mailpit
+    ports:
+      - "8025:8025" # UI
+      - "1025:1025" # SMTP
+    networks:
+      - neptune
+
+networks:
+  neptune: {}
+
+volumes:
+  mysql_data: {}

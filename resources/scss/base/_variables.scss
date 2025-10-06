@@ -1,0 +1,87 @@
+@use 'sass:color';
+
+$white:                     #fff !default;
+$gray-100:                  #f8f9fa !default;
+$gray-200:                  #e9ecef !default;
+$gray-300:                  #dee2e6 !default;
+$gray-400:                  #ced4da !default;
+$gray-500:                  #adb5bd !default;
+$gray-600:                  #6c757d !default;
+$gray-700:                  #495057 !default;
+$gray-800:                  #343a40 !default;
+$gray-900:                  #212529 !default;
+$black:                     #000 !default;
+
+// Base colors untuk SCSS (static values)
+$primary-static:            #C0282D !default; // blue-500
+$secondary-static:          #f1f5f9 !default; // slate-100
+$success-static:            #22c55e !default; // green-500
+$info-static:               #0ea5e9 !default; // sky-500
+$warning-static:            #eab308 !default; // yellow-500
+$danger-static:             #ef4444 !default; // red-500
+$light:                     #f0f2f5 !default;
+$dark:                      $gray-800 !default;
+
+// Colors yang akan digunakan di runtime (CSS variables)
+$primary:                   $primary-static !default;
+$secondary:                 $secondary-static !default;
+$success:                   $success-static !default;
+$info:                      $info-static !default;
+$warning:                   $warning-static !default;
+$danger:                    $danger-static !default;
+
+// Body
+$body-font-family:          'Poppins', 'sans-serif';
+$body-bg:                   $white !default;
+$body-color:                $gray-800 !default; 
+
+$body-bg-dark:              #0f172a !default; // slate-900
+$body-color-dark:           #f8fafc !default; // slate-50
+
+// Sidebar
+$sidebar-bg:                $white !default;
+$sidebar-width:             250px !default;
+$sidebar-mini-width:        80px !default;
+$sidebar-mini-nav-width:    46px !default;
+$side-overlay-width:        320px !default;
+$side-transition:           .26s cubic-bezier(0.470, 0.000, 0.745, 0.715) !default;
+
+$menu-item-color:           $gray-600;
+$menu-item-active-bg:       $primary-static !default;
+$menu-item-active-color:    $white;
+$menu-item-hover-bg:        color.scale($primary-static, $lightness: 90%) !default;
+$menu-item-hover-color:     $primary-static;
+
+$menu-item-padding-x:       15px;
+$menu-item-gap:             5px;
+
+$menu-link-padding-y:       10px;
+$menu-link-padding-x:       8px;
+
+$menu-link-item-gap:        10px;
+
+$menu-item-icon-size:       20px;
+$menu-item-font-size:       13px;
+
+// Header
+$header-height:             4.2rem;
+$header-bg:                 $white;
+$header-item-color:         $gray-800;
+
+// Z-index master list additions
+$zindex-fixed:              1000;
+$zindex-block-pinned:       $zindex-fixed + 1 !default;
+$zindex-sidebar:            $zindex-fixed + 2 !default;
+$zindex-page-overlay:       $zindex-fixed + 3 !default;
+$zindex-side-overlay:       $zindex-fixed + 4 !default;
+$zindex-block-fullscreen:   $zindex-fixed + 5 !default;
+
+// Space Layout
+$space-base:                1.75rem !default;
+$space-mobile:              .875rem !default;
+$space-side:                1.5rem !default;
+$space-row-gutter-tiny:     .375rem !default;
+$space-block:               1.625rem !default;
+$space-boxed:               1260px !default;
+$space-narrow:              92% !default;
+$space-main-max-width:      1920px !default;

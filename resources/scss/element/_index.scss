@@ -1,0 +1,76 @@
+@use "../base/variables" as *;
+
+// Element Plus colors menggunakan nilai statis yang kompatibel dengan SCSS
+$--colors: (
+  "primary": (
+    "base": $primary-static,
+  ),
+  "secondary": (
+    "base": $secondary-static,
+  ),
+  "success": (
+    "base": $success-static,
+  ),
+  "warning": (
+    "base": $warning-static,
+  ),
+  "danger": (
+    "base": $danger-static,
+  ),
+  "error": (
+    "base": $danger-static,
+  ),
+  "info": (
+    "base": $info-static,
+  ),
+);
+
+@forward "element-plus/theme-chalk/src/mixins/config.scss" with (
+  $namespace: "el"
+);
+
+// Create a new module that uses and extends Element Plus variables
+@use "element-plus/theme-chalk/src/common/var.scss" as element with (
+    $colors: $--colors,
+    $border-color: (
+        '': #e4e7ed,
+        'light': #ebeef5,
+        'lighter': #f2f6fc,
+        'extra-light': #fafcff,
+        'dark': #d4d7de,
+        'darker': #cdd0d6,
+    ),
+    $font-family: (
+        '': $body-font-family
+    ),
+    $box-shadow: (
+        '': 0 1px 2px 0 rgba(0, 0, 0, 0.05)
+    ),
+    $bg-color: (
+        '': #ffffff,
+        'page': #ffffff,
+        'overlay': #ffffff,
+    ),
+    $text-color: (
+        'primary': #303133,
+        'regular': #606266,
+        'secondary': #909399,
+        'placeholder': #a8abb2,
+        'disabled': #c0c4cc,
+    ),
+    $fill-color: (
+        '': #f0f2f5,
+        'light': #f5f7fa,
+        'lighter': #fafafa,
+        'extra-light': #fafcff,
+        'dark': #ebedf0,
+        'darker': #e6e8eb,
+        'blank': #ffffff,
+    )
+);
+@use "element-plus/theme-chalk/src/index.scss" as *;
+
+@forward "form";
+@forward "dark";
+@forward "custom-root";
+@forward "theme-integration";
