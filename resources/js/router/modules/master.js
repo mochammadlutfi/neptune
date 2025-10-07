@@ -131,48 +131,6 @@ export default [
                 ],
             },
             {
-                path: "personnel-positions",
-                meta: {
-                    title: "master.personnel_positions.title",
-                },
-                children: [
-                    {
-                        path: "",
-                        name: "master.personnel_positions.index",
-                        component: () => import("../../pages/Master/PersonnelPositions/Index.vue"),
-                        meta: {
-                            title: "master.personnel_positions.title",
-                            hideBreadcrumb: true
-                        }
-                    },
-                    {
-                        path: "create",
-                        name: "master.personnel_positions.create",
-                        component: () => import("../../pages/Master/PersonnelPositions/Form.vue"),
-                        meta: {
-                            title: "master.personnel_positions.create",
-                        }
-                    },
-                    {
-                        path: ":id",
-                        name: "master.personnel_positions.show",
-                        component: () =>
-                            import("../../pages/Master/PersonnelPositions/Show.vue"),
-                        meta: {
-                            title: "master.personnel_positions.detail",
-                        }
-                    },
-                    {
-                        path: ":id/edit",
-                        name: "master.personnel_positions.edit",
-                        component: () => import("../../pages/Master/PersonnelPositions/Form.vue"),
-                        meta: {
-                            title: "master.personnel_positions.edit",
-                        }
-                    },
-                ],
-            },
-            {
                 path: "chemicals",
                 meta: {
                     title: "master.chemicals.title",
@@ -255,49 +213,6 @@ export default [
                         }
                     },
                 ],
-            },
-            // Fuel Types Management
-            {
-                path: "fuel-types",
-                children: [
-                    {
-                        path: "",
-                        name: "master.fuel_types.index",
-                        component: () => import("../../pages/Master/FuelTypes/Index.vue"),
-                        meta: {
-                            requiredAuth: false,
-                            title: "master.fuel_types.title",
-                            hideBreadcrumb: true
-                        }
-                    },
-                    {
-                        path: "create",
-                        name: "master.fuel_types.create",
-                        component: () => import("../../pages/Master/FuelTypes/Form.vue"),
-                        meta: {
-                            requiredAuth: false,
-                            title: "master.fuel_types.create",
-                        }
-                    },
-                    {
-                        path: ":id",
-                        name: "master.fuel_types.show",
-                        component: () => import("../../pages/Master/FuelTypes/Show.vue"),
-                        meta: {
-                            requiredAuth: false,
-                            title: "master.fuel_types.detail"
-                        }
-                    },
-                    {
-                        path: ":id/edit",
-                        name: "master.fuel_types.edit",
-                        component: () => import("../../pages/Master/FuelTypes/Form.vue"),
-                        meta: {
-                            requiredAuth: false,
-                            title: "master.fuel_types.edit"
-                        }
-                    },
-                ]
             },
             {
                 path: "gas-buyer",

@@ -1,6 +1,4 @@
 import SettingSystem from '../pages/Settings/System/Index.vue';
-import SystemLanguage from '../pages/Settings/System/Languages/Index.vue';
-import SystemLanguageForm from '../pages/Settings/System/Languages/Index.vue';
 
 export default [{
     path: '/settings/',
@@ -33,24 +31,6 @@ export default [{
                     meta: {
                         title: 'settings.system.email.title',
                         breadcrumb: 'settings.system.email.title'
-                    }
-                },
-                {
-                    path: 'appearance',
-                    name: 'settings.system.appearance',
-                    component: () => import("../pages/Settings/System/Appearance.vue"),
-                    meta: {
-                        title: 'base.appearance_settings',
-                        breadcrumb: 'base.appearance_settings'
-                    }
-                },
-                {
-                    path: 'update',
-                    name: 'settings.system.update',
-                    component: () => import("../pages/Settings/System/Update.vue"),
-                    meta: {
-                        title: 'base.system_update',
-                        breadcrumb: 'base.system_update'
                     }
                 }
             ]

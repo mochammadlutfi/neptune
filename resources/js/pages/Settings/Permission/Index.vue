@@ -86,15 +86,10 @@
             </el-skeleton>
 
             <!-- Pagination -->
-            <Pagination
-                :current-page="params.page"
-                :page-size="params.limit"
-                :total-results="data?.total || 0"
-                :from="data?.from || 0"
+            <Pagination :current-page="data?.current_page || 1" :per-page="data?.per_page || 25"
+                :total="data?.total || 0" :last-page="data?.last_page || 1" :from="data?.from || 0"
                 :to="data?.to || 0"
-                @update:page-size="(size) => { params.limit = size; changePage(1) }"
-                @page-change="changePage"
-            />
+                @page-change="handlePageChange" @per-page-change="handlePerPageChange" />
         </el-card>
     </div>
 </template>
@@ -200,9 +195,15 @@ const sortChange = (sortObj) => {
     refetch();
 };
 
-const changePage = (newPage) => {
-    params.value.page = newPage;
-    refetch();
+const handlePageChange = (page) => {
+  params.value.page = page;
+  refetch();
+};
+
+const handlePerPageChange = (perPage) => {
+  params.value.limit = perPage;
+  params.value.page = 1;
+  refetch();
 };
 
 const onSelectionChange = (selection) => {

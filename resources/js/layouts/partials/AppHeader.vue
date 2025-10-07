@@ -89,13 +89,6 @@ const handleVesselUpdated = (vesselId) => {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Icon icon="lucide:sparkles" />
-              Upgrade to Pro
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
             <DropdownMenuItem as-child class="cursor-pointer">
               <router-link to="/profile" @click="setOpenMobile(false)">
                 <Icon icon="lucide:badge-check" />

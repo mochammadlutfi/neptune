@@ -11,7 +11,6 @@ import ProfileDevice from "../pages/Profile/Device.vue";
 import SettingRoutes from "../router/settings";
 import DashboardRoutes from "../router/dashboard";
 import MasterRoutes from "../router/modules/master";
-import EquipmentRoutes from "../router/modules/equipment";
 import ProductionRoutes from "../router/modules/production";
 // import ReportRoutes from "../router/modules/report";
 // import MaintenanceRoutes from '../router/modules/maintenance';
@@ -83,8 +82,7 @@ const router = createRouter({
         ...SettingRoutes,
         ...DashboardRoutes,
         ...MasterRoutes,
-        ...EquipmentRoutes,
-        ...ProductionRoutes,
+        // ...ProductionRoutes,
         // ...ReportRoutes,
         // ...MaintenanceRoutes,
         // ...FlareRoutes,

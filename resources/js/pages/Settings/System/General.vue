@@ -187,14 +187,14 @@ import { useI18n } from 'vue-i18n';
 import PageHeader from '@/components/PageHeader.vue';
 import { ElMessage } from 'element-plus';
 import { convertToFormData } from '@/utils/utility';
-import { useAppBaseStore } from '@/stores/base';
+import { useSetting } from '@/composables/common/useSetting';
 
 const { t } = useI18n();
 const formRef = ref(null);
 const formLoading = ref(false);
-const appBase = useAppBaseStore();
+const appSetting = useSetting();
 
-const app = computed(() => appBase.app);
+const app = computed(() => appSetting.app);
 
 // Form data dengan nilai default menggunakan reactive
 const form = reactive({
