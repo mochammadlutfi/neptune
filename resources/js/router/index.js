@@ -82,7 +82,7 @@ const router = createRouter({
         ...SettingRoutes,
         ...DashboardRoutes,
         ...MasterRoutes,
-        // ...ProductionRoutes,
+        ...ProductionRoutes,
         // ...ReportRoutes,
         // ...MaintenanceRoutes,
         // ...FlareRoutes,

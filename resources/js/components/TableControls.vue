@@ -28,8 +28,7 @@
                     <div class="flex-1 max-w-xs">
                         <el-input 
                             :disabled="loading" 
-                            :model-value="searchValue"
-                            @input="$emit('update:search', $event)"
+                            v-model="innerSearch"
                             :placeholder="searchPlaceholder"
                             clearable
                             class="w-full"
@@ -139,11 +138,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
 import { useFormatter } from '@/composables/common/useFormatter'
 import DropdownFilter from '@/components/DropdownFilter.vue'
+import debounce from 'lodash/debounce'
 
 const { t } = useI18n()
 const { formatNumber } = useFormatter()
@@ -166,7 +166,7 @@ const props = defineProps({
         default: false
     },
     // FilterSection props
-    searchValue: {
+    search: {
         type: String,
         default: ''
     },
@@ -193,6 +193,11 @@ const props = defineProps({
     defaultShowAdvanced: {
         type: Boolean,
         default: false
+    },
+    // Debounce duration for debounced search event
+    searchDebounce: {
+        type: Number,
+        default: 1000
     }
 })
 
@@ -203,6 +208,7 @@ const emit = defineEmits([
     'bulk-delete',
     // FilterSection emits
     'update:search',
+    'search',
     'quick-filter',
     'apply-filters',
     'clear-filters',
@@ -216,6 +222,20 @@ const showAdvancedFilters = ref(props.defaultShowAdvanced)
 // Computed properties from FilterSection
 const activeFiltersCount = computed(() => {
     return props.activeFilters ? props.activeFilters.length : 0
+})
+
+// Local search state with debounced emission
+const innerSearch = ref(props.search)
+
+watch(() => props.search, (val) => {
+    innerSearch.value = val
+})
+
+const emitDebounced = debounce((val) => emit('search', val), props.searchDebounce)
+
+watch(innerSearch, (val) => {
+    emit('update:search', val)
+    emitDebounced(val)
 })
 </script>
 

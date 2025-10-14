@@ -15,10 +15,11 @@ class SalesGasNomination extends Model
 
     protected $fillable = [
         'vessel_id',
+        'name',
         'date',
         'nomination',
         'confirmed_at',
-        'recorded_by',
+        'created_uid',
     ];
 
     protected $casts = [
@@ -26,15 +27,13 @@ class SalesGasNomination extends Model
         'confirmed_at' => 'datetime',
     ];
 
+    protected $appends = ['status_label'];
+
     public function vessel()
     {
         return $this->belongsTo(Vessel::class, 'vessel_id');
     }
 
-    public function recordedBy()
-    {
-        return $this->belongsTo(User::class, 'recorded_by');
-    }
 
     public function lines()
     {

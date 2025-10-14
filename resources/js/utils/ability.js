@@ -11,7 +11,6 @@ export const updateAbility = (ability, permissions) => {
             action,
             subject: subject.charAt(0) + subject.slice(1),
         };
-    });
-    console.log(rules);
+    }); 
     ability.update(rules);
 };

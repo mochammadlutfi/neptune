@@ -9,9 +9,15 @@
 
         <el-card body-class="!p-0" class="!rounded-lg !shadow-md">
             <!-- Advanced Filter Section -->
-            <TableControls v-model:search="params.q" :search-placeholder="$t('common.actions.search')"
-                :loading="isLoading" :selected-rows="selectedRows" @refresh="refetch" @bulk-export="bulkExport"
-                @bulk-delete="bulkDelete" />
+            <TableControls :search="params.q" 
+            :search-debounce="1500"
+            :search-placeholder="$t('common.actions.search')"
+            :loading="isLoading" 
+            :selected-rows="selectedRows" 
+            @refresh="refetch" 
+            @bulk-export="bulkExport"
+            @bulk-delete="bulkDelete"
+            @search="onSearch"/>
 
             <!-- Content Area -->
             <el-skeleton :loading="isLoading" animated>
@@ -23,6 +29,19 @@
                         <el-table class="base-table" :data="data?.data || []" @sort-change="sortChange"
                             @selection-change="handleSelectionChange" row-key="id" stripe>
                             <el-table-column type="selection" width="50" align="center" />
+                            <el-table-column prop="vessel.name" :label="$t('master.gas_buyer.fields.vessel_id')" sortable>
+                                <template #default="scope">
+                                    <div class="flex items-center space-x-2">
+                                        <el-icon class="text-blue-600">
+                                            <Icon icon="fluent:vehicle-ship-24-filled"/>
+                                        </el-icon>
+                                        <router-link :to="`/master/vessels/${scope.row.vessel.id}`"
+                                            class="font-medium text-blue-600 hover:underline">
+                                            {{ scope.row.vessel.name }}
+                                        </router-link>
+                                    </div>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="code" label="Code" width="160" sortable
                                 fixed="left">
                                 <template #default="scope">
@@ -47,15 +66,28 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column label="Actions" align="center" width="120"
+                            <el-table-column :label="$t('common.actions.action', 2)" align="center" width="120"
                                 fixed="right">
-                                <template #default="{row}">
-                                    <el-button circle class="!p-0 !m-0" @click="onEdit(row)" v-if="can('update', 'gas_buyer')">
-                                        <Icon icon="mingcute:edit-line" />
-                                    </el-button>
-                                    <el-button circle class="!p-0 !m-0" type="danger" @click="onDelete(row)" v-if="can('delete', 'gas_buyer')">
-                                        <Icon icon="mingcute:delete-2-line" />
-                                    </el-button>
+                                <template #default="scope">
+                                    <el-dropdown popper-class="dropdown-action" placement="bottom-end" trigger="click">
+                                        <el-button circle class="!p-0 !m-0">
+                                            <Icon icon="mingcute:more-2-fill" />
+                                        </el-button>
+                                        <template #dropdown>
+                                            <el-dropdown-menu>
+                                                <el-dropdown-item @click="onEdit(scope.row)"
+                                                    v-if="can('update', 'master-gas_buyer')">
+                                                    <Icon icon="mingcute:edit-line" class="me-2" />
+                                                    {{ $t('common.actions.edit') }}
+                                                </el-dropdown-item>
+                                                <el-dropdown-item divided class="text-red-600"
+                                                    @click="onDelete(scope.row)" v-if="can('delete', 'master-gas_buyer')">
+                                                    <Icon icon="mingcute:delete-2-line" class="me-2" />
+                                                    {{ $t('common.actions.delete') }}
+                                                </el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </template>
+                                    </el-dropdown>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -78,7 +110,6 @@
             class="!sm:w-full !w-1/3 !rounded-xl p-0"
             header-class="border-b-2 el-dialog__header p-4"
             body-class="p-4"
-            v-loading="formLoading"
         >
             <template #header>
                 <div class="flex items-center gap-3">
@@ -88,21 +119,21 @@
                 </div>
             </template>
             
-            <el-form :model="form" ref="formRef" :rules="formRules" label-position="top" @submit.prevent="onSubmit" class="space-y-4">
-                <div class="grid grid-cols-1gap-4">
-                    <el-form-item :label="$t('master.gas_buyer.fields.vessel_id')" prop="vessel_id">
+            <el-form v-loading="formLoading" :model="form" ref="formRef" :rules="formRules" label-position="top" @submit.prevent="onSubmit" class="space-y-4">
+                <div class="grid grid-cols-1 gap-4">
+                    <el-form-item :label="$t('master.gas_buyer.fields.vessel_id')" prop="vessel_id" :error="serverErrors.vessel_id">
                         <SelectVessel v-model="form.vessel_id" :placeholder="$t('master.gas_buyer.fields.vessel_id')" />
                     </el-form-item>
 
-                    <el-form-item :label="$t('master.gas_buyer.fields.code')" prop="code">
+                    <el-form-item :label="$t('master.gas_buyer.fields.code')" prop="code" :error="serverErrors.code">
                         <el-input v-model="form.code" :placeholder="$t('master.gas_buyer.fields.code')" />
                     </el-form-item>
                     
-                    <el-form-item :label="$t('master.gas_buyer.fields.name')" prop="name">
+                    <el-form-item :label="$t('master.gas_buyer.fields.name')" prop="name" :error="serverErrors.name">
                         <el-input v-model="form.name" :placeholder="$t('master.gas_buyer.fields.name')" />
                     </el-form-item>
                     
-                    <el-form-item :label="$t('master.gas_buyer.fields.is_active')" prop="is_active">
+                    <el-form-item :label="$t('master.gas_buyer.fields.is_active')" prop="is_active" :error="serverErrors.is_active">
                         <el-switch
                             v-model="form.is_active"
                             :active-text="$t('master.gas_buyer.status.active')"
@@ -127,7 +158,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted } from 'vue';
+import { ref, reactive, watch, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { Icon } from '@iconify/vue';
@@ -157,6 +188,7 @@ const viewMode = ref('table');
 const selectedRows = ref([]);
 const isLoadingStats = ref(false);
 const stats = ref({});
+const { userVesselId } = useUser();
 
 
 // Form
@@ -166,11 +198,18 @@ const formLoading = ref(false);
 const formRef = ref(null);
 const form = reactive({
     id : null,
-    vessel_id : null,
+    vessel_id : userVesselId,
     name: '',
     code : '',
     is_active : true,
 });
+// Server-side validation errors holder
+const serverErrors = reactive({});
+const clearServerErrors = () => {
+  Object.keys(serverErrors).forEach(key => {
+    delete serverErrors[key];
+  });
+};
 
 // Form validation rules
 const formRules = {
@@ -191,9 +230,8 @@ const params = ref({
   sortDir: 'asc',
   name: null,
   code: null,
-  type: null,
+  vessel_id: userVesselId,
 });
-
 const fetchData = async ({ queryKey }) => {
   const [_key, queryParams] = queryKey;
   const response = await axios.get("/master/gas-buyer", {
@@ -203,7 +241,7 @@ const fetchData = async ({ queryKey }) => {
 };
 
 const { data, isLoading, isError, error, refetch } = useQuery({
-  queryKey: ['MasterIndexChemicals', params.value],
+  queryKey: computed(() => ['MasterIndexGasBuyer', params.value]),
   queryFn: fetchData,
   keepPreviousData: true,
 });
@@ -238,26 +276,27 @@ const onSubmit = async () => {
             message: t('common.messages.saved'),
             type: 'success',
         })
+        clearServerErrors();
+        formRef.value.clearValidate();
         formShow.value = false;
         refetch();
     }
   } catch (error) {
-    console.log(error.value)
-    if (error.status === 422) {
-        const errors = error.response.data.errors
-        let errorMessage = t('common.errors.validation_failed')
+    // console.log('ini error',error.validation)
+    const status = error?.status || error?.response?.status;
+    const validation = error?.validation || error?.response?.data?.errors;
+    if (status === 422) {
+        const errors = validation
         
-        if (errors) {
-            const firstError = Object.values(errors)[0]
-            if (firstError && firstError[0]) {
-                errorMessage = firstError[0]
+        if (errors && typeof errors === 'object') {
+          Object.keys(errors).forEach(key => {
+            const msg = Array.isArray(errors[key]) ? errors[key][0] : errors[key];
+            serverErrors[key] = msg;
+            if (formRef.value?.scrollToField) {
+              formRef.value.scrollToField(key);
             }
+          });
         }
-        
-        ElMessage({
-            message: errorMessage,
-            type: 'error',
-        })
     } else {
         ElMessage({
             message: t('common.errors.server_error'),
@@ -273,14 +312,16 @@ const onCancel = () => {
   formShow.value = false;
   if (formRef.value) {
     formRef.value.resetFields();
+    clearServerErrors();
+    formRef.value.clearValidate();
   }
 };
 
-const doSearch = _.debounce(() => {
+const onSearch = (val) => {
+  params.value.q = val;
   params.value.page = 1;
   refetch();
-}, 1000);
-
+};
 const sortChange = (sortObj) => {
   params.value.sort = sortObj.prop;
   params.value.sortDir = sortObj.order === 'ascending' ? 'asc' : 'desc';
@@ -301,32 +342,6 @@ const handlePerPageChange = (perPage) => {
 const handleSelectionChange = (selection) => {
   selectedRows.value = selection;
 };
-
-const getChemicalTypeTagType = (type) => {
-  const typeMap = {
-    'Drilling Fluid': 'primary',
-    'Production Chemical': 'success',
-    'Completion Fluid': 'warning',
-    'Stimulation Chemical': 'info',
-    'Corrosion Inhibitor': 'danger',
-    'Scale Inhibitor': '',
-    'Biocide': 'primary',
-    'Demulsifier': 'success'
-  };
-  return typeMap[type] || '';
-};
-
-const getStockStatusTagType = (status) => {
-  const statusMap = {
-    'In Stock': 'success',
-    'Low Stock': 'warning',
-    'Out of Stock': 'danger',
-    'On Order': 'info',
-    'Discontinued': ''
-  };
-  return statusMap[status] || '';
-};
-
 const bulkExport = (rows) => {
   ElMessage.info(t('common.messages.feature_unavailable'));
 };
@@ -350,7 +365,13 @@ const onView = (row) => {
 };
 
 const onEdit = (row) => {
-  router.push({ name: 'master.gas_buyer.edit', params: { id: row.id } });
+    formShow.value = true;
+    formTitle.value = t('master.gas_buyer.edit');
+    form.id = row.id;
+    form.vessel_id = row.vessel_id;
+    form.name = row.name;
+    form.code = row.code;
+    form.is_active = row.is_active;
 };
 
 const onDelete = async (row) => {
@@ -365,7 +386,7 @@ const onDelete = async (row) => {
           }
       );
 
-      await axios.delete(`/master/gas-buyer/${row.id}`);
+      await axios.delete(`/master/gas-buyer/${row.id}/delete`);
       ElMessage.success(t('common.success.item_deleted'));
       refetch();
   } catch (error) {
@@ -374,11 +395,6 @@ const onDelete = async (row) => {
       }
   }
 };
-
-// Watchers
-watch(() => params.value.q, () => {
-  doSearch();
-});
 
 // Lifecycle
 onMounted(() => {

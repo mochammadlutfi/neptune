@@ -1,5 +1,5 @@
 <template>
-  <div class="vessel-dropdown">
+  <div class="w-full">
     <DropdownMenu>
       <DropdownMenuTrigger as-child>
         <button
@@ -14,7 +14,7 @@
           <ChevronDownIcon class="h-4 w-4 opacity-50" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent class="w-[200px]">
+      <DropdownMenuContent class="w-[250px]">
         <DropdownMenuItem
           v-for="vessel in userVessels"
           :key="vessel.id || 'all'"
@@ -42,6 +42,7 @@
 
 <script setup>
 import { computed, watch, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useUser } from '@/composables/auth'
 import {
   DropdownMenu,
@@ -90,11 +91,10 @@ const emit = defineEmits([
 
 const userStore = useUser()
 
-// Akses reactive properties langsung dari store
-const userCurrentVessel = computed(() => userStore.userCurrentVessel)
-const userVessels = computed(() => userStore.userVessels)
-const updateVessel = userStore.updateVessel
-const isLoading = computed(() => userStore.isLoading)
+// Ambil refs reaktif dari store untuk menghindari auto-unwrapping
+const { userCurrentVessel, userVessels, isLoading } = storeToRefs(userStore)
+// Methods tetap diambil langsung dari store
+const { updateVessel } = userStore
 
 // Computed
 const loading = computed(() => {
@@ -115,7 +115,9 @@ const handleVesselChange = async (vesselId) => {
     
     if (success) {
       emit('updated', vesselId)
-      console.log('Vessel berhasil diupdate:', userCurrentVessel.value)
+      // Reload browser setelah vessel berhasil diupdate
+      window.location.reload()
+      // console.log('Vessel berhasil diupdate:', userCurrentVessel.value)
     } else {
       console.error('Gagal update vessel')
     }
@@ -144,32 +146,3 @@ onMounted(() => {
 })
 
 </script>
-
-<style scoped>
-.vessel-dropdown {
-  @apply w-full;
-}
-
-.vessel-name {
-  @apply font-medium;
-}
-
-.vessel-code {
-  @apply text-xs opacity-75;
-}
-
-/* Responsive design untuk mobile */
-@media (max-width: 640px) {
-  .vessel-dropdown {
-    @apply text-sm;
-  }
-  
-  .vessel-name {
-    @apply text-sm;
-  }
-  
-  .vessel-code {
-    @apply text-xs;
-  }
-}
-</style>

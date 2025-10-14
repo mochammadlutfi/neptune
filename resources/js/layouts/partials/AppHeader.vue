@@ -53,11 +53,7 @@ const handleVesselUpdated = (vesselId) => {
     </div>
     <div class="ml-auto flex items-center gap-3">
       <!-- Vessel Selector -->
-      <DropdownVessel 
-        @change="handleVesselChange"
-        @updated="handleVesselUpdated"
-        size="default"
-      />
+      <DropdownVessel/>
       
       <!-- User Dropdown -->
       <DropdownMenu>

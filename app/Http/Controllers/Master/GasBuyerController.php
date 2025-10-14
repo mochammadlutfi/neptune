@@ -22,29 +22,27 @@ class GasBuyerController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = GasBuyer::query();
+        $query = GasBuyer::with('vessel');
 
         // Apply filters
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
-        }
-
         if ($request->filled('is_active')) {
             $query->where('is_active', $request->is_active);
         }
 
+        if ($request->filled('vessel_id')) {
+            $query->byVessel($request->vessel_id);
+        }
         // Search functionality
         if ($request->filled('q')) {
             $search = $request->q;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', '%' . $search . '%')
-                  ->orWhere('code', 'LIKE', '%' . $search . '%')
-                  ->orWhere('type', 'LIKE', '%' . $search . '%');
+                  ->orWhere('code', 'LIKE', '%' . $search . '%');
             });
         }
 
         // Sorting dengan validasi kolom yang diizinkan
-        $allowedSorts = ['code', 'name', 'type', 'grade', 'is_active', 'created_at'];
+        $allowedSorts = ['code', 'name', 'is_active', 'created_at'];
         $sort = $request->get('sort', 'created_at');
         $sortDir = $request->get('sortDir', 'desc');
         

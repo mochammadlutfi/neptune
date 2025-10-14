@@ -6,10 +6,8 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Repositories\Settings\UserRepositoryInterface;
 use App\Repositories\Settings\UserRepository;
-use App\Models\Production\WellProduction;
-use App\Models\Production\GasSalesMetering;
-use App\Observers\WellProductionObserver;
-use App\Observers\GasSalesMeteringObserver;
+use App\Models\Production\SalesGasMeteringHourly;
+use App\Observers\SalesGasMeteringHourlyObserver;
 
 
 class AppServiceProvider extends ServiceProvider

@@ -1,8 +1,8 @@
 <template>
     <div class="content">
         <!-- Modern Page Header -->
-        <PageHeader :title="$t('production.fpu.title')" :primary-action="{
-            label: $t('production.fpu.create'),
+        <PageHeader :title="$t('production.operation.title')" :primary-action="{
+            label: $t('production.operation.create'),
             icon: 'mingcute:add-line',
             click: onCreate
         }" />
@@ -15,7 +15,7 @@
                 <template #filters>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.fpu.fields.shift')
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.operation.fields.shift')
                                 }}</label>
                             <el-select v-model="advancedFilters.shift"
                                 :placeholder="$t('common.select.placeholder')" clearable class="w-full">
@@ -24,7 +24,7 @@
                             </el-select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.fpu.fields.data_quality')
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.operation.fields.data_quality')
                                 }}</label>
                             <el-select v-model="advancedFilters.data_quality" :placeholder="$t('common.select.placeholder')"
                                 clearable class="w-full">
@@ -48,7 +48,7 @@
                             @selection-change="handleSelectionChange" row-key="id" stripe>
                             <el-table-column type="selection" width="50" align="center" />
 
-                            <el-table-column prop="reading_datetime" :label="$t('production.fpu.fields.reading_datetime')" sortable
+                            <el-table-column prop="reading_datetime" :label="$t('production.operation.fields.reading_datetime')" sortable
                                 width="150" fixed="left">
                                 <template #default="scope">
                                     <div>
@@ -56,13 +56,13 @@
                                     </div>
                                     <div>
                                         <el-tag :type="scope.row.shift === 'Day' ? 'warning' : 'info'" size="small">
-                                            {{ $t(`production.fpu.shifts.${scope.row.shift?.toLowerCase()}`) }}
+                                            {{ $t(`production.operation.shifts.${scope.row.shift?.toLowerCase()}`) }}
                                         </el-tag>
                                     </div>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="well.name" :label="$t('production.fpu.fields.well_id')" sortable
+                            <el-table-column prop="well.name" :label="$t('production.operation.fields.well_id')" sortable
                                 min-width="200" show-overflow-tooltip>
                                 <template #default="scope">
                                     <div class="flex items-center space-x-2">
@@ -77,49 +77,49 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="oil_rate_bph" :label="$t('production.fpu.fields.oil_rate')" sortable
+                            <el-table-column prop="oil_rate_bph" :label="$t('production.operation.fields.oil_rate')" sortable
                                 width="120" align="right">
                                 <template #default="scope">
                                     <span class="font-mono">{{ formatNumber(scope.row.oil_rate_bph, 2) }}</span>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="gas_rate_mscfh" :label="$t('production.fpu.fields.gas_rate')" sortable
+                            <el-table-column prop="gas_rate_mscfh" :label="$t('production.operation.fields.gas_rate')" sortable
                                 width="130" align="right">
                                 <template #default="scope">
                                     <span class="font-mono">{{ formatNumber(scope.row.gas_rate_mscfh, 3) }}</span>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="water_rate_bph" :label="$t('production.fpu.fields.water_rate')" sortable
+                            <el-table-column prop="water_rate_bph" :label="$t('production.operation.fields.water_rate')" sortable
                                 width="130" align="right">
                                 <template #default="scope">
                                     <span class="font-mono">{{ formatNumber(scope.row.water_rate_bph, 2) }}</span>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="wellhead_pressure_psi" :label="$t('production.fpu.fields.wellhead_pressure')" sortable
+                            <el-table-column prop="wellhead_pressure_psi" :label="$t('production.operation.fields.wellhead_pressure')" sortable
                                 width="170" align="right">
                                 <template #default="scope">
                                     <span class="font-mono">{{ formatNumber(scope.row.wellhead_pressure_psi, 2) }}</span>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="wellhead_temperature_f" :label="$t('production.fpu.fields.wellhead_temperature')" sortable
+                            <el-table-column prop="wellhead_temperature_f" :label="$t('production.operation.fields.wellhead_temperature')" sortable
                                 width="170" align="right">
                                 <template #default="scope">
                                     <span class="font-mono">{{ formatNumber(scope.row.wellhead_temperature_f, 2) }}</span>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="choke_size_64th" :label="$t('production.fpu.fields.choke_size')" sortable
+                            <el-table-column prop="choke_size_64th" :label="$t('production.operation.fields.choke_size')" sortable
                                 width="110" align="right">
                                 <template #default="scope">
                                     <span class="font-mono">{{ scope.row.choke_size_64th || '-' }}</span>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="flow_hours" :label="$t('production.fpu.fields.flow_hours')" sortable
+                            <el-table-column prop="flow_hours" :label="$t('production.operation.fields.flow_hours')" sortable
                                 width="100" align="right">
                                 <template #default="scope">
                                     <span class="font-mono">{{ formatNumber(scope.row.flow_hours, 2) }}</span>
@@ -215,14 +215,14 @@ const activeFilters = computed(() => {
   if (advancedFilters.value.shift) {
       filters.push({
           key: 'shift',
-          label: t('production.fpu.fields.shift'),
+          label: t('production.operation.fields.shift'),
           value: advancedFilters.value.shift
       });
   }
   if (advancedFilters.value.data_quality) {
       filters.push({
           key: 'data_quality',
-          label: t('production.fpu.fields.data_quality'),
+          label: t('production.operation.fields.data_quality'),
           value: advancedFilters.value.data_quality
       });
   }
@@ -281,7 +281,7 @@ const { data, isLoading, isError, error, refetch } = useQuery({
 
 // Event handlers
 const onCreate = () => {
-  router.push({ name: 'production.fpu.create' });
+  router.push({ name: 'production.operation.create' });
 };
 
 const doSearch = _.debounce(() => {
@@ -344,11 +344,11 @@ const removeFilter = (filterKey) => {
 };
 
 const onView = (row) => {
-  router.push({ name: 'production.fpu.show', params: { id: row.id } });
+  router.push({ name: 'production.operation.show', params: { id: row.id } });
 };
 
 const onEdit = (row) => {
-  router.push({ name: 'production.fpu.edit', params: { id: row.id } });
+  router.push({ name: 'production.operation.edit', params: { id: row.id } });
 };
 
 const onDelete = async (row) => {

@@ -34,12 +34,6 @@ class WellRequest extends FormRequest
                 Rule::unique('wells', 'code')->ignore($wellId)
             ],
             'name' => 'required|string|max:100',
-            'type' => 'required',
-            'max_oil_rate' => 'required|numeric|min:0',
-            'max_gas_rate' => 'required|numeric|min:0',
-            'max_water_rate' => 'required|numeric|min:0',
-            // Status
-            'status' => 'required',
         ];
     }
 

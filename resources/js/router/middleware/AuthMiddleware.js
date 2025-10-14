@@ -1,5 +1,9 @@
 import Cookies from 'js-cookie';
 
+// Flag untuk memastikan validasi profil hanya dilakukan sekali
+let hasValidatedProfile = false;
+let profileValidationPromise = null;
+
 // Counter untuk mencegah infinite loop
 let redirectCount = 0;
 const MAX_REDIRECTS = 3;
@@ -13,7 +17,7 @@ const MAX_REDIRECTS = 3;
 export default async (to, from, next) => {
 	// Cek apakah sudah terlalu banyak redirect untuk mencegah infinite loop
 	if (redirectCount >= MAX_REDIRECTS) {
-		console.error('Too many redirects detected, forcing clear auth state')
+		// console.error('Too many redirects detected, forcing clear auth state')
 		// Force clear semua auth state
 		Cookies.remove('token')
 		Cookies.remove('token', { path: '/' })
@@ -33,31 +37,52 @@ export default async (to, from, next) => {
 	// Jika ada token, cek apakah masih valid dengan quick API call
 	let isLoggedIn = false
 	if (cookieToken) {
+		// Pastikan header Authorization terpasang sebelum panggil composable
+		if (window.axios) {
+			window.axios.defaults.headers.common['Authorization'] = `Bearer ${cookieToken}`
+		}
+
+		// Gunakan composable useUser agar hanya satu panggilan ke /api/profile
 		try {
-			// Quick validation dengan endpoint yang ringan
-			const response = await window.axios.get('/profile', {
-				headers: { 'Authorization': `Bearer ${cookieToken}` },
-				timeout: 3000 // 3 detik timeout
-			})
-			isLoggedIn = response.status === 200
-			// Reset counter jika berhasil validasi
-			redirectCount = 0
-		} catch (error) {
-			// Jika error 401 atau timeout, token tidak valid
-			if (error.response?.status === 401) {
-				console.log('Token expired detected in AuthMiddleware, clearing cookie')
-				// Hapus cookie yang expired
-				Cookies.remove('token')
-				Cookies.remove('token', { path: '/' })
-				Cookies.remove('token', { path: '', domain: window.location.hostname })
-				
-				// Clear axios headers
-				if (window.axios) {
-					delete window.axios.defaults.headers.common['Authorization']
+			const { useUser } = await import('@/composables/auth/useUser')
+			const userStore = useUser()
+
+			// Jika user sudah ada di store, anggap sudah login tanpa panggilan API
+			if (userStore.user) {
+				isLoggedIn = true
+				redirectCount = 0
+			} else if (!hasValidatedProfile) {
+				// Lakukan validasi profil hanya sekali
+				if (!profileValidationPromise) {
+					profileValidationPromise = userStore.getUser()
 				}
-				// Increment redirect counter
-				redirectCount++
+				try {
+					await profileValidationPromise
+					isLoggedIn = !!userStore.user
+					redirectCount = 0
+				} catch (error) {
+					// Jika error 401, bersihkan token dan header
+					if (error.status === 401 || error.response?.status === 401) {
+						console.log('Token expired detected in AuthMiddleware, clearing cookie')
+						Cookies.remove('token')
+						Cookies.remove('token', { path: '/' })
+						Cookies.remove('token', { path: '', domain: window.location.hostname })
+						if (window.axios) {
+							delete window.axios.defaults.headers.common['Authorization']
+						}
+						redirectCount++
+					}
+					isLoggedIn = false
+				} finally {
+					hasValidatedProfile = true
+					profileValidationPromise = null
+				}
+			} else {
+				// Sudah divalidasi sebelumnya, jangan panggil API lagi
+				isLoggedIn = !!userStore.user
 			}
+		} catch (importError) {
+			console.warn('Failed to import useUser store for auth validation:', importError)
 			isLoggedIn = false
 		}
 	} else {

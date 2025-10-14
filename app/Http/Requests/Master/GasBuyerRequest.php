@@ -23,6 +23,7 @@ class GasBuyerRequest extends FormRequest
         $id = $this->route('id') ? $this->route('id') : null;
         
         return [
+            'vessel_id' => 'required|integer|exists:vessels,id',
             'code' => [
                 'required',
                 'string',
@@ -33,19 +34,7 @@ class GasBuyerRequest extends FormRequest
             'is_active' => 'nullable|boolean',
         ];
     }
-
-    /**
-     * Mendapatkan pesan error kustom untuk validasi.
-     */
-    public function messages(): array
-    {
-        return [
-            'code.required' => 'Gas Buyer code wajib diisi.',
-            'code.unique' => 'Gas Buyer code sudah digunakan.',
-            'name.required' => 'Gas Buyer name wajib diisi.',
-        ];
-    }
-
+    
     /**
      * Validasi tambahan setelah validasi dasar.
      */

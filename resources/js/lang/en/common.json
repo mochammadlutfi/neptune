@@ -475,6 +475,8 @@
     "created_at": "Created At",
     "updated_at": "Updated At",
     "deleted_at": "Deleted At",
+    "last_updated_at": "Last Updated At",
+    "created_by": "Created By",
     "id": "ID",
     "name": "Name",
     "company": "Company",

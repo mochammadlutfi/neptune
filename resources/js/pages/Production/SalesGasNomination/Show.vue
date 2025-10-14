@@ -1,13 +1,24 @@
 <template>
   <div class="content">
-    <PageHeader :title="$t('production.wells.detail')" :show-back="true" @back="onBack">
+    <PageHeader :title="$t('production.sales_gas_nomination.detail')" :show-back="true" @back="onBack">
       <template #actions>
-        <el-button type="primary" @click="onEdit" :icon="Edit">
-          {{ $t('common.actions.edit') }}
-        </el-button>
-        <el-button type="danger" @click="onDelete" :icon="Delete">
-          {{ $t('common.actions.delete') }}
-        </el-button>
+        <el-dropdown popper-class="dropdown-action" placement="bottom-end" trigger="click">
+            <el-button circle class="!p-0 !m-0">
+                <Icon icon="mingcute:more-2-fill" />
+            </el-button>
+            <template #dropdown>
+                <el-dropdown-menu>
+                    <el-dropdown-item @click="onEdit">
+                        <Icon icon="mingcute:edit-line" class="me-2" />
+                        {{ $t('common.actions.edit') }}
+                    </el-dropdown-item>
+                    <el-dropdown-item class="text-red-600" @click="onDelete">
+                        <Icon icon="mingcute:delete-2-line" class="me-2" />
+                        {{ $t('common.actions.delete') }}
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </template>
+        </el-dropdown>
       </template>
     </PageHeader>
 
@@ -17,18 +28,21 @@
       <div class="flex items-center justify-between px-6 pt-5 pb-3 border-b">
         <div>
           <h3 class="text-base font-semibold">
-            {{ data.well_name ?? $t('production.wells.detail') }}
+            {{ data.name ?? $t('production.sales_gas_nomination.detail') }}
           </h3>
           <p class="text-xs text-gray-500">
-            {{ $t('common.labels.last_updated') }}:
+            {{ $t('common.fields.last_updated_at') }}:
             <span>{{ formatDate(data.updated_at || data.recorded_date) }}</span>
           </p>
         </div>
-        <div class="flex items-center gap-2">
-          <el-tag :type="getStatusTagType(data.status)" size="small">{{ data.status ?? '-' }}</el-tag>
-          <el-tag :type="getWellTypeTagType(data.well_type)" size="small" effect="plain">
-            {{ data.well_type ?? '-' }}
-          </el-tag>
+        <div>
+          <div class="text-right">
+            <el-tag :type="getStatusTagType(data.status)">{{ $t(`production.sales_gas_nomination.status.${data.status}`) ?? '-' }}</el-tag>
+          </div>
+          <p class="text-xs text-gray-500">
+            {{ $t('common.fields.created_by') }}:
+            <span>{{ data.created_by?.name ?? '-' }}</span>
+          </p>
         </div>
       </div>
 
@@ -36,23 +50,34 @@
       <div class="p-6 space-y-8">
         <!-- Section: Well & Vessel -->
         <section>
-          <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-4">
-            {{ $t('production.wells.sections.well_vessel_information') || 'Well & Vessel' }}
-          </h4>
           <el-row :gutter="24">
             <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.vessel_name')">
-                {{ data.vessel_name ?? '-' }}
+              <field-detail :label="$t('production.sales_gas_nomination.fields.vessel_id')">
+                <div class="flex items-center space-x-2" v-if="data.vessel">
+                    <el-icon class="text-blue-600">
+                      <Icon icon="fluent:vehicle-ship-24-filled"/>
+                    </el-icon>
+                    <router-link :to="`/master/vessels/${data.vessel_id}`"
+                        class="font-medium text-blue-600 hover:underline">
+                        {{ data.vessel?.name || '-' }}
+                    </router-link>
+                </div>
+                <span v-else>-</span>
               </field-detail>
             </el-col>
             <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.well_name')">
-                {{ data.well_name ?? '-' }}
+              <field-detail :label="$t('production.sales_gas_nomination.fields.date')">
+                {{ formatDate(data.date) }}
               </field-detail>
             </el-col>
             <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.well_code')">
-                {{ data.well_code ?? '-' }}
+              <field-detail :label="$t('production.sales_gas_nomination.fields.total_nomination')">
+                {{ formatNumber(data.total_nomination, 2) ?? '-' }} MMSCF
+              </field-detail>
+            </el-col>
+            <el-col :md="6" :sm="12" :xs="24" class="mb-4">
+              <field-detail :label="$t('production.sales_gas_nomination.fields.total_confirmed')">
+                {{ formatNumber(data.total_confirmed, 2) ?? '-' }} MMSCF
               </field-detail>
             </el-col>
           </el-row>
@@ -62,117 +87,26 @@
 
         <!-- Section: Recording Info -->
         <section>
-          <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-4">
-            {{ $t('production.wells.sections.recording_information') || 'Recording Information' }}
-          </h4>
-          <el-row :gutter="24">
-            <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.recorded_date')">
-                {{ formatDate(data.recorded_date) }}
-              </field-detail>
-            </el-col>
-            <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.recorded_time')">
-                {{ data.recorded_time ?? '-' }}
-              </field-detail>
-            </el-col>
-            <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.shift')">
-                <el-tag :type="data.shift === 'Day' ? 'warning' : 'info'" size="small">
-                  {{ data.shift ?? '-' }}
-                </el-tag>
-              </field-detail>
-            </el-col>
-            <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.recorded_by')">
-                {{ data.recorded_by ?? '-' }}
-              </field-detail>
-            </el-col>
-          </el-row>
-        </section>
-
-        <el-divider class="!my-0" />
-
-        <!-- Section: Production Rates -->
-        <section>
-          <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-4">
-            {{ $t('production.wells.sections.rates') || 'Production Rates' }}
-          </h4>
-          <el-row :gutter="24">
-            <el-col :lg="8" :md="8" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.oil_rate_bph')">
-                <span class="text-lg font-semibold text-green-600">
-                  {{ data.oil_rate_bph ? `${data.oil_rate_bph} BPH` : '-' }}
-                </span>
-              </field-detail>
-            </el-col>
-            <el-col :lg="8" :md="8" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.gas_rate_mscfh')">
-                <span class="text-lg font-semibold text-blue-600">
-                  {{ data.gas_rate_mscfh ? `${data.gas_rate_mscfh} MSCFH` : '-' }}
-                </span>
-              </field-detail>
-            </el-col>
-            <el-col :lg="8" :md="8" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.water_rate_bph')">
-                <span class="text-lg font-semibold text-cyan-600">
-                  {{ data.water_rate_bph ? `${data.water_rate_bph} BPH` : '-' }}
-                </span>
-              </field-detail>
-            </el-col>
-          </el-row>
-        </section>
-
-        <el-divider class="!my-0" />
-
-        <!-- Section: Well Parameters -->
-        <section>
-          <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-4">
-            {{ $t('production.wells.sections.parameters') || 'Well Parameters' }}
-          </h4>
-          <el-row :gutter="24">
-            <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.wellhead_pressure_psi')">
-                {{ data.wellhead_pressure_psi ? `${data.wellhead_pressure_psi} PSI` : '-' }}
-              </field-detail>
-            </el-col>
-            <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.wellhead_temperature_f')">
-                {{ data.wellhead_temperature_f ? `${data.wellhead_temperature_f} °F` : '-' }}
-              </field-detail>
-            </el-col>
-            <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.choke_size_64th')">
-                {{ data.choke_size_64th ? `${data.choke_size_64th}/64"` : '-' }}
-              </field-detail>
-            </el-col>
-            <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.flow_hours')">
-                {{ data.flow_hours ? `${data.flow_hours} Hours` : '-' }}
-              </field-detail>
-            </el-col>
-          </el-row>
-        </section>
-
-        <el-divider class="!my-0" />
-
-        <!-- Section: Fluid Properties -->
-        <section>
-          <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-4">
-            {{ $t('production.wells.sections.fluid_properties') || 'Fluid Properties' }}
-          </h4>
-          <el-row :gutter="24">
-            <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.api_gravity')">
-                {{ data.api_gravity ? `${data.api_gravity} °API` : '-' }}
-              </field-detail>
-            </el-col>
-            <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-              <field-detail :label="$t('production.wells.fields.bs_w_percent')">
-                {{ data.bs_w_percent ? `${data.bs_w_percent}%` : '-' }}
-              </field-detail>
-            </el-col>
-          </el-row>
+            <div class="overflow-x-auto">
+              <el-table class="base-table" :data="data.lines || []">
+                <el-table-column
+                  :label="$t('production.sales_gas_nomination.fields.gas_buyer')"
+                  prop="buyer.name"
+                />
+                <el-table-column
+                  :label="$t('production.sales_gas_nomination.fields.nomination')">
+                  <template #default="scope">
+                    <span class="font-mono">{{ formatNumber(scope.row.nomination,2) }} MMSCF</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  :label="$t('production.sales_gas_nomination.fields.confirmed')">
+                  <template #default="scope">
+                    <span class="font-mono">{{ formatNumber(scope.row.confirmed,2) }} MMSCF</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
         </section>
 
         <el-divider class="!my-0" />
@@ -180,7 +114,7 @@
         <!-- Section: Remarks -->
         <section>
           <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-4">
-            {{ $t('production.wells.fields.remarks') }}
+            {{ $t('production.sales_gas_nomination.fields.remarks') }}
           </h4>
           <div class="rounded-lg border p-4 bg-gray-50 min-h-[56px]">
             <div class="whitespace-pre-wrap text-sm">
@@ -206,13 +140,12 @@ import FieldDetail from '@/components/FieldDetail.vue'
 
 // import 
 import { useFormatter } from '@/composables/common/useFormatter'
-import { wellsApi } from '@/api/production/wells'
 
 const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
 
-const { formatDate } = useFormatter();
+const { formatDate, formatNumber } = useFormatter();
 // State
 const isLoading = ref(false)
 const data = ref({})
@@ -221,7 +154,7 @@ const data = ref({})
 const loadWell = async () => {
   try {
     isLoading.value = true
-    const response = await wellsApi.getById(route.params.id)
+    const response = await axios.get(`/production/sales-gas-nomination/${route.params.id}`)
     data.value = response.data.data
   } catch (error) {
     console.error('Failed to load well:', error)
@@ -232,39 +165,22 @@ const loadWell = async () => {
   }
 }
 
-// Helper methods untuk Wells
-const getWellTypeTagType = (type) => {
-  const typeMap = {
-    'production': 'success',
-    'injection': 'primary',
-    'gas_lift' : 'danger',
-    'water_injection' : 'info',
-    'observation' : 'secondary',
-    'exploration': 'warning',
-    'appraisal': 'info',
-    'other': 'default'
-  }
-  return typeMap[type] || 'info'
-}
-
 
 const getStatusTagType = (status) => {
   const statusMap = {
-    'active': 'success',
-    'shut-in': 'warning',
-    'suspended': 'info',
-    'abandoned': 'danger',
-    'drilling': 'primary'
+    'draft': 'warning',
+    'confirmed': 'success',
+    'cancel' : "danger"
   }
   return statusMap[status] || 'info'
 }
 // Actions
 const onBack = () => {
-  router.push({ name: 'production.wells.index' })
+  router.push({ name: 'production.sales_gas_nomination.index' })
 }
 
 const onEdit = () => {
-  router.push({ name: 'production.wells.edit', params: { id: route.params.id } })
+  router.push({ name: 'production.sales_gas_nomination.edit', params: { id: route.params.id } })
 }
 
 const onDelete = async () => {

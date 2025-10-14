@@ -1,10 +1,12 @@
+import { breadcrumbKey } from "element-plus";
+
 export default [
 
     // Production Operations
     {
         path: '/production',
         meta: {
-            hideBreadcrumb: true
+            title: "production.title",
         },
         children: [
             {
@@ -31,7 +33,16 @@ export default [
                         }
                     },
                     {
-                        path: ":id",
+                        path: ":date",
+                        name: "production.sales_gas_metering.hourly",
+                        component: () =>
+                            import("../../pages/Production/SalesGasMetering/Hourly.vue"),
+                        meta: {
+                            title: "production.sales_gas_metering.hourly",
+                        }
+                    },
+                    {
+                        path: ":date/:id",
                         name: "production.sales_gas_metering.show",
                         component: () =>
                             import("../../pages/Production/SalesGasMetering/Show.vue"),
@@ -40,7 +51,7 @@ export default [
                         }
                     },
                     {
-                        path: ":id/edit",
+                        path: ":date/:id/edit",
                         name: "production.sales_gas_metering.edit",
                         component: () => import("../../pages/Production/SalesGasMetering/Form.vue"),
                         meta: {
@@ -92,7 +103,7 @@ export default [
                 ],
             },
             {
-                path: "sales_gas_allocation",
+                path: "sales-gas-allocation",
                 meta: {
                     title: "production.sales_gas_allocation.title",
                 },

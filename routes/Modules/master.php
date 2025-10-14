@@ -86,4 +86,14 @@ Route::namespace('Master')->prefix('/master')->name('master.')->group(function (
         Route::put('/{id}/update', 'GasBuyerController@update')->name('update');
         Route::delete('/{id}/delete', 'GasBuyerController@destroy')->name('delete');
     });
+
+
+    // Tank
+    Route::prefix('/tank')->name('tank.')->group(function () {
+        Route::get('/', 'TankController@index')->name('index');
+        Route::post('/store', 'TankController@store')->name('store');
+        Route::get('/{id}', 'TankController@show')->name('show');
+        Route::put('/{id}/update', 'TankController@update')->name('update');
+        Route::delete('/{id}/delete', 'TankController@destroy')->name('delete');
+    });
 });

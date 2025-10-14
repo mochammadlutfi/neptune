@@ -28,16 +28,6 @@ class WellResource extends JsonResource
             // Basic Information
             'code' => $this->code,
             'name' => $this->name,
-            'type' => $this->type,
-            
-            // Production Rates
-            'max_oil_rate' => $this->max_oil_rate ? $this->max_oil_rate : null,
-            'max_gas_rate' => $this->max_gas_rate ? $this->max_gas_rate : null,
-            'max_water_rate' => $this->max_water_rate ? $this->max_water_rate : null,
-
-            // Status
-            'status' => $this->status,
-            'status_label' => $this->getStatusLabel(),
             
             // Timestamps
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),

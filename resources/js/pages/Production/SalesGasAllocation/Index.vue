@@ -1,8 +1,8 @@
 <template>
     <div class="content">
         <!-- Modern Page Header -->
-        <PageHeader :title="$t('production.wells.title')" :primary-action="{
-            label: $t('production.wells.create'),
+        <PageHeader :title="$t('production.sales_gas_allocation.title')" :primary-action="{
+            label: $t('production.sales_gas_allocation.create'),
             icon: 'mingcute:add-line',
             click: onCreate
         }" />
@@ -15,8 +15,7 @@
                 <template #filters>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.wells.fields.shift')
-                                }}</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.sales_gas_allocation.fields.date') }}</label>
                             <el-select v-model="advancedFilters.shift"
                                 :placeholder="$t('common.select.placeholder')" clearable class="w-full">
                                 <el-option :label="$t('production.shifts.day')" value="Day" />
@@ -24,7 +23,7 @@
                             </el-select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.wells.fields.data_quality')
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.sales_gas_allocation.fields.data_quality')
                                 }}</label>
                             <el-select v-model="advancedFilters.data_quality" :placeholder="$t('common.select.placeholder')"
                                 clearable class="w-full">
@@ -48,84 +47,61 @@
                             @selection-change="handleSelectionChange" row-key="id" stripe>
                             <el-table-column type="selection" width="50" align="center" />
 
-                            <el-table-column prop="reading_datetime" :label="$t('production.wells.fields.reading_datetime')" sortable
-                                width="150" fixed="left">
+                            <el-table-column prop="date" :label="$t('production.sales_gas_allocation.fields.date')" sortable
+                                width="150">
                                 <template #default="scope">
                                     <div>
-                                        {{ formatDateTime(scope.row.reading_datetime) }}
-                                    </div>
-                                    <div>
-                                        <el-tag :type="scope.row.shift === 'Day' ? 'warning' : 'info'" size="small">
-                                            {{ $t(`production.wells.shifts.${scope.row.shift?.toLowerCase()}`) }}
-                                        </el-tag>
+                                        {{ formatDate(scope.row.date) }}
                                     </div>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="well.name" :label="$t('production.wells.fields.well_id')" sortable
-                                min-width="200" show-overflow-tooltip>
+                            <el-table-column prop="vessel.name" :label="$t('production.sales_gas_allocation.fields.vessel_id')" sortable
+                                width="200" show-overflow-tooltip>
                                 <template #default="scope">
                                     <div class="flex items-center space-x-2">
                                         <el-icon class="text-blue-600">
-                                            <Icon icon="mingcute:oil-line" />
+                                            <Icon icon="fluent:vehicle-ship-24-filled"/>
                                         </el-icon>
-                                        <router-link :to="`/production/wells/${scope.row.id}`"
+                                        <router-link :to="`/master/vessels/${scope.row.vessel_id}`"
                                             class="font-medium text-blue-600 hover:underline">
-                                            {{ scope.row.well?.name || '-' }}
+                                            {{ scope.row.vessel?.name || '-' }}
                                         </router-link>
                                     </div>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="oil_rate_bph" :label="$t('production.wells.fields.oil_rate')" sortable
-                                width="120" align="right">
+                            <el-table-column prop="name" :label="$t('production.sales_gas_allocation.fields.name')" sortable show-overflow-tooltip>
                                 <template #default="scope">
-                                    <span class="font-mono">{{ formatNumber(scope.row.oil_rate_bph, 2) }}</span>
+                                    <router-link :to="`/production/sales-gas-allocation/${scope.row.id}`"
+                                        class="font-medium text-blue-600 hover:underline">
+                                        {{ scope.row?.name || '-' }}
+                                    </router-link>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="gas_rate_mscfh" :label="$t('production.wells.fields.gas_rate')" sortable
-                                width="130" align="right">
+                            <el-table-column prop="total_confirmed" :label="$t('production.sales_gas_allocation.fields.total')" sortable
+                                width="180" align="right">
                                 <template #default="scope">
-                                    <span class="font-mono">{{ formatNumber(scope.row.gas_rate_mscfh, 3) }}</span>
+                                    <span class="font-mono">{{ formatNumber(scope.row.total, 2) }} MMSCF</span>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="water_rate_bph" :label="$t('production.wells.fields.water_rate')" sortable
-                                width="130" align="right">
+                            <el-table-column prop="status" :label="$t('production.sales_gas_allocation.fields.status')" sortable
+                                width="180" align="right">
                                 <template #default="scope">
-                                    <span class="font-mono">{{ formatNumber(scope.row.water_rate_bph, 2) }}</span>
+                                    <!-- <span class="font-mono">{{ scope.row.status }}</span> -->
+                                    <el-tag :type="getStatusTagType(scope.row.status)">
+                                        {{ $t(`production.sales_gas_allocation.status.${scope.row.status}`) }}
+                                    </el-tag>
                                 </template>
                             </el-table-column>
-
-                            <el-table-column prop="wellhead_pressure_psi" :label="$t('production.wells.fields.wellhead_pressure')" sortable
-                                width="170" align="right">
+                            <el-table-column prop="created_by" :label="$t('common.fields.created_by')" sortable
+                                width="180" align="right">
                                 <template #default="scope">
-                                    <span class="font-mono">{{ formatNumber(scope.row.wellhead_pressure_psi, 2) }}</span>
+                                    {{ scope.row.created_by?.name || '-' }}
                                 </template>
                             </el-table-column>
-
-                            <el-table-column prop="wellhead_temperature_f" :label="$t('production.wells.fields.wellhead_temperature')" sortable
-                                width="170" align="right">
-                                <template #default="scope">
-                                    <span class="font-mono">{{ formatNumber(scope.row.wellhead_temperature_f, 2) }}</span>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="choke_size_64th" :label="$t('production.wells.fields.choke_size')" sortable
-                                width="110" align="right">
-                                <template #default="scope">
-                                    <span class="font-mono">{{ scope.row.choke_size_64th || '-' }}</span>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="flow_hours" :label="$t('production.wells.fields.flow_hours')" sortable
-                                width="100" align="right">
-                                <template #default="scope">
-                                    <span class="font-mono">{{ formatNumber(scope.row.flow_hours, 2) }}</span>
-                                </template>
-                            </el-table-column>
-
                             <el-table-column :label="$t('common.actions.action', 2)" align="center" width="120"
                                 fixed="right">
                                 <template #default="scope">
@@ -167,7 +143,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import axios from 'axios'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { Icon } from '@iconify/vue'
@@ -176,24 +152,21 @@ import { useQuery } from '@tanstack/vue-query'
 import { useI18n } from 'vue-i18n'
 import { useFormatter } from '@/composables/common/useFormatter'
 import { useRouter } from 'vue-router'
+import { useUser } from '@/composables/auth'
 // Import our reusable components
 import PageHeader from '@/components/PageHeader.vue'
-import StatisticCard from '@/components/StatisticCard.vue'
 import TableControls from '@/components/TableControls.vue'
 import Pagination from '@/components/Pagination.vue'
 import SkeletonTable from '@/components/SkeletonTable.vue'
 
 
-const { formatCurrency } = useFormatter();
+const { formatDate, formatNumber } = useFormatter();
 const { t } = useI18n();
 const router = useRouter();
 
-// Page stats
-const viewMode = ref('table');
+// Page state
 const selectedRows = ref([]);
-const isLoadingStats = ref(false);
-const stats = ref({});
-
+const { userVesselId } = useUser();
 // Filter state
 const params = ref({
   limit: 25,
@@ -201,79 +174,34 @@ const params = ref({
   q: "",
   sort: 'reading_datetime',
   sortDir: 'desc',
+  vessel_id: userVesselId,
 });
 
 const advancedFilters = ref({
   shift: null,
   data_quality: null,
-  well_id: null,
 });
 
-// Computed properties
-const activeFilters = computed(() => {
-  const filters = [];
-  if (advancedFilters.value.shift) {
-      filters.push({
-          key: 'shift',
-          label: t('production.wells.fields.shift'),
-          value: advancedFilters.value.shift
-      });
+const getStatusTagType = (status) => {
+  const statusMap = {
+    'draft': 'warning',
+    'confirmed': 'success',
+    'cancel' : "danger"
   }
-  if (advancedFilters.value.data_quality) {
-      filters.push({
-          key: 'data_quality',
-          label: t('production.wells.fields.data_quality'),
-          value: advancedFilters.value.data_quality
-      });
-  }
-  return filters;
-});
+  return statusMap[status] || 'info'
+}
+//
 
-// Helper methods untuk production wells
-
-const formatDate = (date) => {
-  if (!date) return '-';
-  return new Date(date).toLocaleDateString('id-ID', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-  });
-};
-
-const formatDateTime = (datetime) => {
-  if (!datetime) return '-';
-  return new Date(datetime).toLocaleString('id-ID', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-  });
-};
-
-const formatNumber = (value, decimals = 2) => {
-  if (value === null || value === undefined) return '-';
-  return Number(value).toFixed(decimals);
-};
-
-const getDataQualityTagType = (quality) => {
-  switch (quality) {
-      case 'Good': return 'success';
-      case 'Estimated': return 'warning';
-      case 'Bad': return 'danger';
-      default: return 'info';
-  }
-};
 
 const fetchData = async ({ queryKey }) => {
   const [_key, queryParams] = queryKey;
-  const response = await axios.get("/production/wells", {
+  const response = await axios.get("/production/sales-gas-allocation", {
       params: queryParams,
   });
   return response.data;
 };
 
-const { data, isLoading, isError, error, refetch } = useQuery({
+const { data, isLoading, refetch } = useQuery({
   queryKey: ['wellProductionReadings', params.value],
   queryFn: fetchData,
   keepPreviousData: true,
@@ -281,7 +209,7 @@ const { data, isLoading, isError, error, refetch } = useQuery({
 
 // Event handlers
 const onCreate = () => {
-  router.push({ name: 'production.wells.create' });
+  router.push({ name: 'production.sales_gas_allocation.create' });
 };
 
 const doSearch = _.debounce(() => {
@@ -306,49 +234,14 @@ const handlePerPageChange = (perPage) => {
   refetch();
 };
 
-const applyAdvancedFilters = () => {
-  Object.assign(params.value, {
-      shift: advancedFilters.value.shift,
-      data_quality: advancedFilters.value.data_quality,
-      well_id: advancedFilters.value.well_id,
-      page: 1
-  });
-  refetch();
-};
-
-const clearAllFilters = () => {
-  advancedFilters.value = {
-      shift: null,
-      data_quality: null,
-      well_id: null,
-  };
-  params.value = {
-      ...params.value,
-      shift: null,
-      data_quality: null,
-      well_id: null,
-      page: 1
-  };
-  refetch();
-};
-
-const removeFilter = (filterKey) => {
-  if (filterKey === 'shift') {
-      advancedFilters.value.shift = null;
-  } else if (filterKey === 'data_quality') {
-      advancedFilters.value.data_quality = null;
-  } else {
-      advancedFilters.value[filterKey] = null;
-  }
-  applyAdvancedFilters();
-};
+//
 
 const onView = (row) => {
-  router.push({ name: 'production.wells.show', params: { id: row.id } });
+  router.push({ name: 'production.sales_gas_allocation.show', params: { id: row.id } });
 };
 
 const onEdit = (row) => {
-  router.push({ name: 'production.wells.edit', params: { id: row.id } });
+  router.push({ name: 'production.sales_gas_allocation.edit', params: { id: row.id } });
 };
 
 const onDelete = async (row) => {
@@ -363,7 +256,7 @@ const onDelete = async (row) => {
           }
       );
 
-      await axios.delete(`/production/wells/${row.id}/delete`);
+      await axios.delete(`/production/sales-gas-allocation/${row.id}/delete`);
       ElMessage.success(t('common.messages.deleted'));
       refetch();
   } catch (error) {
@@ -396,7 +289,7 @@ const bulkDelete = async () => {
       );
 
       const ids = selectedRows.value.map(row => row.id);
-      await axios.delete('/production/wells/bulk', { data: { ids } });
+      await axios.delete('/production/sales-gas-allocation/bulk', { data: { ids } });
       ElMessage.success(t('common.success.bulk_deleted'));
       selectedRows.value = [];
       refetch();

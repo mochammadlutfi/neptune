@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use App\Traits\ActivityLogger;
+use App\Services\SequenceGenerator;
 
 class SalesGasNominationController extends Controller
 {
@@ -24,13 +25,16 @@ class SalesGasNominationController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $query = SalesGasNomination::query();
+        $query = SalesGasNomination::with(['vessel', 'createdBy']);
 
+
+        if ($request->filled('vessel_id')) {
+            $query->where('vessel_id', $request->vessel_id);
+        }
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
@@ -83,13 +87,27 @@ class SalesGasNominationController extends Controller
 
             $data = new SalesGasNomination();
             
+            $data->name = SequenceGenerator::generate('sales_gas_nomination');
             $data->date = $validatedData['date'];
             $data->vessel_id = $validatedData['vessel_id'];
             $data->total_nomination = $validatedData['total_nomination'];
             $data->total_confirmed = $validatedData['total_confirmed'];
             $data->status = 'draft';
-            $data->recorded_by = $user->id;
+            $data->created_uid = $user->id;
+            $data->remarks = $validatedData['remarks'];
             $data->save();
+
+            $data->lines()->saveMany(
+                array_map(function($line) use ($data) {
+                    return new SalesGasNominationLine([
+                        'buyer_id' => $line['buyer_id'],
+                        'nomination' => $line['nomination'],
+                        'confirmed' => $line['confirmed'],
+                        'sales_gas_nomination_id' => $data->id,
+                    ]);
+                }, $validatedData['lines'])
+            );
+            
             
             $this->logCreate($data, $request, __('activity.sales_gas_nomination.created', ['id' => $data->id]));
 
@@ -111,7 +129,9 @@ class SalesGasNominationController extends Controller
 
     public function show(String $id): JsonResponse
     {
-        $data = SalesGasNomination::where('id', $id)->first();
+        $data = SalesGasNomination::with(['vessel', 'createdBy', 'lines' => function($q){
+            return $q->with('buyer');
+        }])->where('id', $id)->first();
         
         if (!$data) {
             return response()->json([
@@ -140,9 +160,35 @@ class SalesGasNominationController extends Controller
             }
             
             $validatedData = $request->validated();
-            $data->update($validatedData);
-            $this->logUpdate($data, $request, __('activity.sales_gas_nomination.updated', ['id' => $data->id]));
+            $user = auth()->user();
+
+            $data->name = SequenceGenerator::generate('sales_gas_nomination');
+            $data->date = $validatedData['date'];
+            $data->vessel_id = $validatedData['vessel_id'];
+            $data->total_nomination = $validatedData['total_nomination'];
+            $data->total_confirmed = $validatedData['total_confirmed'];;
+            $data->created_uid = $user->id;
+            $data->remarks = $validatedData['remarks'];
+            $data->save();
             
+            // Delete existing lines
+            $data->lines()->delete();
+
+            // Create new lines
+            $data->lines()->saveMany(
+                array_map(function($line) use ($data) {
+                    return new SalesGasNominationLine([
+                        'buyer_id' => $line['buyer_id'],
+                        'nomination' => $line['nomination'],
+                        'confirmed' => $line['confirmed'],
+                        'sales_gas_nomination_id' => $data->id,
+                    ]);
+                }, $validatedData['lines'])
+            );
+            
+            
+            $originalAttributes = $data->getOriginal();
+            $this->logUpdate($data, $request, $originalAttributes, __('activity.sales_gas_nomination.updated', ['id' => $data->id]));
             DB::commit();
             
             return response()->json([
@@ -159,7 +205,7 @@ class SalesGasNominationController extends Controller
         }
     }
 
-    public function destroy(String $id): JsonResponse
+    public function destroy(Request $request, String $id): JsonResponse
     {
         DB::beginTransaction();
         try {
@@ -172,20 +218,10 @@ class SalesGasNominationController extends Controller
                 ], 404);
             }
             
-            // Check dependencies before deletion
-            $wellsCount = $data->wells()->count();
-            $equipmentCount = $data->equipment()->count();
-            
-            if ($wellsCount > 0 || $equipmentCount > 0) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Tidak dapat menghapus Sales Gas Nomination yang memiliki {$wellsCount} wells dan {$equipmentCount} equipment.",
-                ], 422);
-            }
-
             $dataName = $data->name;
+            // Log aktivitas delete sebelum menghapus untuk menangkap atribut model dan request
+            $this->logDelete($data, $request, __('activity.sales_gas_nomination.deleted', ['id' => $data->id]));
             $data->delete();
-            $this->logDelete($data, __('activity.sales_gas_nomination.deleted', ['id' => $data->id]));
             DB::commit();
             
             return response()->json([

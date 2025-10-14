@@ -2,13 +2,14 @@ export default [
     {
         path: "/master",
         meta: {
-            title: "base.master_data",
+            title: "master.title",
         },
         children: [
             {
                 path: "vessels",
                 meta: {
                     title: "master.vessels.title",
+                    hideBreadcrumb: true
                 },
                 children: [
                     {
@@ -17,6 +18,7 @@ export default [
                         component: () => import("../../pages/Master/Vessels/Index.vue"),
                         meta: {
                             title: "master.vessels.title",
+                            hideBreadcrumb: true
                         }
                     },
                     {
@@ -231,6 +233,27 @@ export default [
                         path: ":id",
                         name: "master.gas_buyer.show",
                         component: () => import("../../pages/Master/GasBuyer/Show.vue"),
+                        meta: {
+                            requiredAuth: false,
+                            title: "master.gas_buyer.detail"
+                        }
+                    },
+                ]
+            },
+            {
+                path: "tank",
+                children: [
+                    {
+                        path: "",
+                        component: () => import("../../pages/Master/Tank/Index.vue"),
+                        meta: {
+                            requiredAuth: false,
+                            hideBreadcrumb: true
+                        }
+                    },
+                    {
+                        path: ":id",
+                        component: () => import("../../pages/Master/Tank/Show.vue"),
                         meta: {
                             requiredAuth: false,
                             title: "master.gas_buyer.detail"

@@ -25,10 +25,11 @@ class SalesGasNominationRequest extends FormRequest
         return [
             'vessel_id' => 'required|exists:vessels,id',
             'date' => 'required|date',
-            // 'total_nomination' => 'required|numeric',
-            // 'total_confirmed' => 'required|numeric',
+            'total_nomination' => 'required|numeric',
+            'total_confirmed' => 'required|numeric',
+            'remarks' => 'nullable|string',
             'lines' => 'required|array',
-            'lines.*.gas_buyer_id' => 'required|exists:gas_buyers,id',
+            'lines.*.buyer_id' => 'required|exists:gas_buyers,id',
             'lines.*.nomination' => 'required|numeric',
             'lines.*.confirmed' => 'required|numeric',
         ];

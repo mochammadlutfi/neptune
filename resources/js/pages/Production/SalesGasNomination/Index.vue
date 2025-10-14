@@ -48,22 +48,22 @@
                             <el-table-column type="selection" width="50" align="center" />
 
                             <el-table-column prop="date" :label="$t('production.sales_gas_nomination.fields.date')" sortable
-                                width="150" fixed="left">
+                                width="150">
                                 <template #default="scope">
                                     <div>
-                                        {{ formatDateTime(scope.row.date) }}
+                                        {{ formatDate(scope.row.date) }}
                                     </div>
                                 </template>
                             </el-table-column>
 
                             <el-table-column prop="vessel.name" :label="$t('production.sales_gas_nomination.fields.vessel_id')" sortable
-                                min-width="200" show-overflow-tooltip>
+                                width="200" show-overflow-tooltip>
                                 <template #default="scope">
                                     <div class="flex items-center space-x-2">
                                         <el-icon class="text-blue-600">
-                                            <Icon icon="mingcute:vessel-2-line" />
+                                            <Icon icon="fluent:vehicle-ship-24-filled"/>
                                         </el-icon>
-                                        <router-link :to="`/production/vessels/${scope.row.vessel_id}`"
+                                        <router-link :to="`/master/vessels/${scope.row.vessel_id}`"
                                             class="font-medium text-blue-600 hover:underline">
                                             {{ scope.row.vessel?.name || '-' }}
                                         </router-link>
@@ -71,14 +71,43 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="total_nomination" :label="$t('production.sales_gas_nomination.fields.total_nomination')" sortable
-                                width="120" align="right">
+                            <el-table-column prop="name" :label="$t('production.sales_gas_nomination.fields.name')" sortable show-overflow-tooltip>
                                 <template #default="scope">
-                                    <span class="font-mono">{{ formatNumber(scope.row.total_nomination, 2) }}</span>
+                                    <router-link :to="`/production/sales-gas-nomination/${scope.row.id}`"
+                                        class="font-medium text-blue-600 hover:underline">
+                                        {{ scope.row?.name || '-' }}
+                                    </router-link>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="total_nomination" :label="$t('production.sales_gas_nomination.fields.total_nomination')" sortable
+                                width="180" align="right">
+                                <template #default="scope">
+                                    <span class="font-mono">{{ formatNumber(scope.row.total_nomination, 2) }} MMSCF</span>
                                 </template>
                             </el-table-column>
 
+                            <el-table-column prop="total_confirmed" :label="$t('production.sales_gas_nomination.fields.total_confirmed')" sortable
+                                width="180" align="right">
+                                <template #default="scope">
+                                    <span class="font-mono">{{ formatNumber(scope.row.total_confirmed, 2) }} MMSCF</span>
+                                </template>
+                            </el-table-column>
 
+                            <el-table-column prop="status" :label="$t('production.sales_gas_nomination.fields.status')" sortable
+                                width="180" align="right">
+                                <template #default="scope">
+                                    <!-- <span class="font-mono">{{ scope.row.status }}</span> -->
+                                    <el-tag :type="getStatusTagType(scope.row.status)">
+                                        {{ $t(`production.sales_gas_nomination.status.${scope.row.status}`) }}
+                                    </el-tag>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="created_by" :label="$t('common.fields.created_by')" sortable
+                                width="180" align="right">
+                                <template #default="scope">
+                                    {{ scope.row.created_by?.name || '-' }}
+                                </template>
+                            </el-table-column>
                             <el-table-column :label="$t('common.actions.action', 2)" align="center" width="120"
                                 fixed="right">
                                 <template #default="scope">
@@ -120,7 +149,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import axios from 'axios'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { Icon } from '@iconify/vue'
@@ -129,24 +158,21 @@ import { useQuery } from '@tanstack/vue-query'
 import { useI18n } from 'vue-i18n'
 import { useFormatter } from '@/composables/common/useFormatter'
 import { useRouter } from 'vue-router'
+import { useUser } from '@/composables/auth'
 // Import our reusable components
 import PageHeader from '@/components/PageHeader.vue'
-import StatisticCard from '@/components/StatisticCard.vue'
 import TableControls from '@/components/TableControls.vue'
 import Pagination from '@/components/Pagination.vue'
 import SkeletonTable from '@/components/SkeletonTable.vue'
 
 
-const { formatCurrency } = useFormatter();
+const { formatDate, formatNumber } = useFormatter();
 const { t } = useI18n();
 const router = useRouter();
 
-// Page stats
-const viewMode = ref('table');
+// Page state
 const selectedRows = ref([]);
-const isLoadingStats = ref(false);
-const stats = ref({});
-
+const { userVesselId } = useUser();
 // Filter state
 const params = ref({
   limit: 25,
@@ -154,33 +180,23 @@ const params = ref({
   q: "",
   sort: 'reading_datetime',
   sortDir: 'desc',
+  vessel_id: userVesselId,
 });
 
 const advancedFilters = ref({
   shift: null,
   data_quality: null,
-  well_id: null,
 });
 
-// Computed properties
-const activeFilters = computed(() => {
-  const filters = [];
-  if (advancedFilters.value.shift) {
-      filters.push({
-          key: 'shift',
-          label: t('production.sales_gas_nomination.fields.shift'),
-          value: advancedFilters.value.shift
-      });
+const getStatusTagType = (status) => {
+  const statusMap = {
+    'draft': 'warning',
+    'confirmed': 'success',
+    'cancel' : "danger"
   }
-  if (advancedFilters.value.data_quality) {
-      filters.push({
-          key: 'data_quality',
-          label: t('production.sales_gas_nomination.fields.data_quality'),
-          value: advancedFilters.value.data_quality
-      });
-  }
-  return filters;
-});
+  return statusMap[status] || 'info'
+}
+//
 
 
 const fetchData = async ({ queryKey }) => {
@@ -191,7 +207,7 @@ const fetchData = async ({ queryKey }) => {
   return response.data;
 };
 
-const { data, isLoading, isError, error, refetch } = useQuery({
+const { data, isLoading, refetch } = useQuery({
   queryKey: ['wellProductionReadings', params.value],
   queryFn: fetchData,
   keepPreviousData: true,
@@ -224,42 +240,7 @@ const handlePerPageChange = (perPage) => {
   refetch();
 };
 
-const applyAdvancedFilters = () => {
-  Object.assign(params.value, {
-      shift: advancedFilters.value.shift,
-      data_quality: advancedFilters.value.data_quality,
-      well_id: advancedFilters.value.well_id,
-      page: 1
-  });
-  refetch();
-};
-
-const clearAllFilters = () => {
-  advancedFilters.value = {
-      shift: null,
-      data_quality: null,
-      well_id: null,
-  };
-  params.value = {
-      ...params.value,
-      shift: null,
-      data_quality: null,
-      well_id: null,
-      page: 1
-  };
-  refetch();
-};
-
-const removeFilter = (filterKey) => {
-  if (filterKey === 'shift') {
-      advancedFilters.value.shift = null;
-  } else if (filterKey === 'data_quality') {
-      advancedFilters.value.data_quality = null;
-  } else {
-      advancedFilters.value[filterKey] = null;
-  }
-  applyAdvancedFilters();
-};
+//
 
 const onView = (row) => {
   router.push({ name: 'production.sales_gas_nomination.show', params: { id: row.id } });
@@ -281,7 +262,7 @@ const onDelete = async (row) => {
           }
       );
 
-      await axios.delete(`/production/wells/${row.id}/delete`);
+      await axios.delete(`/production/sales-gas-nomination/${row.id}/delete`);
       ElMessage.success(t('common.messages.deleted'));
       refetch();
   } catch (error) {
@@ -314,7 +295,7 @@ const bulkDelete = async () => {
       );
 
       const ids = selectedRows.value.map(row => row.id);
-      await axios.delete('/production/wells/bulk', { data: { ids } });
+      await axios.delete('/production/sales-gas-nomination/bulk', { data: { ids } });
       ElMessage.success(t('common.success.bulk_deleted'));
       selectedRows.value = [];
       refetch();

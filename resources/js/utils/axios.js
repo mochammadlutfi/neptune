@@ -38,8 +38,8 @@ axios.interceptors.response.use(function (response) {
     
     switch (err.response?.status) {
         case 422:
-            for (let field in err.response.data.result) {
-                error.validation[field] = err.response.data.result[field][0];
+            for (let field in err.response.data.errors) {
+                error.validation[field] = err.response.data.errors[field][0];
             }
             break;
         case 403:

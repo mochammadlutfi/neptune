@@ -44,7 +44,7 @@ class UserRepository implements UserRepositoryInterface
         $query->orderBy($sort, $sortDir);
 
         if (isset($filters['limit'])) {
-            return $query->paginate($filters['limit']);
+            return $query->with('vessel')->paginate($filters['limit']);
         }
 
         return $query->get();

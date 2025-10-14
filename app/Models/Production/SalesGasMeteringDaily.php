@@ -7,32 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Master\Vessel;
 use App\Models\User;
 
-class SalesGasMetering extends Model
+class SalesGasMeteringDaily extends Model
 {
     use HasFactory;
 
-    protected $table = 'gas_sales_metering';
+    protected $table = 'gas_sales_metering_daily';
 
     protected $fillable = [
         'vessel_id',
         'date',
-        'time',
         'pressure_psig',
         'temperature_f',
         'h2o_content_lb_mmscf',
-        'hcdp_a_f',
-        'hcdp_b_f',
+        'hcdp_temp',
         'co2_content_mol_pct',
         'heating_value_btu_scf',
         'specific_gravity',
         'ejgp_pressure_psig',
         'total_flowrates',
         'status',
-        'recorded_by',
-    ];
-
-    protected $casts = [
-        'date' => 'date',
     ];
 
     public function vessel()
@@ -47,6 +40,6 @@ class SalesGasMetering extends Model
 
     public function flowrates()
     {
-        return $this->hasMany(SalesGasMeteringFlowrate::class, 'gas_sales_metering_id');
+        return $this->hasMany(SalesGasMeteringDailyFlowrate::class, 'gas_sales_metering_daily_id');
     }
 }

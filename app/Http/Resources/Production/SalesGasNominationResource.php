@@ -4,7 +4,7 @@ namespace App\Http\Resources\Production;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use Carbon\Carbon;
 class SalesGasNominationResource extends JsonResource
 {
     /**
@@ -16,6 +16,7 @@ class SalesGasNominationResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'vessel_id' => $this->vessel_id,
             'vessel' => $this->whenLoaded('vessel', function () {
                 return [
@@ -24,7 +25,7 @@ class SalesGasNominationResource extends JsonResource
                     'code' => $this->vessel->code ?? null,
                 ];
             }),
-            'date' => $this->date,
+            'date' => Carbon::parse($this->date)->format('Y-m-d'),
             'total_nomination' => $this->total_nomination ? (float) $this->total_nomination : null,
             'total_confirmed' => $this->total_confirmed ? (float) $this->total_confirmed : null,
             'status' => $this->status,
@@ -40,43 +41,29 @@ class SalesGasNominationResource extends JsonResource
                 return $this->lines->map(function ($line) {
                     return [
                         'id' => $line->id,
-                        'gas_buyer_id' => $line->gas_buyer_id,
-                        'gas_buyer' => $line->whenLoaded('gasBuyer', function () {
-                            return [
-                                'id' => $line->gasBuyer->id,
-                                'name' => $line->gasBuyer->name,
-                                'code' => $line->gasBuyer->code ?? null,
-                                'company' => $line->gasBuyer->company ?? null,
-                            ];
-                        }),
+                        'buyer_id' => $line->buyer_id,
+                        'buyer' => $line->relationLoaded('buyer') ? [
+                            'id' => $line->buyer->id,
+                            'name' => $line->buyer->name,
+                            'code' => $line->buyer->code ?? null,
+                        ] : null,
                         'nomination' => $line->nomination ? (float) $line->nomination : null,
                         'confirmed' => $line->confirmed ? (float) $line->confirmed : null,
                     ];
                 });
             }),
+            'created_uid' => $this->created_uid,
+            'created_by' => $this->whenLoaded('createdBy', function () {
+                return [
+                    'id' => $this->createdBy->id,
+                    'name' => $this->createdBy->name,
+                    'email' => $this->createdBy->email,
+                ];
+            }),
+            'remarks' => $this->remarks,
+            'confirmed_at' => $this->confirmed_at?->format('Y-m-d H:i:s'),
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
         ];
-    }
-
-    /**
-     * Determine gas quality grade based on composition
-     */
-    private function getQualityGrade(): ?string
-    {
-        $h2s = $this->h2s_content_ppm ?? 0;
-        $co2 = $this->co2_content_pct ?? 0;
-        $moisture = $this->moisture_content_ppm ?? 0;
-
-        // Pipeline quality standards
-        if ($h2s <= 4 && $co2 <= 2 && $moisture <= 112) {
-            return 'Pipeline Quality';
-        } elseif ($h2s <= 10 && $co2 <= 5 && $moisture <= 200) {
-            return 'Commercial Grade';
-        } elseif ($h2s <= 20 && $co2 <= 10 && $moisture <= 400) {
-            return 'Industrial Grade';
-        } else {
-            return 'Below Standard';
-        }
     }
 }

@@ -96,7 +96,7 @@
               <el-table class="base-table" :data="form.lines">
                 <el-table-column
                   :label="$t('production.sales_gas_nomination.fields.gas_buyer')"
-                  prop="gas_buyer_name"
+                  prop="buyer.name"
                 />
                 <el-table-column
                   :label="$t('production.sales_gas_nomination.fields.nomination')">
@@ -107,6 +107,7 @@
                       class="w-full"
                       :min="0"
                       :step="0.001"
+                      :change="calculateTotal()"
                       :placeholder="$t('production.sales_gas_nomination.placeholder.nomination')"
                     >
                       <template #suffix>
@@ -124,6 +125,7 @@
                       class="w-full"
                       :min="0"
                       :step="0.001"
+                      :change="calculateTotal()"
                       :placeholder="$t('production.sales_gas_nomination.placeholder.confirmed')"
                     >
                       <template #suffix>
@@ -196,7 +198,7 @@ import SelectVessel from '@/components/select/SelectVessel.vue'
 import { useUser } from '@/composables/auth/useUser'
 import dayjs from 'dayjs';
 
-const user = useUser()
+const { userVesselId } = useUser();
 const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
@@ -212,7 +214,7 @@ const isEdit = computed(() => !!route.params.id)
  * State form - Updated to match database schema
  */
 const form = reactive({
-  vessel_id: user.value?.vessel_id || null,
+  vessel_id: userVesselId || null,
   date: dayjs().format('YYYY-MM-DD'),
   total_nomination : 0,
   total_confirmed : 0,
@@ -281,7 +283,7 @@ const formRules = ref({
   vessel_id: [
     { required: true, message: requiredMsg(t('production.sales_gas_nomination.fields.vessel_id')), trigger: 'change' }
   ],
-  production_date: [ notFutureDate ],
+  date: [ notFutureDate ],
   remarks: [
     { min: 0, max: 500, message: t('common.validation.max', { attribute: t('production.sales_gas_nomination.fields.remarks'), max: 500 }), trigger: 'blur' }
   ]
@@ -291,6 +293,18 @@ const formRules = ref({
 /* -------------------- HELPERS -------------------- */
 const sanitizeNumeric = (v) => (v === '' || v === null || v === undefined ? null : Number(v))
 
+const calculateTotal = () => {
+    let total_nomination = 0;
+    let total_confirmed = 0;
+
+    for (var i = 0; i < form.lines.length; i++) {
+      total_nomination += form.lines[i].nomination;
+      total_confirmed += form.lines[i].confirmed;
+    }
+
+    form.total_nomination = total_nomination;
+    form.total_confirmed = total_confirmed;
+}
 /* -------------------- SUBMIT -------------------- */
 const onSubmit = async () => {
   if (!formRef.value) return
@@ -348,32 +362,19 @@ const loadData = async () => {
   if (!isEdit.value) return
   try {
     loading.value = true
-    const { data } = await axios.get(`/production/well-production/${route.params.id}`)
+    const { data } = await axios.get(`/production/sales-gas-nomination/${route.params.id}`)
     const d = data?.data || data
     if (d) {
-      Object.assign(form, {
-        vessel_id: d.vessel_id ?? user.value?.vessel_id,
-        well_id: d.well_id ?? null,
-        production_date: d.production_date ?? dayjs().format('YYYY-MM-DD'),
-        shift: d.shift ?? 'Day',
-
-        oil_rate_bph: d.oil_rate_bph ?? null,
-        gas_rate_mscfh: d.gas_rate_mscfh ?? null,
-        water_rate_bph: d.water_rate_bph ?? null,
-
-        wellhead_pressure_psi: d.wellhead_pressure_psi ?? null,
-        wellhead_temp_f: d.wellhead_temp_f ?? null,
-        separator_pressure_psi: d.separator_pressure_psi ?? null,
-        choke_size: d.choke_size ?? null,
-
-        api_gravity: d.api_gravity ?? null,
-        bs_w_percent: d.bs_w_percent ?? null,
-
-        remarks: d.remarks ?? ''
-      })
-      
-      // Calculate derived metrics
-      calculateMetrics()
+      form.vessel_id = d.vessel_id ?? user.value?.vessel_id
+      form.date = d.date ?? dayjs().format('YYYY-MM-DD')
+      form.remarks = d.remarks ?? ''
+      // form.lines = d.lines || []
+      form.lines = d.lines.map(item => ({
+        ...item,
+        nomination: sanitizeNumeric(item.nomination),
+        confirmed: sanitizeNumeric(item.confirmed),
+      }))
+      calculateTotal()
     }
   } catch (e) {
     console.error('Load error:', e)
@@ -389,15 +390,17 @@ const loadData = async () => {
 const loadGasBuyer = async () => {
   try {
     loading.value = true
+    form.lines = []
     const { data } = await axios.get(`/master/gas-buyer`, { params: { vessel_id: form.vessel_id } })
     const d = data?.data || data
     if (d) {
-      // console.log('Gas Buyers:', d)
-      form.lines = []
       d.forEach(item => {
         form.lines.push({
-          gas_buyer_id: item.id,
-          gas_buyer_name: item.name,
+          buyer_id: item.id,
+          buyer: {
+            id: item.id,
+            name: item.name,
+          },
           nomination : null,
           confirmed: null,
         })
@@ -418,7 +421,7 @@ const onBack = () => {
 
 const onDuplicate = () => {
   const duplicateData = { ...form }
-  duplicateData.production_date = dayjs().format('YYYY-MM-DD')
+  duplicateData.date = dayjs().format('YYYY-MM-DD')
   duplicateData.remarks = `Copy of: ${form.remarks || 'Previous entry'}`
   
   router.push({ 
@@ -439,7 +442,7 @@ onMounted(() => {
       console.error('Error parsing duplicate data:', e)
     }
   }
-  
+  loadGasBuyer()
   loadData()
 })
 </script>

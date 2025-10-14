@@ -1,6 +1,9 @@
 <template>
     <el-card body-class="!p-4" class="!rounded-lg !shadow-sm">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between w-full gap-4">
+            <el-button circle @click="$router.back()">
+                <Icon icon="mingcute:left-line" />
+            </el-button>
             <div class="min-w-0 flex-1">
                 <h1 class="text-xl lg:text-2xl font-bold text-gray-900 flex flex-col sm:flex-row sm:items-center gap-2">
                     <div class="flex items-center">
@@ -10,6 +13,7 @@
                     <!-- Optional status/badge slot -->
                     <slot name="status" />
                 </h1>
+                <p class="text-sm text-gray-500 truncate">{{ subtitle }}</p>
             </div>
             
             <!-- Actions section -->
@@ -103,7 +107,7 @@ const props = defineProps({
         type: String,
         required: true
     },
-    description: {
+    subtitle: {
         type: String,
         default: null
     },

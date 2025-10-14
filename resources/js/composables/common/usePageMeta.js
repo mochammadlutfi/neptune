@@ -26,12 +26,11 @@ export function usePageMeta() {
 
   // Computed untuk breadcrumbs
   const breadcrumbs = computed(() => {
-    const matched = route.matched.filter(record => record.meta?.breadcrumb)
+    const matched = route.matched.filter(record => record.meta?.title && !record.meta?.hideBreadcrumb)
     const crumbs = []
 
     matched.forEach((record, index) => {
-      const breadcrumbMeta = record.meta.breadcrumb
-      console.log(breadcrumbMeta)
+      const breadcrumbMeta = record.meta.title
       let label = ''
 
       if (typeof breadcrumbMeta === 'function') {

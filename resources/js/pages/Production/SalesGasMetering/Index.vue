@@ -1,8 +1,8 @@
 <template>
     <div class="content">
         <!-- Modern Page Header -->
-        <PageHeader :title="$t('production.sales_gas.title')" :primary-action="{
-            label: $t('production.sales_gas.create'),
+        <PageHeader :title="$t('production.sales_gas_metering.title')" :primary-action="{
+            label: $t('production.sales_gas_metering.create'),
             icon: 'mingcute:add-line',
             click: onCreate
         }" />
@@ -15,13 +15,13 @@
                 <template #filters>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.sales_gas.fields.buyer_name')
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.sales_gas_metering.fields.buyer_name')
                                 }}</label>
                             <el-input v-model="advancedFilters.buyer_name"
                                 :placeholder="$t('common.search.search_placeholder')" clearable class="w-full" />
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.sales_gas.fields.buyer_confirmed')
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.sales_gas_metering.fields.buyer_confirmed')
                                 }}</label>
                             <el-select v-model="advancedFilters.buyer_confirmed" :placeholder="$t('common.select.placeholder')"
                                 clearable class="w-full">
@@ -30,7 +30,7 @@
                             </el-select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.sales_gas.fields.data_validated')
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('production.sales_gas_metering.fields.data_validated')
                                 }}</label>
                             <el-select v-model="advancedFilters.data_validated" :placeholder="$t('common.select.placeholder')"
                                 clearable class="w-full">
@@ -53,53 +53,46 @@
                             @selection-change="handleSelectionChange" row-key="id" stripe>
                             <el-table-column type="selection" width="50" align="center" />
 
-                            <el-table-column prop="reading_time" :label="$t('production.sales_gas.fields.reading_time')" sortable
-                                width="140" fixed="left">
+                            <el-table-column prop="date" :label="$t('production.sales_gas_metering.fields.date')" sortable
+                                fixed="left">
                                 <template #default="scope">
-                                    {{ formatDate(scope.row.reading_time) }}
+                                    {{ formatDate(scope.row.date) }}
                                 </template>
                             </el-table-column>
 
-
-                            <el-table-column prop="buyer_name" :label="$t('production.sales_gas.fields.buyer_name')" sortable
-                                min-width="120" show-overflow-tooltip>
+                            <el-table-column prop="vessel.name" :label="$t('production.sales_gas_metering.fields.vessel_id')" sortable
+                                width="200" show-overflow-tooltip>
                                 <template #default="scope">
-                                    <span class="font-medium">{{ scope.row.buyer_name || '-' }}</span>
+                                    <div class="flex items-center space-x-2">
+                                        <el-icon class="text-blue-600">
+                                            <Icon icon="fluent:vehicle-ship-24-filled"/>
+                                        </el-icon>
+                                        <router-link :to="`/master/vessels/${scope.row.vessel_id}`"
+                                            class="font-medium text-blue-600 hover:underline">
+                                            {{ scope.row.vessel?.name || '-' }}
+                                        </router-link>
+                                    </div>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="flowrate_mmscfd" :label="$t('production.sales_gas.fields.flowrate')" sortable
-                                width="140" align="right">
+                            <el-table-column prop="avg_pressure" :label="$t('production.sales_gas_metering.fields.avg_pressure')" sortable
+                                align="right">
                                 <template #default="scope">
-                                    <span class="font-mono" v-if="scope.row.flowrate_mmscfd">{{ formatNumber(scope.row.flowrate_mmscfd, 3) }} MMSCFD</span>
-                                    <span v-else>-</span>
+                                    <span class="font-mono">{{ formatNumber(scope.row.pressure_psig, 2) }} MMSCF</span>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="actual_delivery_mmscf" :label="$t('production.sales_gas.fields.actual')" sortable
-                                width="140" align="right">
+                            <el-table-column prop="avg_temperature" :label="$t('production.sales_gas_metering.fields.avg_temperature')" sortable
+                                align="right">
                                 <template #default="scope">
-                                    <span class="font-mono" v-if="scope.row.actual_delivery_mmscf">{{ formatNumber(scope.row.flowrate_mmscfd, 3) }} MMSCF</span>
-                                    <span v-else>-</span>
+                                    <span class="font-mono">{{ formatNumber(scope.row.temperature_f, 2) }} °F</span>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="nomination_mmscf" :label="$t('production.sales_gas.fields.nomination')" sortable
-                                width="140" align="right">
+                            <el-table-column prop="data_completeness" :label="$t('production.sales_gas_metering.fields.data_completeness')" sortable
+                                align="right">
                                 <template #default="scope">
-                                    <span class="font-mono" v-if="scope.row.nomination_mmscf">
-                                        {{ formatNumber(scope.row.flowrate_mmscfd, 3) }} MMSCF
-                                    </span>
-                                    <span v-else>-</span>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="variance_percent" :label="$t('production.sales_gas.fields.variance_percent')" sortable
-                                width="140" align="right">
-                                <template #default="scope">
-                                    <span class="font-mono" :class="getVarianceClass(scope.row.variance_percent)">
-                                        {{ formatNumber(scope.row.variance_percent, 2) }}%
-                                    </span>
+                                    <span class="font-mono">{{ formatNumber(scope.row.data_completeness, 2) }} %</span>
                                 </template>
                             </el-table-column>
 
@@ -107,28 +100,10 @@
                             <el-table-column :label="$t('common.actions.action', 2)" align="center" width="120"
                                 fixed="right">
                                 <template #default="scope">
-                                    <el-dropdown popper-class="dropdown-action" placement="bottom-end" trigger="click">
-                                        <el-button circle class="!p-0 !m-0">
-                                            <Icon icon="mingcute:more-2-fill" />
-                                        </el-button>
-                                        <template #dropdown>
-                                            <el-dropdown-menu>
-                                                <el-dropdown-item @click="onView(scope.row)">
-                                                    <Icon icon="mingcute:eye-line" class="me-2" />
-                                                    {{ $t('common.actions.view') }}
-                                                </el-dropdown-item>
-                                                <el-dropdown-item @click="onEdit(scope.row)">
-                                                    <Icon icon="mingcute:edit-line" class="me-2" />
-                                                    {{ $t('common.actions.edit') }}
-                                                </el-dropdown-item>
-                                                <el-dropdown-item divided class="text-red-600"
-                                                    @click="onDelete(scope.row)" v-if="scope.row.id != 1">
-                                                    <Icon icon="mingcute:delete-2-line" class="me-2" />
-                                                    {{ $t('common.actions.delete') }}
-                                                </el-dropdown-item>
-                                            </el-dropdown-menu>
-                                        </template>
-                                    </el-dropdown>
+                                    <router-link :to="`/production/sales-gas-metering/${scope.row.date}`"
+                                        class="text-blue-600 hover:underline">
+                                        {{ $t('common.actions.edit') }}
+                                    </router-link>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -177,6 +152,7 @@ const params = ref({
   q: "",
   sort: 'reading_timestamp',
   sortDir: 'desc',
+  type: 'daily',
 });
 
 const advancedFilters = ref({
@@ -191,21 +167,21 @@ const activeFilters = computed(() => {
   if (advancedFilters.value.buyer_name) {
       filters.push({
           key: 'buyer_name',
-          label: t('production.sales_gas.fields.buyer_name'),
+          label: t('production.sales_gas_metering.fields.buyer_name'),
           value: advancedFilters.value.buyer_name
       });
   }
   if (advancedFilters.value.buyer_confirmed !== null) {
       filters.push({
           key: 'buyer_confirmed',
-          label: t('production.sales_gas.fields.buyer_confirmed'),
+          label: t('production.sales_gas_metering.fields.buyer_confirmed'),
           value: advancedFilters.value.buyer_confirmed ? t('common.yes') : t('common.no')
       });
   }
   if (advancedFilters.value.data_validated !== null) {
       filters.push({
           key: 'data_validated',
-          label: t('production.sales_gas.fields.data_validated'),
+          label: t('production.sales_gas_metering.fields.data_validated'),
           value: advancedFilters.value.data_validated ? t('common.yes') : t('common.no')
       });
   }
@@ -229,7 +205,7 @@ const getVarianceClass = (variance) => {
 
 const fetchData = async ({ queryKey }) => {
   const [_key, queryParams] = queryKey;
-  const response = await axios.get("/production/sales-gas", {
+  const response = await axios.get("/production/sales-gas-metering", {
       params: queryParams,
   });
   return response.data;
@@ -243,7 +219,7 @@ const { data, isLoading, isError, error, refetch } = useQuery({
 
 // Event handlers
 const onCreate = () => {
-  router.push({ name: 'production.sales_gas.create' });
+  router.push({ name: 'production.sales_gas_metering.create' });
 };
 
 const doSearch = _.debounce(() => {
@@ -308,11 +284,11 @@ const removeFilter = (filterKey) => {
 };
 
 const onView = (row) => {
-  router.push({ name: 'production.sales_gas.show', params: { id: row.id } });
+  router.push({ name: 'production.sales_gas_metering.show', params: { id: row.id } });
 };
 
 const onEdit = (row) => {
-  router.push({ name: 'production.sales_gas.edit', params: { id: row.id } });
+  router.push({ name: 'production.sales_gas_metering.edit', params: { id: row.id } });
 };
 
 const onDelete = async (row) => {

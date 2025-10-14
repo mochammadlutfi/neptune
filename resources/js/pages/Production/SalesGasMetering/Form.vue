@@ -21,303 +21,280 @@
         @submit.prevent="onSubmit"
       >
         <div class="p-6">
-          <!-- Section 1: General Information -->
-          <div class="mb-8">
-            <div class="flex items-center mb-4">
-              <Icon icon="mdi:information-outline" class="text-blue-600 mr-2" :width="20" :height="20" />
-              <h3 class="text-lg font-semibold text-gray-800">{{ $t('production.sales_gas.sections.general_info') }}</h3>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
-              <!-- Gas Buyer -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.buyer_id')" prop="buyer_id">
-                  <SelectGasBuyer v-model="form.buyer_id"/>
-                </el-form-item>
-              </div>
+          <!-- Basic Information -->
+          <div class="mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <el-form-item :label="$t('production.sales_gas_metering.fields.vessel_id')" prop="vessel_id">
+                <select-vessel
+                  v-model="form.vessel_id"
+                  :vessel-id="form.vessel_id"
+                  :placeholder="$t('production.sales_gas_metering.placeholder.vessel_id')"
+                  @change="loadGasBuyer"
+                  disabled
+                />
+              </el-form-item>
 
-              <!-- Sales Date -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.sales_date')" prop="sales_date">
-                  <el-date-picker
-                    v-model="form.sales_date"
-                    type="date"
-                    :placeholder="$t('production.sales_gas.placeholder.sales_date')"
-                    format="DD-MM-YYYY"
-                    value-format="YYYY-MM-DD"
-                    style="width: 100%"
-                    :disabled-date="disabledDate"
-                    @change="() => formRef?.validateField('sales_date')"
-                  />
-                </el-form-item>
+              <el-form-item :label="$t('production.sales_gas_metering.fields.date')" prop="date">
+                <el-date-picker
+                  v-model="form.date"
+                  type="date"
+                  :placeholder="$t('production.sales_gas_metering.placeholder.date')"
+                  format="DD-MM-YYYY"
+                  value-format="YYYY-MM-DD"
+                  style="width: 100%"
+                  :disabled-date="disabledDate"
+                  @change="() => formRef?.validateField('date')"
+                />
+              </el-form-item>
+
+              <el-form-item :label="$t('production.sales_gas_metering.fields.time')" prop="time">
+                <el-time-picker
+                  v-model="form.time"
+                  :placeholder="$t('production.sales_gas_metering.placeholder.time')"
+                  format="HH:00"
+                  value-format="HH:00:00"
+                  style="width: 100%"
+                  @change="() => formRef?.validateField('time')"
+                />
+              </el-form-item>
+            </div>
+          </div>
+
+          <!-- Gas Quality Readings -->
+          <div class="mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <el-form-item :label="$t('production.sales_gas_metering.fields.pressure_psig')" prop="pressure_psig">
+                <el-input
+                  v-model.number="form.pressure_psig"
+                  type="number"
+                  :min="0"
+                  :step="0.01"
+                  :placeholder="$t('production.sales_gas_metering.placeholder.pressure_psig')"
+                >
+                  <template #suffix>
+                    <span class="text-gray-500 text-sm">psig</span>
+                  </template>
+                </el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('production.sales_gas_metering.fields.temperature_f')" prop="temperature_f">
+                <el-input
+                  v-model.number="form.temperature_f"
+                  type="number"
+                  :min="0"
+                  :step="0.01"
+                  :placeholder="$t('production.sales_gas_metering.placeholder.temperature_f')"
+                >
+                  <template #suffix>
+                    <span class="text-gray-500 text-sm">°F</span>
+                  </template>
+                </el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('production.sales_gas_metering.fields.h2o_lb_mmscf')" prop="h2o_lb_mmscf">
+                <el-input
+                  v-model.number="form.h2o_lb_mmscf"
+                  type="number"
+                  :min="0"
+                  :step="0.01"
+                  :placeholder="$t('production.sales_gas_metering.placeholder.h2o_lb_mmscf')"
+                >
+                  <template #suffix>
+                    <span class="text-gray-500 text-sm">lb/MMscf</span>
+                  </template>
+                </el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('production.sales_gas_metering.fields.co2_mol_pct')" prop="co2_mol_pct">
+                <el-input
+                  v-model.number="form.co2_mol_pct"
+                  type="number"
+                  :min="0"
+                  :max="100"
+                  :step="0.01"
+                  :placeholder="$t('production.sales_gas_metering.placeholder.co2_mol_pct')"
+                >
+                  <template #suffix>
+                    <span class="text-gray-500 text-sm">mol%</span>
+                  </template>
+                </el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('production.sales_gas_metering.fields.ghv')" prop="ghv">
+                <el-input
+                  v-model.number="form.ghv"
+                  type="number"
+                  :min="0"
+                  :step="0.01"
+                  :placeholder="$t('production.sales_gas_metering.placeholder.ghv')"
+                >
+                  <template #suffix>
+                    <span class="text-gray-500 text-sm">BTU/scf</span>
+                  </template>
+                </el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('production.sales_gas_metering.fields.specific_gravity')" prop="specific_gravity">
+                <el-input
+                  v-model.number="form.specific_gravity"
+                  type="number"
+                  :min="0"
+                  :max="2"
+                  :step="0.0001"
+                  :placeholder="$t('production.sales_gas_metering.placeholder.specific_gravity')"
+                />
+              </el-form-item>
+
+              <el-form-item :label="$t('production.sales_gas_metering.fields.ejgp_pressure_psig')" prop="ejgp_pressure_psig">
+                <el-input
+                  v-model.number="form.ejgp_pressure_psig"
+                  type="number"
+                  :min="0"
+                  :step="0.01"
+                  :placeholder="$t('production.sales_gas_metering.placeholder.ejgp_pressure_psig')"
+                >
+                  <template #suffix>
+                    <span class="text-gray-500 text-sm">psig</span>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </div>
+          </div>
+
+          <!-- Flow Rates per Buyer -->
+          <div class="mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+              <div>
+                  <h3 class="text-lg font-semibold mb-4 text-gray-700">{{ $t('production.sales_gas_metering.fields.hcdp_temperature') }}</h3>
+                  <div class="overflow-x-auto">
+                    <el-table 
+                      :data="form.hcdp" 
+                      class="base-table" 
+                    >
+                      <el-table-column
+                        :label="$t('production.sales_gas_metering.fields.hcdp_equipment')"
+                        prop="name"
+                      />
+                      
+                      <el-table-column
+                        :label="$t('production.sales_gas_metering.fields.temperature_f')"
+                        align="center"
+                        width="250"
+                      >
+                        <template #default="scope">
+                          <el-input
+                            v-model.number="scope.row.temp"
+                            type="number"
+                            class="w-full"
+                            :min="0"
+                            :step="0.01"
+                            @input="calculateTotal"
+                            :placeholder="$t('production.sales_gas_metering.placeholder.temperature_f')"
+                          >
+                            <template #suffix>
+                              <span class="text-gray-500 text-sm">F</span>
+                            </template>
+                          </el-input>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </div>
+              </div>
+              <div>
+                  <h3 class="text-lg font-semibold mb-4 text-gray-700">{{ $t('production.sales_gas_metering.fields.flow_rates') }}</h3>
+                  <div class="overflow-x-auto">
+                    <el-table 
+                      :data="form.flowrates" 
+                      class="base-table"
+                      :summary-method="getSummaries"
+                      show-summary
+                    >
+                      <el-table-column
+                        :label="$t('production.sales_gas_metering.fields.gas_buyer')"
+                        prop="buyer.name"
+                      />
+                      
+                      <el-table-column
+                        :label="$t('production.sales_gas_metering.fields.primary_stream')"
+                        align="center"
+                      >
+                        <template #default="scope">
+                          <el-input
+                            v-model.number="scope.row.primary_stream"
+                            type="number"
+                            class="w-full"
+                            :min="0"
+                            :step="0.01"
+                            @input="calculateTotal"
+                            :placeholder="$t('production.sales_gas_metering.placeholder.primary_stream')"
+                          >
+                            <template #suffix>
+                              <span class="text-gray-500 text-sm">MMSCFD</span>
+                            </template>
+                          </el-input>
+                        </template>
+                      </el-table-column>
+
+                      <el-table-column
+                        :label="$t('production.sales_gas_metering.fields.backup_stream')"
+                        align="center"
+                      >
+                        <template #default="scope">
+                          <el-input
+                            v-model.number="scope.row.backup_stream"
+                            type="number"
+                            class="w-full"
+                            :min="0"
+                            :step="0.01"
+                            :placeholder="$t('production.sales_gas_metering.placeholder.backup_stream')"
+                          >
+                            <template #suffix>
+                              <span class="text-gray-500 text-sm">MMSCFD</span>
+                            </template>
+                          </el-input>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </div>
               </div>
             </div>
           </div>
 
-          <!-- Section 2: Export Conditions -->
-          <div class="mb-8">
-            <div class="flex items-center mb-4">
-              <Icon icon="mdi:export" class="text-green-600 mr-2" :width="20" :height="20" />
-              <h3 class="text-lg font-semibold text-gray-800">{{ $t('production.sales_gas.sections.export_conditions') }}</h3>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
-              <!-- Export Pressure -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.export_pressure_psi')" prop="export_pressure_psi">
-                  <el-input
-                    v-model.number="form.export_pressure_psi"
-                    type="number"
-                    :placeholder="$t('production.sales_gas.placeholder.export_pressure_psi')"
-                    :min="0"
-                    :step="0.01"
-                    @change="() => formRef?.validateField('export_pressure_psi')"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:gauge" class="text-red-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">PSI</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </div>
-
-              <!-- Export Temperature -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.export_temp_f')" prop="export_temp_f">
-                  <el-input
-                    v-model.number="form.export_temp_f"
-                    type="number"
-                    :placeholder="$t('production.sales_gas.placeholder.export_temp_f')"
-                    :step="0.01"
-                    @change="() => formRef?.validateField('export_temp_f')"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:thermometer" class="text-orange-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">°F</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 3: Volume & Delivery -->
-          <div class="mb-8">
-            <div class="flex items-center mb-4">
-              <Icon icon="mdi:chart-line" class="text-purple-600 mr-2" :width="20" :height="20" />
-              <h3 class="text-lg font-semibold text-gray-800">{{ $t('production.sales_gas.sections.volume_delivery') }}</h3>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              <!-- Nomination -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.nomination_mmscf')" prop="nomination_mmscf">
-                  <el-input
-                    v-model.number="form.nomination_mmscf"
-                    type="number"
-                    :min="0"
-                    :step="0.001"
-                    :placeholder="$t('production.sales_gas.placeholder.nomination_mmscf')"
-                    @input="calculateVariance"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:target" class="text-green-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">MMSCF</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </div>
-
-              <!-- Actual Delivery -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.actual_delivery_mmscf')" prop="actual_delivery_mmscf">
-                  <el-input
-                    v-model.number="form.actual_delivery_mmscf"
-                    type="number"
-                    :min="0"
-                    :step="0.001"
-                    :placeholder="$t('production.sales_gas.placeholder.actual_delivery_mmscf')"
-                    @input="calculateVariance"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:truck-delivery" class="text-orange-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">MMSCF</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </div>
-
-              <!-- Variance (Auto-calculated) -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.variance_percent')" prop="variance_percent">
-                  <el-input
-                    v-model.number="form.variance_percent"
-                    type="number"
-                    :step="0.01"
-                    :placeholder="$t('production.sales_gas.placeholder.variance_percent')"
-                    readonly
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:percent" 
-                            :class="getVarianceColor()" 
-                            :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">%</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 4: Gas Quality Parameters -->
-          <div class="mb-8">
-            <div class="flex items-center mb-4">
-              <Icon icon="mdi:flask-outline" class="text-indigo-600 mr-2" :width="20" :height="20" />
-              <h3 class="text-lg font-semibold text-gray-800">{{ $t('production.sales_gas.sections.quality_parameters') }}</h3>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              <!-- Heating Value -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.heating_value_btu')" prop="heating_value_btu">
-                  <el-input
-                    v-model.number="form.heating_value_btu"
-                    type="number"
-                    :min="0"
-                    :step="0.01"
-                    :placeholder="$t('production.sales_gas.placeholder.heating_value_btu')"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:fire" class="text-red-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">BTU</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </div>
-
-              <!-- Specific Gravity -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.specific_gravity')" prop="specific_gravity">
-                  <el-input
-                    v-model.number="form.specific_gravity"
-                    type="number"
-                    :min="0"
-                    :step="0.0001"
-                    :placeholder="$t('production.sales_gas.placeholder.specific_gravity')"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:scale-balance" class="text-purple-600" :width="16" :height="16" />
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </div>
-
-              <!-- H2S Content -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.h2s_content_ppm')" prop="h2s_content_ppm">
-                  <el-input
-                    v-model.number="form.h2s_content_ppm"
-                    type="number"
-                    :min="0"
-                    :step="0.01"
-                    :placeholder="$t('production.sales_gas.placeholder.h2s_content_ppm')"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:chemical-weapon" class="text-yellow-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">PPM</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </div>
-
-              <!-- CO2 Content -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.co2_content_pct')" prop="co2_content_pct">
-                  <el-input
-                    v-model.number="form.co2_content_pct"
-                    type="number"
-                    :min="0"
-                    :max="100"
-                    :step="0.01"
-                    :placeholder="$t('production.sales_gas.placeholder.co2_content_pct')"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:molecule-co2" class="text-gray-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">%</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </div>
-
-              <!-- Moisture Content -->
-              <div class="mb-4">
-                <el-form-item :label="$t('production.sales_gas.fields.moisture_content_ppm')" prop="moisture_content_ppm">
-                  <el-input
-                    v-model.number="form.moisture_content_ppm"
-                    type="number"
-                    :min="0"
-                    :step="0.01"
-                    :placeholder="$t('production.sales_gas.placeholder.moisture_content_ppm')"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:water-percent" class="text-blue-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">PPM</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 5: Additional Information -->
-          <div class="mb-8">
-            <div class="flex items-center mb-4">
-              <Icon icon="mdi:note-text-outline" class="text-gray-600 mr-2" :width="20" :height="20" />
-              <h3 class="text-lg font-semibold text-gray-800">{{ $t('production.sales_gas.sections.additional_info') }}</h3>
-            </div>
-            <div class="grid grid-cols-1 gap-6">
-              <!-- Remarks -->
-              <div class="mb-2">
-                <el-form-item :label="$t('production.sales_gas.fields.remarks')" prop="remarks">
-                  <el-input
-                    v-model="form.remarks"
-                    type="textarea"
-                    :rows="3"
-                    :placeholder="$t('production.sales_gas.placeholder.remarks')"
-                    maxlength="1000"
-                    show-word-limit
-                  />
-                </el-form-item>
-              </div>
-            </div>
+          <!-- Remarks -->
+          <div class="mb-2">
+            <el-form-item :label="$t('production.sales_gas_metering.fields.remarks')" prop="remarks">
+              <el-input
+                v-model="form.remarks"
+                type="textarea"
+                :rows="3"
+                :placeholder="$t('production.sales_gas_metering.placeholder.remarks')"
+                maxlength="500"
+                show-word-limit
+              />
+            </el-form-item>
           </div>
         </div>
 
         <!-- Form Actions -->
         <div class="p-6 border-t bg-gray-50">
-          <div class="flex justify-end space-x-3">
-            <el-button @click="onBack">
-              <Icon icon="mingcute:arrow-left-line" class="mr-2" />
-              {{ $t('common.actions.cancel') }}
-            </el-button>
-            <el-button native-type="submit" type="primary" :loading="loading">
-              <Icon icon="mingcute:check-fill" class="mr-2" />
-              {{ $t('common.actions.save') }}
-            </el-button>
+          <div class="flex justify-between items-center">
+            <div class="flex space-x-3">
+              <el-button v-if="isEdit" @click="onDuplicate" type="info" plain>
+                <Icon icon="mingcute:copy-line" class="mr-2" />
+                {{ $t('common.actions.duplicate') }}
+              </el-button>
+            </div>
+            
+            <div class="flex space-x-3">
+              <el-button @click="onBack">
+                <Icon icon="mingcute:arrow-left-line" class="mr-2" />
+                {{ $t('common.actions.cancel') }}
+              </el-button>
+              <el-button native-type="submit" type="primary" :loading="loading">
+                <Icon icon="mingcute:check-fill" class="mr-2" />
+                {{ $t('common.actions.save') }}
+              </el-button>
+            </div>
           </div>
         </div>
       </el-form>
@@ -325,208 +302,138 @@
   </div>
 </template>
 
-<script setup lang="js">
-import axios from 'axios'
-import { Icon } from '@iconify/vue'
+<script setup>
 import { ref, computed, onMounted, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { ElMessage } from 'element-plus'
+import dayjs from 'dayjs'
 
 import PageHeader from '@/components/PageHeader.vue'
-import SelectGasBuyer from '@/components/select/SelectGasBuyer.vue'
+import SelectVessel from '@/components/select/SelectVessel.vue'
 import { useUser } from '@/composables/auth/useUser'
-import dayjs from 'dayjs';
 
-// Register components
-const components = {
-  PageHeader,
-  SelectGasBuyer
-}
 
-const user = useUser()
+const { userVesselId } = useUser();
 const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
 
-const title = ref(route.meta.title ?? 'production.sales_gas.create')
+const title = ref(route.meta.title ?? 'production.sales_gas_metering.create')
 const formRef = ref(null)
 const loading = ref(false)
-
-// edit mode? (opsional jika nanti ada update reading)
 const isEdit = computed(() => !!route.params.id)
 
-/**
- * State form untuk Gas Sales
- * Sesuai dengan struktur tabel gas_sales (clean database structure)
- */
+// Form State
 const form = reactive({
-  buyer_id: null, // bigint NOT NULL - Gas buyer reference
-  sales_date: null, // date NOT NULL
-  export_pressure_psi: null, // decimal(8,2) NULL
-  export_temp_f: null, // decimal(6,2) NULL
-  actual_delivery_mmscf: null, // decimal(12,3) NULL
-  nomination_mmscf: null, // decimal(12,3) NULL
-  variance_percent: null, // decimal(5,2) NULL - auto calculated
-  heating_value_btu: null, // decimal(8,2) NULL
-  specific_gravity: null, // decimal(6,4) NULL
-  h2s_content_ppm: null, // decimal(6,2) NULL
-  co2_content_pct: null, // decimal(5,2) NULL
-  moisture_content_ppm: null, // decimal(8,2) NULL
-  recorded_by: user.value?.id || null, // bigint - auto set user ID
-  remarks: '' // text NULL
+  vessel_id: userVesselId,
+  date: dayjs().format('YYYY-MM-DD'),
+  time: dayjs().format('HH:00:00'),
+  
+  // Gas Quality Readings
+  pressure_psig: null,
+  temperature_f: null,
+  h2o_lb_mmscf: null,
+  co2_mol_pct: null,
+  ghv: null,
+  specific_gravity: null,
+  ejgp_pressure_psig: null,
+  hcdp : [
+    {
+      "name" : "HCDP A",
+      "temp" : null,
+    },
+    {
+      "name" : "HCDP B",
+      "temp" : null,
+    }
+  ],
+  // Flow Rates
+  flowrates: [],
+  
+  remarks: ''
 })
 
-/* -------------------- VALIDATION HELPERS -------------------- */
-const now = () => new Date()
-
-// Disable tanggal masa depan di date-picker (toleransi 1 hari)
-const disabledDate = (date) => {
-  return date.getTime() > now().getTime() + 24 * 60 * 60 * 1000
-}
+// Validation
+const disabledDate = (date) => date.getTime() > new Date().getTime()
 
 const requiredMsg = (attr) => t('common.validation.required', { attribute: attr })
 
-// Generic numeric range validator dengan decimal precision
 const numberRange = (min, max, attr, opts = {}) => ({
   validator: (_rule, value, callback) => {
-    const allowNull = !!opts.allowNull
-    if (allowNull && (value === null || value === undefined || value === '')) return callback()
-    if (value === null || value === undefined || value === '') {
-      return callback(new Error(requiredMsg(attr)))
-    }
-    if (typeof value !== 'number' || Number.isNaN(value)) {
-      return callback(new Error(t('common.validation.numeric', { attribute: attr })))
-    }
-    if (min !== undefined && value < min) {
-      return callback(new Error(t('common.validation.min.numeric', { attribute: attr, min })))
-    }
-    if (max !== undefined && value > max) {
-      return callback(new Error(t('common.validation.max.numeric', { attribute: attr, max })))
-    }
-    // Validasi decimal precision sesuai database
-    if (opts.precision) {
-      const decimalPlaces = (value.toString().split('.')[1] || '').length
-      if (decimalPlaces > opts.precision) {
-        return callback(new Error(t('common.validation.decimal_places', { attribute: attr, max: opts.precision })))
-      }
-    }
+    if (opts.allowNull && !value) return callback()
+    if (!opts.allowNull && !value) return callback(new Error(requiredMsg(attr)))
+    
+    const num = Number(value)
+    if (isNaN(num)) return callback(new Error(t('common.validation.numeric', { attribute: attr })))
+    if (min !== undefined && num < min) return callback(new Error(t('common.validation.min.numeric', { attribute: attr, min })))
+    if (max !== undefined && num > max) return callback(new Error(t('common.validation.max.numeric', { attribute: attr, max })))
+    
     callback()
   },
-  trigger: opts.trigger || ['change', 'blur']
+  trigger: ['change', 'blur']
 })
 
-/* -------------------- RULES -------------------- */
 const formRules = ref({
-  buyer_id: [
-    { required: true, message: requiredMsg(t('production.sales_gas.fields.buyer_id')), trigger: 'change' }
-  ],
-  sales_date: [
-    { required: true, message: requiredMsg(t('production.sales_gas.fields.sales_date')), trigger: 'change' }
-  ],
-  actual_delivery_mmscf: [
-    { required: true, message: requiredMsg(t('production.sales_gas.fields.actual_delivery_mmscf')), trigger: 'blur' },
-    numberRange(0, 999999999.999, t('production.sales_gas.fields.actual_delivery_mmscf'), { precision: 3 })
-  ],
-
-  // Optional fields with proper validation ranges
-  export_pressure_psi: [
-    numberRange(0, 999999.99, t('production.sales_gas.fields.export_pressure_psi'), { allowNull: true, precision: 2 })
-  ],
-  export_temp_f: [
-    numberRange(-459.67, 9999.99, t('production.sales_gas.fields.export_temp_f'), { allowNull: true, precision: 2 })
-  ],
-  nomination_mmscf: [
-    numberRange(0, 999999999.999, t('production.sales_gas.fields.nomination_mmscf'), { allowNull: true, precision: 3 })
-  ],
-  heating_value_btu: [
-    numberRange(0, 999999.99, t('production.sales_gas.fields.heating_value_btu'), { allowNull: true, precision: 2 })
-  ],
-  specific_gravity: [
-    numberRange(0, 99.9999, t('production.sales_gas.fields.specific_gravity'), { allowNull: true, precision: 4 })
-  ],
-  h2s_content_ppm: [
-    numberRange(0, 9999.99, t('production.sales_gas.fields.h2s_content_ppm'), { allowNull: true, precision: 2 })
-  ],
-  co2_content_pct: [
-    numberRange(0, 999.99, t('production.sales_gas.fields.co2_content_pct'), { allowNull: true, precision: 2 })
-  ],
-  moisture_content_ppm: [
-    numberRange(0, 99999999.99, t('production.sales_gas.fields.moisture_content_ppm'), { allowNull: true, precision: 2 })
-  ],
-  variance_percent: [
-    numberRange(-999.99, 999.99, t('production.sales_gas.fields.variance_percent'), { allowNull: true, precision: 2 })
-  ],
-  remarks: [
-    { max: 1000, message: t('common.validation.max', { attribute: t('production.sales_gas.fields.remarks'), max: 1000 }), trigger: 'blur' }
-  ]
+  vessel_id: [{ required: true, message: requiredMsg(t('production.sales_gas_metering.fields.vessel_id')), trigger: 'change' }],
+  date: [{ required: true, message: requiredMsg(t('production.sales_gas_metering.fields.date')), trigger: 'change' }],
+  reading_hour: [{ required: true, message: requiredMsg(t('production.sales_gas_metering.fields.time')), trigger: 'change' }],
+  pressure_psig: [numberRange(0, 5000, t('production.sales_gas_metering.fields.pressure_psig'), { allowNull: true })],
+  temperature_f: [numberRange(-100, 500, t('production.sales_gas_metering.fields.temperature_f'), { allowNull: true })],
+  co2_mol: [numberRange(0, 100, t('production.sales_gas_metering.fields.co2'), { allowNull: true })],
+  specific_gravity: [numberRange(0, 2, t('production.sales_gas_metering.fields.specific_gravity'), { allowNull: true })]
 })
 
-/* -------------------- HELPERS -------------------- */
-const sanitizeNumeric = (v) => (v === '' || v === null || v === undefined ? null : v)
-
-// Hitung variance berdasarkan nomination dan actual delivery
-const calculateVariance = () => {
-  if (form.nomination_mmscf && form.actual_delivery_mmscf) {
-    const variance = ((form.actual_delivery_mmscf - form.nomination_mmscf) / form.nomination_mmscf) * 100
-    form.variance_percent = Math.round(variance * 100) / 100 // round to 2 decimal places
-  } else {
-    form.variance_percent = null
-  }
+// Methods
+const calculateTotal = () => {
+  form.total_flow_rate = form.flowrates.reduce((sum, row) => sum + (Number(row.primary_stream) || 0), 0)
 }
 
-// Get variance color based on percentage
-const getVarianceColor = () => {
-  if (form.variance_percent === null || form.variance_percent === undefined) return 'text-gray-500'
-  if (Math.abs(form.variance_percent) <= 5) return 'text-green-600'
-  if (Math.abs(form.variance_percent) <= 10) return 'text-yellow-600'
-  return 'text-red-600'
+const getSummaries = (param) => {
+  const { columns } = param
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = t('production.sales_gas_metering.fields.total')
+    } else if (index === 1) {
+      const total = form.flowrates.reduce((sum, row) => sum + (Number(row.primary_stream) || 0), 0)
+      sums[index] = `${total.toFixed(2)} MMSCFD`
+    } else {
+      sums[index] = ''
+    }
+  })
+  return sums
 }
 
-/* -------------------- SUBMIT -------------------- */
+
 const onSubmit = async () => {
   if (!formRef.value) return
   formRef.value.validate(async (valid) => {
     if (!valid) {
       return ElMessage({ message: t('common.errors.validation_failed'), type: 'error' })
     }
+
     try {
       loading.value = true
 
-      const payload = {
-        buyer_id: form.buyer_id,
-        sales_date: form.sales_date,
-        export_pressure_psi: sanitizeNumeric(form.export_pressure_psi),
-        export_temp_f: sanitizeNumeric(form.export_temp_f),
-        actual_delivery_mmscf: sanitizeNumeric(form.actual_delivery_mmscf),
-        nomination_mmscf: sanitizeNumeric(form.nomination_mmscf),
-        heating_value_btu: sanitizeNumeric(form.heating_value_btu),
-        specific_gravity: sanitizeNumeric(form.specific_gravity),
-        h2s_content_ppm: sanitizeNumeric(form.h2s_content_ppm),
-        co2_content_pct: sanitizeNumeric(form.co2_content_pct),
-        moisture_content_ppm: sanitizeNumeric(form.moisture_content_ppm),
-        recorded_by: form.recorded_by || user.value?.id,
-        remarks: form.remarks ?? ''
-      }
-
-      // endpoint sesuai dengan rute backend
+      // endpoint sesuai dengan struktur database baru
       const url = isEdit.value
-        ? `/production/sales-gas/${route.params.id}`
-        : '/production/sales-gas'
+        ? `/production/sales-gas-metering/${route.params.id}/update`
+        : '/production/sales-gas-metering/store'
       const method = isEdit.value ? 'put' : 'post'
 
-      const { status, data } = await axios({ method, url, data: payload })
+      const { status, data } = await axios({ method, url, data: form })
 
       if (status === 200 || status === 201) {
         ElMessage({ message: t('common.messages.saved'), type: 'success' })
         const id = data?.id || data?.data?.id
         if (id) {
-          router.replace({ path: `/production/sales-gas/${id}` })
+          router.replace({ path: `/production/sales-gas-metering/${id}` })
         } else {
-          router.push({ name: 'production.sales_gas.index' })
+          router.push({ name: 'production.sales_gas_metering.index' })
         }
       }
     } catch (error) {
+      console.error('Submit error:', error)
       if (error?.response?.status === 422) {
         const errors = error.response.data.errors
         let msg = t('common.errors.validation_failed')
@@ -535,6 +442,11 @@ const onSubmit = async () => {
           if (first && first[0]) msg = first[0]
         }
         ElMessage({ message: msg, type: 'error' })
+      } else if (error?.response?.status === 409) {
+        ElMessage({ 
+          message: t('production.sales_gas_allocation.validation.duplicate_entry'), 
+          type: 'error' 
+        })
       } else {
         ElMessage({ message: t('common.errors.server_error'), type: 'error' })
       }
@@ -544,31 +456,34 @@ const onSubmit = async () => {
   })
 }
 
-/* -------------------- LOAD (edit mode) -------------------- */
-const loadData = async () => {
-  if (!isEdit.value) return
+const onBack = () => {
+  router.push({ name: 'production.sales_gas_metering.index' })
+}
+
+const onDuplicate = () => {
+  // Duplicate logic here
+}
+const loadGasBuyer = async () => {
   try {
     loading.value = true
-    const { data } = await axios.get(`/production/sales-gas/${route.params.id}`)
+    form.lines = []
+    const { data } = await axios.get(`/master/gas-buyer`, { params: { vessel_id: form.vessel_id } })
     const d = data?.data || data
     if (d) {
-      form.buyer_id = d.buyer_id ?? null
-      form.sales_date = d.sales_date
-      form.export_pressure_psi = d.export_pressure_psi ?? null
-      form.export_temp_f = d.export_temp_f ?? null
-      form.actual_delivery_mmscf = d.actual_delivery_mmscf ?? null
-      form.nomination_mmscf = d.nomination_mmscf ?? null
-      form.variance_percent = d.variance_percent ?? null
-      form.heating_value_btu = d.heating_value_btu ?? null
-      form.specific_gravity = d.specific_gravity ?? null
-      form.h2s_content_ppm = d.h2s_content_ppm ?? null
-      form.co2_content_pct = d.co2_content_pct ?? null
-      form.moisture_content_ppm = d.moisture_content_ppm ?? null
-      form.recorded_by = d.recorded_by ?? user.value?.id
-      form.remarks = d.remarks ?? ''
+      d.forEach(item => {
+        form.flowrates.push({
+          buyer_id: item.id,
+          buyer: {
+            id: item.id,
+            name: item.name,
+          },
+          primary_stream: null,
+          backup_stream:null
+        })
+      })
     }
   } catch (e) {
-    console.error(e)
+    console.error('Load error:', e)
     ElMessage.error(t('common.errors.server_error'))
     onBack()
   } finally {
@@ -576,11 +491,12 @@ const loadData = async () => {
   }
 }
 
-const onBack = () => {
-  router.push({ name: 'production.sales_gas.index' })
+const loadData = async () => {
+  // Load edit data logic here
 }
 
 onMounted(() => {
+  loadGasBuyer()
   loadData()
 })
 </script>

@@ -5,6 +5,7 @@ namespace App\Models\Production;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Master\Vessel;
+use App\Models\User;
 
 class SalesGasAllocation extends Model
 {
@@ -16,10 +17,9 @@ class SalesGasAllocation extends Model
         'vessel_id',
         'date',
         'total',
-    ];
-
-    protected $casts = [
-        'date' => 'date',
+        'created_uid',
+        'status',
+        'remarks',
     ];
 
     public function vessel()
@@ -29,6 +29,12 @@ class SalesGasAllocation extends Model
 
     public function lines()
     {
-        return $this->hasMany(SalesGasAllocationLine::class, 'gas_allocation_id');
+        return $this->hasMany(SalesGasAllocationLine::class, 'allocation_id');
     }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_uid');
+    }
+
 }

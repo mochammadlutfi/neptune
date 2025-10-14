@@ -2,18 +2,79 @@
   "title": "Production | Productions",
   "sales_gas_metering" : {
       "title": "Sales Gas Metering",
+      "create" : "Add Sales Gas Metering",
+      "hourly" : "Hourly Sales Gas Metering", 
+      "edit" : "Edit Sales Gas Metering",
+      "detail" : "Detail Sales Gas Metering",
+      "delete" : "Delete Sales Gas Metering",
+      "hours_missing" : "Hours Missing",
+      "hours_recorded" : "Hours Recorded",
+      "quick_fill" : "Quick Fill",
+      "avg_pressure" : "Avg Pressure",
+      "avg_temperature" : "Avg Temperature",
+      "avg_flow_rate" : "Avg Flow Rate",
+      "hourly_readings_table" : "Hourly Readings Table",
+      "data_completeness" : "Data Completeness",
       "fields" : {
-
+        "vessel_id" : "Vessel",
+        "date" : "Date",
+        "time" : "Time",
+        "name" : "Name",
+        "avg_pressure" : "Avg Pressure",
+        "avg_temperature" : "Avg Temperature",
+        "data_completeness" : "Data Completeness",
+        "status" : "Status",
+        "pressure_psig" : "Pressure (PSIG)",
+        "temperature_f" : "Temperature (°F)",
+        "h2o_lb_mmscf" : "H2O (lib/MMscf)",
+        "HCDP_temp_f" : "HCDP Temp (°F)",
+        "co2_mol_pct" : "CO2 (mol%)",
+        "ghv" : "GHV (BTU/scf)",
+        "specific_gravity" : "Specific Gravity",
+        "ejgp_pressure_psig" : "EJGP Pressure (PSIG)",
+        "flow_rates" : "Flow Rates",
+        "gas_buyer" : "Gas Buyer",
+        "hcdp_temperature" : "HCDP Temperature",
+        "primary_stream" : "Primary Stream",
+        "hcdp_equipment" : "HCDP Equipment",
+        "backup_stream" : "Backup Stream",
+        "total" : "Total",
+        "remarks" : "Remarks"
+      },
+      "placeholder" : {
+        "vessel_id" : "Select Vessel",
+        "date" : "Select Date",
+        "time" : "Select Time",
+        "pressure_psig" : "Enter Pressure (PSIG)",
+        "temperature_f" : "Enter Temperature (F)",
+        "h2o_lb_mmscf" : "Enter H2O (lib/MMscf)",
+        "HCDP_temp_f" : "Enter HCDP Temp (F)",
+        "co2_mol_pct" : "Enter CO2 (mol%)",
+        "ghv" : "Enter GHV (BTU/scf)",
+        "specific_gravity" : "Enter Specific Gravity",
+        "ejgp_pressure_psig" : "Enter EJGP Pressure (PSIG)",
+        "flow_rates" : "Enter Flow Rates",
+        "primary_stream" : "Enter Primary Stream",
+        "backup_stream" : "Enter Backup Stream",
+        "total" : "Enter Total",
+        "remarks" : "Enter Remarks"
+      },
+      "status" : {
+        "draft" : "Draft",
+        "confirmed" : "Confirmed",
+        "cancel"  : "Cancel"
       }
   },
   "sales_gas_nomination" : {
       "title": "Sales Gas Nomination",
       "create" : "Add Sales Gas Nomination",
       "edit" : "Edit Sales Gas Nomination",
+      "detail" : "Detail Sales Gas Nomination",
       "delete" : "Delete Sales Gas Nomination",
       "fields" : {
         "date" : "Date",
         "vessel_id" : "Vessel",
+        "name" : "Name",
         "total_nomination" : "Total Nomination",
         "total_confirmed" : "Total Confirmed",
         "gas_buyer" : "Gas Buyer",
@@ -44,14 +105,141 @@
       "delete" : "Delete Sales Gas Allocation",
       "fields" : {
         "vessel_id" : "Vessel",
+        "name" : "Name",
         "date" : "Date",
         "allocation" : "Allocation",
-        "total" : "Total"
+        "total" : "Total Allocation",
+        "gas_buyer" :"Gas Buyer",
+        "remarks" : "Remarks",
+        "status" : "Status"
+      },
+      "placeholder" : {
+        "vessel_id" : "Select Vessel",
+        "date" : "Select Date",
+        "allocation" : "Enter Gas Allocation",
+        "total" : "Total",
+        "remarks" :"Enter additional remarks or notes"
       },
       "status" : {
         "draft" : "Draft",
         "confirmed" : "Confirmed"
       }
+  },
+  "vessel_operation": {
+    "title": "Vessel Operations",
+    "create": "Create Vessel Operation",
+    "edit": "Edit Vessel Operation",
+    "detail": "Vessel Operation Detail",
+    "list": "Vessel Operations List",
+    
+    "sections": {
+      "basic_info": "Basic Information",
+      "gas_operations": "Gas Operations",
+      "condensate_operations": "Condensate Operations",
+      "fuel_water_operations": "Fuel & Water Operations",
+      "well_flows": "Well Flow Rates"
+    },
+    
+    "fields": {
+      "vessel_id": "Vessel",
+      "operation_date": "Operation Date",
+      
+      "inlet_gas_mmscf": "Inlet Gas (MMSCF)",
+      "total_sales_gas_mmscf": "Sales Gas (MMSCF)",
+      "fuel_gas_mmscf": "Fuel Gas (MMSCF)",
+      "flare_hp_mmscf": "Flare HP (MMSCF)",
+      "flare_lp_mmscf": "Flare LP (MMSCF)",
+      "total_flare_gas_mmscf": "Total Flare (MMSCF)", 
+      "gas_export_uptime": "Gas Export Uptime",
+      "gas_export_uptime_percent": "Uptime %",
+      "inlet_pressure_psi": "Inlet Pressure (PSI)",
+      "inlet_temp_f": "Inlet Temp (°F)",
+      "outlet_pressure_psi": "Outlet Pressure (PSI)",
+      "outlet_temp_f": "Outlet Temp (°F)",
+      
+      "condensate_produced": "Condensate Produced",
+      "condensate_skimmed": "Condensate Skimmed",
+      "condensate_production_total": "Consendate Production Total",
+      "condensate_stock_bbls": "Condensate Stock (bbls)",
+      "condensate_consumed_gtg": "Consumed by GTG (bbls)",
+      "condensate_temp_f": "Condensate Temp (°F)",
+      "condensate_uptime": "Condensate Uptime",
+      "condensate_uptime_percent": "Uptime %",
+      
+      "diesel_fuel_mopu_ltr": "Diesel MOPU (Liters)",
+      "diesel_fuel_hcml_ltr": "Diesel HCML (Liters)",
+      
+      "produced_water_total_bbls": "Water Total (bbls)",
+      "produced_water_offspec_bbls": "Water Off-spec (bbls)",
+      "produced_water_overboard_bbls": "Water Overboard (bbls)",
+      "water_oiw_content_ppm": "OIW Content (ppm)",
+      
+      "well": "Well",
+      "well_flow_rate": "Gas Flow Rate (MMSCFD)",
+      "total_well_flow": "Total Well Flow",
+      "well_balance_status": "Balance Status",
+      
+      "remarks": "Remarks",
+      "recorded_by": "Recorded By",
+      "created_at": "Created At",
+      "updated_at": "Updated At"
+    },
+    
+    "placeholder": {
+      "vessel_id": "Select vessel",
+      "operation_date": "Select operation date",
+      
+      "inlet_gas_mmscfd": "Enter inlet gas",
+      "total_sales_gas_mmscfd": "Enter sales gas",
+      "fuel_gas_mmscfd": "Enter fuel gas",
+      "flare_hp_mmscfd": "Enter flare HP",
+      "flare_lp_mmscfd": "Enter flare LP",
+      "gas_export_uptime": "HH:MM:SS (e.g., 10:00:00)",
+      "inlet_pressure_psi": "Enter pressure",
+      "inlet_temp_f": "Enter temperature",
+      "outlet_pressure_psi": "Enter pressure",
+      "outlet_temp_f": "Enter temperature",
+      
+      "condensate_produced_lts": "Enter volume in liters",
+      "condensate_produced_bbls": "Auto-calculated from liters",
+      "condensate_skimmed_bbls": "Enter skimmed volume",
+      "condensate_stock_bbls": "Enter stock",
+      "condensate_consumed_gtg_bbls": "Enter GTG consumption",
+      "condensate_temp_f": "Enter temperature",
+      "condensate_uptime": "HH:MM:SS (e.g., 08:30:00)",
+      
+      "diesel_fuel_mopu_ltr": "Enter diesel consumption",
+      "diesel_fuel_hcml_ltr": "Enter diesel consumption",
+      
+      "produced_water_total_bbls": "Enter total water",
+      "produced_water_offspec_bbls": "Enter off-spec water",
+      "produced_water_overboard_bbls": "Enter overboard water",
+      "water_oiw_content_ppm": "Enter OIW content",
+      
+      "well_flow_rate": "Enter flow rate",
+      
+      "remarks": "Enter remarks (optional)"
+    },
+    
+    "validation": {
+      "duplicate_entry": "Operation for this vessel and date already exists",
+      "well_balance_warning": "Well flow rates do not match inlet gas. Please verify your data.",
+      "uptime_format": "Uptime must be in HH:MM:SS format (e.g., 10:00:00)",
+      "future_date": "Operation date cannot be in the future"
+    },
+    
+    "messages": {
+      "created": "Vessel operation created successfully",
+      "updated": "Vessel operation updated successfully",
+      "deleted": "Vessel operation deleted successfully",
+      "load_failed": "Failed to load vessel operation data",
+      "save_failed": "Failed to save vessel operation"
+    },
+    
+    "confirm": {
+      "delete": "Are you sure you want to delete this vessel operation?",
+      "delete_message": "This action cannot be undone."
+    }
   },
   "operation" : {
       "title": "Operation | Operations",

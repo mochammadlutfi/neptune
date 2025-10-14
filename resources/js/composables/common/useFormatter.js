@@ -1,5 +1,4 @@
 import { useSetting } from "./useSetting";
-import currency from "currency.js";
 import dayjs from "dayjs";
 
 export const useFormatter = () => {
@@ -20,39 +19,33 @@ export const useFormatter = () => {
         return dayjs(value).format(formatString);
     };
 
-    const formatCurrency = (value) => {
+    const formatTime = (value) => {
         const appBase = useSetting();
-        const separator = appBase.app.currency?.separator || ",";
-        const decimal = appBase.app.currency?.decimal || ".";
-        const precision = appBase.app.currency?.precision || 0;
-        const symbol = appBase.app.currency?.symbol || "$";
+        const timeFormat = appBase.app.time_format || "HH:mm:ss";
 
-        // Format nilai dengan currency.js
-        return currency(value ?? 0, {
-            symbol: symbol, // Simbol mata uang
-            separator: separator, // Pemisah ribuan
-            decimal: decimal, // Pemisah desimal
-            precision: precision, // Jumlah angka desimal
-        }).format();
+        // If value is a valid time string like "21:00:00", parse it as a time and format
+        return dayjs(value, "HH:mm").format(timeFormat);
     };
 
-    const formatNumber = (value) => {
+    const formatNumber = (value, decimals = 0) => {
         const appBase = useSetting();
-        const separator = appBase.app.currency?.separator || ",";
-        const decimal = appBase.app.currency?.decimal || ".";
+        const separator = appBase.app.number?.separator || ",";
+        const decimal = appBase.app.number?.decimal || ".";
+        const precision = decimals ?? appBase.app.number?.precision ?? 0;
 
-        // Format angka tanpa simbol mata uang
-        return currency(value ?? 0, {
-            symbol: "", // Tanpa simbol
-            separator: separator, // Pemisah ribuan
-            decimal: decimal, // Pemisah desimal
-            precision: 0, // Tanpa desimal untuk number formatting
-        }).format();
+        const num = Number(value ?? 0);
+        if (!isFinite(num)) return "";
+
+        const absFixed = Math.abs(num).toFixed(precision);
+        const [intPart, fracPart] = absFixed.split(".");
+        const intWithSep = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+        const formatted = fracPart ? intWithSep + decimal + fracPart : intWithSep;
+        return num < 0 ? "-" + formatted : formatted;
     };
 
     return {
         formatDate,
-        formatCurrency,
+        formatTime,
         formatNumber,
     };
 };

@@ -25,10 +25,10 @@
                         </el-col>
                         <el-col :md="12">
                             <el-form-item :label="$t('settings.user.fields.allowed_vessel')" prop="vessel_list">
-                                <select-vessel v-model="form.vessel_list" multiple/>
+                                <select-vessel v-model="form.vessel_list" @change="handleVesselListChange" multiple/>
                             </el-form-item>
                             <el-form-item :label="$t('settings.user.fields.vessel_id')" prop="vessel_id">
-                                <select-vessel v-model="form.vessel_id"/>
+                                <select-vessel v-model="form.vessel_id" :allowed_ids="form.vessel_list" :disabled="form.vessel_list.length === 0"/>
                             </el-form-item>
                             <el-form-item :label="$t('settings.user.fields.role')" prop="role">
                                 <select-role v-model="form.role" class="w-full"/>
@@ -85,7 +85,7 @@ const form = ref({
     role : null,
     image : null,
     vessel_id : null,
-    vessel_list : null,
+    vessel_list : [],
 })
 
 const formRef = ref(null)
@@ -119,6 +119,12 @@ const formRules = computed(() => ({
     ],
 }))
 const isLoading = ref(false)
+
+const handleVesselListChange = (selectedIds) => {
+    form.value.vessel_id = selectedIds[0] || null
+}
+
+
 
 const fetchData = async () => {
     try {

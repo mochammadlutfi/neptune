@@ -38,6 +38,10 @@ class VesselController extends Controller
             $query->where('client_oim', 'LIKE', '%' . $request->client_oim . '%');
         }
 
+        if($request->filled('allowed_ids')){
+            $query->whereIn('id', $request->allowed_ids);
+        }
+
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;

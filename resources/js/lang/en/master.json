@@ -44,13 +44,9 @@
     "detail": "Well Detail",
     "fields": {
       "vessel_id": "Vessel",
-      "code": "Well Code",
-      "name": "Well Name",
-      "max_oil_rate": "Max Oil Rate",
-      "max_gas_rate": "Max Gas Rate",
-      "max_water_rate": "Max Water Rate",
-      "type": "Well Type",
-      "status": "Status"
+      "code": "Code",
+      "name": "Name",
+      "recorded_by": "Recorded By"
     },
     "placeholders" : {
       "vessel_id": "Select Vessel",
@@ -220,6 +216,37 @@
       "code" : "Enter gas buyer code",
       "name" : "Enter gas buyer name",
       "type" : "Enter gas buyer type"
+    },
+    "status" : {
+      "active" : "Active",
+      "inactive" : "Inactive"
+    }
+  },
+  "tank" : {
+    "title" : "Tank",
+    "create" : "Add Tank",
+    "edit" : "Edit Tank",
+    "delete" : "Delete Tank",
+    "detail" : "Tank Detail",
+    "list" : "Tanks",
+    "fields" : {
+      "vessel_id" : "Vessel",
+      "code" : "Code",
+      "name" : "Name",
+      "type" : "Type",
+      "capacity_bbls" : "Capacity (Bbls)",
+      "is_multiphase" : "Multiphase",
+      "product_type" : "Product Type",
+      "is_active" : "Status"
+    },
+    "placeholders" : {
+      "vessel_id" : "Select Vessel",
+      "code" : "Enter tank code",
+      "name" : "Enter tank name",
+      "type" : "Enter tank type",
+      "capacity_bbls" : "Enter tank capacity (Bbls)",
+      "is_multiphase" : "Enter tank multiphase status",
+      "product_type" : "Enter tank product type"
     },
     "status" : {
       "active" : "Active",

@@ -23,83 +23,203 @@
         <div class="p-6">
           <!-- Basic Information -->
           <div class="mb-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-              <Icon icon="heroicons:information-circle" class="mr-2 text-blue-600" />
-              {{ $t('production.fpu.sections.basic_info') }}
+            <h3 class="text-lg font-semibold mb-4 text-gray-700">
+              {{ $t('production.vessel_operation.sections.basic_info') }}
             </h3>
             <el-row :gutter="24">
-              <!-- Reading Date -->
-              <el-col :md="8" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.reading_date')" prop="reading_date">
-                  <el-date-picker
-                    v-model="form.reading_date"
-                    type="date"
-                    :placeholder="$t('production.fpu.placeholder.reading_date')"
-                    format="DD-MM-YYYY"
-                    value-format="YYYY-MM-DD"
-                    style="width: 100%"
-                    :disabled-date="disabledDate"
-                    @change="() => formRef?.validateField('reading_date')"
+              <!-- Vessel -->
+              <el-col :md="12" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.vessel_id')" 
+                  prop="vessel_id"
+                >
+                  <select-vessel
+                    v-model="form.vessel_id"
+                    :vessel-id="form.vessel_id"
+                    :placeholder="$t('production.vessel_operation.placeholder.vessel_id')"
+                    @change="loadWells"
                   />
                 </el-form-item>
               </el-col>
 
-              <!-- Reading Hour -->
-              <el-col :md="8" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.reading_hour')" prop="reading_hour">
-                  <el-select
-                    v-model="form.reading_hour"
-                    :placeholder="$t('production.fpu.placeholder.reading_hour')"
+              <!-- Operation Date -->
+              <el-col :md="12" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.date')" 
+                  prop="date"
+                >
+                  <el-date-picker
+                    v-model="form.date"
+                    type="date"
+                    :placeholder="$t('production.vessel_operation.placeholder.date')"
+                    format="DD-MM-YYYY"
+                    value-format="YYYY-MM-DD"
                     style="width: 100%"
-                    @change="() => formRef?.validateField('reading_hour')"
-                  >
-                    <el-option
-                      v-for="hour in hourOptions"
-                      :key="hour.value"
-                      :label="hour.label"
-                      :value="hour.value"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-
-              <!-- Operator -->
-              <el-col :md="8" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.operator')" prop="recorded_by">
-                  <el-input
-                    :value="currentOperator"
-                    readonly
-                    :placeholder="$t('production.fpu.placeholder.operator')"
-                  >
-                    <template #prefix>
-                      <Icon icon="heroicons:user" class="text-gray-600" :width="16" :height="16" />
-                    </template>
-                  </el-input>
+                    :disabled-date="disabledDate"
+                    @change="() => formRef?.validateField('date')"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
           </div>
 
-          <!-- Process Parameters -->
+          <!-- Gas Operations Section -->
           <div class="mb-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-              <Icon icon="mdi:gauge" class="mr-2 text-red-600" />
-              {{ $t('production.fpu.sections.process_parameters') }}
+            <h3 class="text-lg font-semibold mb-4 text-gray-700 flex items-center">
+              <Icon icon="mdi:gas-cylinder" class="mr-2 text-blue-600" />
+              {{ $t('production.vessel_operation.sections.gas_operations') }}
             </h3>
             <el-row :gutter="24">
+              <!-- Gas Export Uptime -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.gas_export_uptime')" 
+                  prop="gas_export_uptime"
+                >
+                  <el-time-picker
+                    v-model="form.gas_export_uptime"
+                    format="HH:mm"
+                    value-format="HH:mm:ss"
+                    :placeholder="$t('production.vessel_operation.placeholder.gas_export_uptime')"
+                    style="width: 100%"
+                  />
+                </el-form-item>
+              </el-col>
+
+              <!-- Inlet Gas -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.inlet_gas_mmscf')" 
+                  prop="inlet_gas_mmscf"
+                >
+                  <el-input
+                    v-model.number="form.inlet_gas_mmscf"
+                    type="number"
+                    :min="0"
+                    :step="0.0001"
+                    :placeholder="$t('production.vessel_operation.placeholder.inlet_gas_mmscf')"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">MMSCF</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!-- Sales Gas -->
+              <!-- <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.total_sales_gas_mmscfd')" 
+                  prop="total_sales_gas_mmscfd"
+                >
+                  <el-input
+                    v-model.number="form.total_sales_gas_mmscfd"
+                    type="number"
+                    :min="0"
+                    :step="0.0001"
+                    :placeholder="$t('production.vessel_operation.placeholder.total_sales_gas_mmscfd')"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">MMSCFD</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col> -->
+
+              <!-- Fuel Gas -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.fuel_gas_mmscfd')" 
+                  prop="fuel_gas_mmscfd"
+                >
+                  <el-input
+                    v-model.number="form.fuel_gas_mmscfd"
+                    type="number"
+                    :min="0"
+                    :step="0.0001"
+                    :placeholder="$t('production.vessel_operation.placeholder.fuel_gas_mmscfd')"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">MMSCFD</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!-- Flare HP -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.flare_hp_mmscfd')" 
+                  prop="flare_hp_mmscfd"
+                >
+                  <el-input
+                    v-model.number="form.flare_hp_mmscfd"
+                    type="number"
+                    :min="0"
+                    :step="0.0001"
+                    @input="calculateTotalFlare"
+                    :placeholder="$t('production.vessel_operation.placeholder.flare_hp_mmscfd')"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">MMSCFD</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!-- Flare LP -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.flare_lp_mmscfd')" 
+                  prop="flare_lp_mmscfd"
+                >
+                  <el-input
+                    v-model.number="form.flare_lp_mmscfd"
+                    type="number"
+                    :min="0"
+                    :step="0.0001"
+                    @input="calculateTotalFlare"
+                    :placeholder="$t('production.vessel_operation.placeholder.flare_lp_mmscfd')"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">MMSCFD</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!-- Total Flare (Read-only) -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.total_flare_gas_mmscfd')" 
+                  prop="total_flare_gas_mmscfd"
+                >
+                  <el-input
+                    v-model.number="form.total_flare_gas_mmscfd"
+                    type="number"
+                    readonly
+                    class="!bg-gray-100"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">MMSCFD</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+
               <!-- Inlet Pressure -->
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.inlet_pressure_psi')" prop="inlet_pressure_psi">
+              <el-col :md="6" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.inlet_pressure_psi')" 
+                  prop="inlet_pressure_psi"
+                >
                   <el-input
                     v-model.number="form.inlet_pressure_psi"
                     type="number"
-                    :min="0"
-                    :step="0.1"
-                    placeholder="Enter inlet pressure"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.inlet_pressure_psi')"
                   >
-                    <template #prefix>
-                      <Icon icon="mdi:arrow-right" class="text-green-600" :width="16" :height="16" />
-                    </template>
                     <template #suffix>
                       <span class="text-gray-500 text-sm">PSI</span>
                     </template>
@@ -107,19 +227,18 @@
                 </el-form-item>
               </el-col>
 
-              <!-- Inlet Temperature -->
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.inlet_temp_f')" prop="inlet_temp_f">
+              <!-- Inlet Temp -->
+              <el-col :md="6" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.inlet_temp_f')" 
+                  prop="inlet_temp_f"
+                >
                   <el-input
                     v-model.number="form.inlet_temp_f"
                     type="number"
-                    :min="0"
-                    :step="0.1"
-                    placeholder="Enter inlet temperature"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.inlet_temp_f')"
                   >
-                    <template #prefix>
-                      <Icon icon="mdi:thermometer" class="text-orange-600" :width="16" :height="16" />
-                    </template>
                     <template #suffix>
                       <span class="text-gray-500 text-sm">°F</span>
                     </template>
@@ -128,18 +247,17 @@
               </el-col>
 
               <!-- Outlet Pressure -->
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.outlet_pressure_psi')" prop="outlet_pressure_psi">
+              <el-col :md="6" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.outlet_pressure_psi')" 
+                  prop="outlet_pressure_psi"
+                >
                   <el-input
                     v-model.number="form.outlet_pressure_psi"
                     type="number"
-                    :min="0"
-                    :step="0.1"
-                    placeholder="Enter outlet pressure"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.outlet_pressure_psi')"
                   >
-                    <template #prefix>
-                      <Icon icon="mdi:arrow-left" class="text-blue-600" :width="16" :height="16" />
-                    </template>
                     <template #suffix>
                       <span class="text-gray-500 text-sm">PSI</span>
                     </template>
@@ -147,19 +265,18 @@
                 </el-form-item>
               </el-col>
 
-              <!-- Outlet Temperature -->
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.outlet_temp_f')" prop="outlet_temp_f">
+              <!-- Outlet Temp -->
+              <el-col :md="6" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.outlet_temp_f')" 
+                  prop="outlet_temp_f"
+                >
                   <el-input
                     v-model.number="form.outlet_temp_f"
                     type="number"
-                    :min="0"
-                    :step="0.1"
-                    placeholder="Enter outlet temperature"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.outlet_temp_f')"
                   >
-                    <template #prefix>
-                      <Icon icon="mdi:thermometer" class="text-purple-600" :width="16" :height="16" />
-                    </template>
                     <template #suffix>
                       <span class="text-gray-500 text-sm">°F</span>
                     </template>
@@ -169,203 +286,145 @@
             </el-row>
           </div>
 
-          <!-- Gas Flow Rates -->
+          <!-- Condensate Operations Section -->
           <div class="mb-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-              <Icon icon="heroicons:chart-bar" class="mr-2 text-green-600" />
-              {{ $t('production.fpu.sections.gas_flow_rates') }}
+            <h3 class="text-lg font-semibold mb-4 text-gray-700 flex items-center">
+              <Icon icon="mdi:oil" class="mr-2 text-amber-600" />
+              {{ $t('production.vessel_operation.sections.condensate_operations') }}
             </h3>
             <el-row :gutter="24">
-              <!-- Total Gas Rate -->
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.total_gas_rate_mmscfd')" prop="total_gas_rate_mmscfd">
+              <!-- Condensate Produced (Liters) -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.condensate_produced_lts')" 
+                  prop="condensate_produced_lts"
+                >
                   <el-input
-                    v-model.number="form.total_gas_rate_mmscfd"
+                    v-model.number="form.condensate_produced_lts"
                     type="number"
                     :min="0"
-                    :step="0.001"
-                    @input="calculateMetrics"
-                    @change="() => formRef?.validateField('total_gas_rate_mmscfd')"
-                    placeholder="Enter total gas rate"
+                    :step="0.01"
+                    @input="convertLitersToBbls"
+                    :placeholder="$t('production.vessel_operation.placeholder.condensate_produced_lts')"
                   >
-                    <template #prefix>
-                      <Icon icon="heroicons:chart-bar" class="text-green-600" :width="16" :height="16" />
-                    </template>
                     <template #suffix>
-                      <span class="text-gray-500 text-sm">MMSCFD</span>
+                      <span class="text-gray-500 text-sm">Liters</span>
                     </template>
                   </el-input>
                 </el-form-item>
               </el-col>
 
-              <!-- Fuel Gas Rate -->
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.fuel_gas_rate_mmscfd')" prop="fuel_gas_rate_mmscfd">
+              <!-- Condensate Produced (Barrels) - Auto-calculated -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.condensate_produced_bbls')" 
+                  prop="condensate_produced_bbls"
+                >
                   <el-input
-                    v-model.number="form.fuel_gas_rate_mmscfd"
+                    v-model.number="form.condensate_produced_bbls"
                     type="number"
-                    :min="0"
-                    :step="0.001"
-                    @input="calculateMetrics"
-                    @change="() => formRef?.validateField('fuel_gas_rate_mmscfd')"
-                    placeholder="Enter fuel gas rate"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:fire" class="text-red-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">MMSCFD</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </el-col>
-
-              <!-- Flare HP Rate -->
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.flare_hp_rate_mmscfd')" prop="flare_hp_rate_mmscfd">
-                  <el-input
-                    v-model.number="form.flare_hp_rate_mmscfd"
-                    type="number"
-                    :min="0"
-                    :step="0.001"
-                    @input="calculateMetrics"
-                    @change="() => formRef?.validateField('flare_hp_rate_mmscfd')"
-                    placeholder="Enter HP flare rate"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:fire-alert" class="text-orange-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">MMSCFD</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </el-col>
-
-              <!-- Flare LP Rate -->
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.flare_lp_rate_mmscfd')" prop="flare_lp_rate_mmscfd">
-                  <el-input
-                    v-model.number="form.flare_lp_rate_mmscfd"
-                    type="number"
-                    :min="0"
-                    :step="0.001"
-                    @input="calculateMetrics"
-                    @change="() => formRef?.validateField('flare_lp_rate_mmscfd')"
-                    placeholder="Enter LP flare rate"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:fire" class="text-yellow-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">MMSCFD</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <!-- Calculated Metrics (Read-only) -->
-            <el-row :gutter="24" v-if="showCalculatedMetrics">
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.total_flare_rate')">
-                  <el-input
-                    :value="calculatedMetrics.totalFlareRate"
                     readonly
-                    placeholder="Auto-calculated"
+                    class="!bg-gray-100"
                   >
                     <template #suffix>
-                      <span class="text-gray-500 text-sm">MMSCFD</span>
+                      <span class="text-gray-500 text-sm">bbls</span>
                     </template>
                   </el-input>
                 </el-form-item>
               </el-col>
 
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.export_gas_rate')">
+              <!-- Condensate Skimmed -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.condensate_skimmed_bbls')" 
+                  prop="condensate_skimmed_bbls"
+                >
                   <el-input
-                    :value="calculatedMetrics.exportGasRate"
-                    readonly
-                    placeholder="Auto-calculated"
-                  >
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">MMSCFD</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </el-col>
-
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.flare_percentage')">
-                  <el-input
-                    :value="calculatedMetrics.flarePercentage"
-                    readonly
-                    placeholder="Auto-calculated"
-                  >
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">%</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </el-col>
-
-              <el-col :md="6" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.gas_balance')">
-                  <el-input
-                    :value="calculatedMetrics.gasBalance"
-                    readonly
-                    placeholder="Auto-calculated"
-                    :class="{'border-red-500': Math.abs(parseFloat(calculatedMetrics.gasBalance)) > 0.1}"
-                  >
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">MMSCFD</span>
-                    </template>
-                  </el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </div>
-
-          <!-- TEG System -->
-          <div class="mb-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-              <Icon icon="mdi:water" class="mr-2 text-cyan-600" />
-              {{ $t('production.fpu.sections.teg_system') }}
-            </h3>
-            <el-row :gutter="24">
-              <!-- Contactor Pressure -->
-              <el-col :md="8" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.contactor_pressure_psi')" prop="contactor_pressure_psi">
-                  <el-input
-                    v-model.number="form.contactor_pressure_psi"
+                    v-model.number="form.condensate_skimmed_bbls"
                     type="number"
                     :min="0"
-                    :step="0.1"
-                    placeholder="Enter contactor pressure"
+                    :step="0.01"
+                    @input="calculateCondensateTotal"
+                    :placeholder="$t('production.vessel_operation.placeholder.condensate_skimmed_bbls')"
                   >
-                    <template #prefix>
-                      <Icon icon="mdi:gauge" class="text-cyan-600" :width="16" :height="16" />
-                    </template>
                     <template #suffix>
-                      <span class="text-gray-500 text-sm">PSI</span>
+                      <span class="text-gray-500 text-sm">bbls</span>
                     </template>
                   </el-input>
                 </el-form-item>
               </el-col>
 
-              <!-- Reboiler Temperature -->
-              <el-col :md="8" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.reboiler_temp_f')" prop="reboiler_temp_f">
+              <!-- Condensate Total Production (Read-only) -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.condensate_production_total_bbls')" 
+                  prop="condensate_production_total_bbls"
+                >
                   <el-input
-                    v-model.number="form.reboiler_temp_f"
+                    v-model.number="form.condensate_production_total_bbls"
+                    type="number"
+                    readonly
+                    class="!bg-gray-100"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">bbls</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!-- Condensate Stock -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.condensate_stock_bbls')" 
+                  prop="condensate_stock_bbls"
+                >
+                  <el-input
+                    v-model.number="form.condensate_stock_bbls"
                     type="number"
                     :min="0"
-                    :step="0.1"
-                    placeholder="Enter reboiler temperature"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.condensate_stock_bbls')"
                   >
-                    <template #prefix>
-                      <Icon icon="mdi:thermometer" class="text-red-600" :width="16" :height="16" />
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">bbls</span>
                     </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!-- Condensate Consumed GTG -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.condensate_consumed_gtg_bbls')" 
+                  prop="condensate_consumed_gtg_bbls"
+                >
+                  <el-input
+                    v-model.number="form.condensate_consumed_gtg_bbls"
+                    type="number"
+                    :min="0"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.condensate_consumed_gtg_bbls')"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">bbls</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!-- Condensate Temperature -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.condensate_temp_f')" 
+                  prop="condensate_temp_f"
+                >
+                  <el-input
+                    v-model.number="form.condensate_temp_f"
+                    type="number"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.condensate_temp_f')"
+                  >
                     <template #suffix>
                       <span class="text-gray-500 text-sm">°F</span>
                     </template>
@@ -373,70 +432,146 @@
                 </el-form-item>
               </el-col>
 
-              <!-- Circulation Rate -->
-              <el-col :md="8" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.circulation_rate_gph')" prop="circulation_rate_gph">
-                  <el-input
-                    v-model.number="form.circulation_rate_gph"
-                    type="number"
-                    :min="0"
-                    :step="0.1"
-                    placeholder="Enter circulation rate"
-                  >
-                    <template #prefix>
-                      <Icon icon="mdi:rotate-3d-variant" class="text-blue-600" :width="16" :height="16" />
-                    </template>
-                    <template #suffix>
-                      <span class="text-gray-500 text-sm">GPH</span>
-                    </template>
-                  </el-input>
+              <!-- Condensate Uptime -->
+              <el-col :md="8" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.condensate_uptime')" 
+                  prop="condensate_uptime"
+                >
+                  <el-time-picker
+                    v-model="form.condensate_uptime"
+                    format="HH:mm:ss"
+                    value-format="HH:mm:ss"
+                    :placeholder="$t('production.vessel_operation.placeholder.condensate_uptime')"
+                    style="width: 100%"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
           </div>
 
-          <!-- Compression System -->
+          <!-- Diesel Fuel & Water Operations -->
           <div class="mb-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-              <Icon icon="mdi:turbine" class="mr-2 text-indigo-600" />
-              {{ $t('production.fpu.sections.compression_system') }}
+            <h3 class="text-lg font-semibold mb-4 text-gray-700 flex items-center">
+              <Icon icon="mdi:fuel" class="mr-2 text-red-600" />
+              {{ $t('production.vessel_operation.sections.fuel_water_operations') }}
             </h3>
             <el-row :gutter="24">
-              <!-- GTC A Seal Gas -->
-              <el-col :md="12" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.gtc_a_seal_gas')" prop="gtc_a_seal_gas">
+              <!-- Diesel MOPU -->
+              <el-col :md="6" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.diesel_fuel_mopu_ltr')" 
+                  prop="diesel_fuel_mopu_ltr"
+                >
                   <el-input
-                    v-model.number="form.gtc_a_seal_gas"
+                    v-model.number="form.diesel_fuel_mopu_ltr"
                     type="number"
                     :min="0"
-                    :step="0.001"
-                    placeholder="Enter GTC A seal gas"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.diesel_fuel_mopu_ltr')"
                   >
-                    <template #prefix>
-                      <Icon icon="mdi:turbine" class="text-indigo-600" :width="16" :height="16" />
-                    </template>
                     <template #suffix>
-                      <span class="text-gray-500 text-sm">MMSCFD</span>
+                      <span class="text-gray-500 text-sm">Liters</span>
                     </template>
                   </el-input>
                 </el-form-item>
               </el-col>
 
-              <!-- GTC B Seal Gas -->
-              <el-col :md="12" :sm="12" :xs="24" class="mb-4">
-                <el-form-item :label="$t('production.fpu.fields.gtc_b_seal_gas')" prop="gtc_b_seal_gas">
+              <!-- Diesel HCML -->
+              <el-col :md="6" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.diesel_fuel_hcml_ltr')" 
+                  prop="diesel_fuel_hcml_ltr"
+                >
                   <el-input
-                    v-model.number="form.gtc_b_seal_gas"
+                    v-model.number="form.diesel_fuel_hcml_ltr"
                     type="number"
                     :min="0"
-                    :step="0.001"
-                    placeholder="Enter GTC B seal gas"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.diesel_fuel_hcml_ltr')"
                   >
-                    <template #prefix>
-                      <Icon icon="mdi:turbine" class="text-purple-600" :width="16" :height="16" />
-                    </template>
                     <template #suffix>
-                      <span class="text-gray-500 text-sm">MMSCFD</span>
+                      <span class="text-gray-500 text-sm">Liters</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!-- Produced Water Total -->
+              <el-col :md="6" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.produced_water_total_bbls')" 
+                  prop="produced_water_total_bbls"
+                >
+                  <el-input
+                    v-model.number="form.produced_water_total_bbls"
+                    type="number"
+                    :min="0"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.produced_water_total_bbls')"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">bbls</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!-- Water Off-spec -->
+              <el-col :md="6" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.produced_water_offspec_bbls')" 
+                  prop="produced_water_offspec_bbls"
+                >
+                  <el-input
+                    v-model.number="form.produced_water_offspec_bbls"
+                    type="number"
+                    :min="0"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.produced_water_offspec_bbls')"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">bbls</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!-- Water Overboard -->
+              <el-col :md="6" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.produced_water_overboard_bbls')" 
+                  prop="produced_water_overboard_bbls"
+                >
+                  <el-input
+                    v-model.number="form.produced_water_overboard_bbls"
+                    type="number"
+                    :min="0"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.produced_water_overboard_bbls')"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">bbls</span>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+
+              <!-- OIW Content -->
+              <el-col :md="6" :sm="12" :xs="24">
+                <el-form-item 
+                  :label="$t('production.vessel_operation.fields.water_oiw_content_ppm')" 
+                  prop="water_oiw_content_ppm"
+                >
+                  <el-input
+                    v-model.number="form.water_oiw_content_ppm"
+                    type="number"
+                    :min="0"
+                    :step="0.01"
+                    :placeholder="$t('production.vessel_operation.placeholder.water_oiw_content_ppm')"
+                  >
+                    <template #suffix>
+                      <span class="text-gray-500 text-sm">ppm</span>
                     </template>
                   </el-input>
                 </el-form-item>
@@ -444,44 +579,90 @@
             </el-row>
           </div>
 
-          <!-- Additional Information -->
-          <div class="mb-2">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-              <Icon icon="heroicons:document-text" class="mr-2 text-gray-600" />
-              {{ $t('production.fpu.sections.additional_info') }}
+          <!-- Well Flow Rates (Dynamic) -->
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-4 text-gray-700 flex items-center">
+              <Icon icon="mdi:oil-well" class="mr-2 text-green-600" />
+              {{ $t('production.vessel_operation.sections.well_flows') }}
+              <el-tag 
+                v-if="totalWellFlow !== null" 
+                :type="isWellBalanced ? 'success' : 'danger'" 
+                class="ml-3"
+                size="small"
+              >
+                Total: {{ totalWellFlow.toFixed(4) }} MMSCFD
+                <span v-if="!isWellBalanced" class="ml-1">⚠️</span>
+              </el-tag>
             </h3>
-            <!-- Remarks -->
-            <el-col :span="24" class="mb-2">
-              <el-form-item :label="$t('production.fpu.fields.remarks')" prop="remarks">
-                <el-input
-                  v-model="form.remarks"
-                  type="textarea"
-                  :rows="3"
-                  :placeholder="$t('production.fpu.placeholder.remarks')"
-                  maxlength="500"
-                  show-word-limit
+            <div class="overflow-x-auto">
+              <el-table :data="form.well_flows" class="base-table" stripe>
+                <el-table-column
+                  :label="$t('production.vessel_operation.fields.well')"
+                  prop="well.name"
+                  width="200"
                 />
-              </el-form-item>
-            </el-col>
+                <el-table-column
+                  :label="$t('production.vessel_operation.fields.well_flow_rate')">
+                  <template #default="scope">
+                    <el-input
+                      v-model.number="scope.row.gas_flow_rate_mmscfd"
+                      type="number"
+                      :min="0"
+                      :step="0.0001"
+                      @input="calculateWellTotal"
+                      :placeholder="$t('production.vessel_operation.placeholder.well_flow_rate')"
+                    >
+                      <template #suffix>
+                        <span class="text-gray-500 text-sm">MMSCFD</span>
+                      </template>
+                    </el-input>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <el-alert
+              v-if="!isWellBalanced && totalWellFlow !== null"
+              :title="$t('production.vessel_operation.validation.well_balance_warning')"
+              type="warning"
+              class="mt-3"
+              show-icon
+              :closable="false"
+            >
+              <template #default>
+                Inlet Gas: {{ form.inlet_gas_mmscfd || 0 }} MMSCFD | 
+                Well Total: {{ totalWellFlow.toFixed(4) }} MMSCFD | 
+                Difference: {{ Math.abs((form.inlet_gas_mmscfd || 0) - totalWellFlow).toFixed(4) }} MMSCFD
+              </template>
+            </el-alert>
+          </div>
+
+          <!-- Remarks -->
+          <div class="mb-2">
+            <el-form-item :label="$t('production.vessel_operation.fields.remarks')" prop="remarks">
+              <el-input
+                v-model="form.remarks"
+                type="textarea"
+                :rows="3"
+                :placeholder="$t('production.vessel_operation.placeholder.remarks')"
+                maxlength="500"
+                show-word-limit
+              />
+            </el-form-item>
           </div>
         </div>
 
         <!-- Form Actions -->
         <div class="p-6 border-t bg-gray-50">
           <div class="flex justify-between items-center">
-            <!-- Left side - Additional actions -->
+            <!-- Left side -->
             <div class="flex space-x-3">
               <el-button v-if="isEdit" @click="onDuplicate" type="info" plain>
                 <Icon icon="mingcute:copy-line" class="mr-2" />
                 {{ $t('common.actions.duplicate') }}
               </el-button>
-              <el-button @click="onCopyPreviousReading" type="success" plain>
-                <Icon icon="mingcute:history-line" class="mr-2" />
-                {{ $t('production.fpu.actions.copy_previous') }}
-              </el-button>
             </div>
             
-            <!-- Right side - Main actions -->
+            <!-- Right side -->
             <div class="flex space-x-3">
               <el-button @click="onBack">
                 <Icon icon="mingcute:arrow-left-line" class="mr-2" />
@@ -500,110 +681,97 @@
 </template>
 
 <script setup lang="js">
-import axios from 'axios'
 import { Icon } from '@iconify/vue'
-import { ref, computed, onMounted, reactive, watch } from 'vue'
+import { ref, computed, onMounted, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
-
 import PageHeader from '@/components/PageHeader.vue'
+import SelectVessel from '@/components/select/SelectVessel.vue'
 import { useUser } from '@/composables/auth/useUser'
-import dayjs from 'dayjs';
+import dayjs from 'dayjs'
 
-const user = useUser()
+const { userVesselId } = useUser()
 const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
 
-const title = ref(route.meta.title ?? 'production.fpu.create')
+const title = ref(route.meta.title ?? 'production.vessel_operation.create')
 const formRef = ref(null)
 const loading = ref(false)
-
-// edit mode
 const isEdit = computed(() => !!route.params.id)
 
-// Current operator
-const currentOperator = computed(() => user.value?.name || 'Unknown')
-
-// Hour options for 2-hourly readings
-const hourOptions = [
-  { value: '00:00:00', label: '00:00' },
-  { value: '02:00:00', label: '02:00' },
-  { value: '04:00:00', label: '04:00' },
-  { value: '06:00:00', label: '06:00' },
-  { value: '08:00:00', label: '08:00' },
-  { value: '10:00:00', label: '10:00' },
-  { value: '12:00:00', label: '12:00' },
-  { value: '14:00:00', label: '14:00' },
-  { value: '16:00:00', label: '16:00' },
-  { value: '18:00:00', label: '18:00' },
-  { value: '20:00:00', label: '20:00' },
-  { value: '22:00:00', label: '22:00' }
-]
-
-/**
- * State form - Based on FPU Operations database schema
- */
+// ============================================
+// FORM STATE
+// ============================================
 const form = reactive({
-  vessel_id: user.value?.vessel_id || null, // Auto-filled from user
-  reading_date: dayjs().format('YYYY-MM-DD'),
-  reading_hour: getCurrentHour(),
-
-  // Process parameters
+  vessel_id: userVesselId || null,
+  date: dayjs().format('YYYY-MM-DD'),
+  
+  // Gas Operations
+  inlet_gas_mmscfd: null,
+  total_sales_gas_mmscfd: null,
+  fuel_gas_mmscfd: null,
+  flare_hp_mmscfd: null,
+  flare_lp_mmscfd: null,
+  total_flare_gas_mmscfd: null,
+  gas_export_uptime: null,
   inlet_pressure_psi: null,
   inlet_temp_f: null,
   outlet_pressure_psi: null,
   outlet_temp_f: null,
-
-  // Gas flow rates
-  total_gas_rate_mmscfd: null,
-  fuel_gas_rate_mmscfd: null,
-  flare_hp_rate_mmscfd: null,
-  flare_lp_rate_mmscfd: null,
-
-  // TEG System
-  contactor_pressure_psi: null,
-  reboiler_temp_f: null,
-  circulation_rate_gph: null,
-
-  // Compression System  
-  gtc_a_seal_gas: null,
-  gtc_b_seal_gas: null,
-
+  
+  // Condensate Operations
+  condensate_produced_lts: null,
+  condensate_produced_bbls: null,
+  condensate_skimmed_bbls: null,
+  condensate_production_total_bbls: null,
+  condensate_stock_bbls: null,
+  condensate_consumed_gtg_bbls: null,
+  condensate_temp_f: null,
+  condensate_uptime: null,
+  
+  // Diesel Fuel
+  diesel_fuel_mopu_ltr: null,
+  diesel_fuel_hcml_ltr: null,
+  
+  // Water Operations
+  produced_water_total_bbls: null,
+  produced_water_offspec_bbls: null,
+  produced_water_overboard_bbls: null,
+  water_oiw_content_ppm: null,
+  
+  // Well Flows (dynamic)
+  well_flows: [],
+  
   remarks: ''
 })
 
-// Calculated metrics (derived values)
-const calculatedMetrics = reactive({
-  totalFlareRate: 0,
-  exportGasRate: 0,
-  flarePercentage: 0,
-  gasBalance: 0
+// ============================================
+// COMPUTED PROPERTIES
+// ============================================
+
+// Total well flow (sum of all wells)
+const totalWellFlow = computed(() => {
+  if (!form.well_flows || form.well_flows.length === 0) return null
+  return form.well_flows.reduce((sum, wf) => sum + (wf.gas_flow_rate_mmscfd || 0), 0)
 })
 
-// Show calculated metrics only when we have gas flow data
-const showCalculatedMetrics = computed(() => {
-  return form.total_gas_rate_mmscfd > 0 || form.fuel_gas_rate_mmscfd > 0 || 
-         form.flare_hp_rate_mmscfd > 0 || form.flare_lp_rate_mmscfd > 0
+// Check if well balance is correct (inlet gas ≈ sum of wells)
+const isWellBalanced = computed(() => {
+  if (!form.inlet_gas_mmscfd || totalWellFlow.value === null) return true
+  const difference = Math.abs(form.inlet_gas_mmscfd - totalWellFlow.value)
+  return difference < 0.01 // Tolerance 0.01 MMSCFD
 })
 
-/* -------------------- HELPERS -------------------- */
-// Get current hour rounded to nearest 2-hour interval
-function getCurrentHour() {
-  const now = new Date()
-  const currentHour = now.getHours()
-  const roundedHour = Math.floor(currentHour / 2) * 2
-  return `${roundedHour.toString().padStart(2, '0')}:00:00`
-}
+// ============================================
+// VALIDATION HELPERS
+// ============================================
 
-/* -------------------- VALIDATION HELPERS -------------------- */
 const now = () => new Date()
 
 // Disable future dates
-const disabledDate = (date) => {
-  return date.getTime() > now().getTime()
-}
+const disabledDate = (date) => date.getTime() > now().getTime()
 
 const requiredMsg = (attr) => t('common.validation.required', { attribute: attr })
 
@@ -632,199 +800,214 @@ const numberRange = (min, max, attr, opts = {}) => ({
   trigger: opts.trigger || ['change', 'blur']
 })
 
-// Date validator
+// Date validator (must not be future)
 const notFutureDate = {
   validator: (_rule, value, callback) => {
-    if (!value) return callback(new Error(requiredMsg(t('production.fpu.fields.reading_date'))))
-    
-    const readingDate = dayjs(value)
-    if (!readingDate.isValid()) {
-      return callback(new Error(t('common.validation.date', { attribute: t('production.fpu.fields.reading_date') })))
+    if (!value) return callback(new Error(requiredMsg('Operation Date')))
+    const opDate = dayjs(value)
+    if (!opDate.isValid()) {
+      return callback(new Error('Invalid date format'))
     }
-
-    if (readingDate.isAfter(dayjs(), 'day')) {
-      return callback(new Error(t('common.validation.before_or_equal', { 
-        attribute: t('production.fpu.fields.reading_date'), 
-        date: t('common.words.today') 
-      })))
+    if (opDate.isAfter(dayjs(), 'day')) {
+      return callback(new Error('Date cannot be in the future'))
     }
-
     callback()
   },
   trigger: ['change', 'blur']
 }
 
-/* -------------------- VALIDATION RULES -------------------- */
+// ============================================
+// VALIDATION RULES
+// ============================================
 const formRules = ref({
-  reading_date: [ notFutureDate ],
-  reading_hour: [
-    { required: true, message: requiredMsg(t('production.fpu.fields.reading_hour')), trigger: 'change' }
+  vessel_id: [
+    { required: true, message: 'Vessel is required', trigger: 'change' }
   ],
-  inlet_pressure_psi: [
-    numberRange(0, undefined, t('production.fpu.fields.inlet_pressure_psi'), { allowNull: true })
-  ],
-  inlet_temp_f: [
-    numberRange(0, undefined, t('production.fpu.fields.inlet_temp_f'), { allowNull: true })
-  ],
-  outlet_pressure_psi: [
-    numberRange(0, undefined, t('production.fpu.fields.outlet_pressure_psi'), { allowNull: true })
-  ],
-  outlet_temp_f: [
-    numberRange(0, undefined, t('production.fpu.fields.outlet_temp_f'), { allowNull: true })
-  ],
-  total_gas_rate_mmscfd: [
-    numberRange(0, undefined, t('production.fpu.fields.total_gas_rate_mmscfd'), { allowNull: true })
-  ],
-  fuel_gas_rate_mmscfd: [
-    numberRange(0, undefined, t('production.fpu.fields.fuel_gas_rate_mmscfd'), { allowNull: true })
-  ],
-  flare_hp_rate_mmscfd: [
-    numberRange(0, undefined, t('production.fpu.fields.flare_hp_rate_mmscfd'), { allowNull: true })
-  ],
-  flare_lp_rate_mmscfd: [
-    numberRange(0, undefined, t('production.fpu.fields.flare_lp_rate_mmscfd'), { allowNull: true })
-  ],
-  contactor_pressure_psi: [
-    numberRange(0, undefined, t('production.fpu.fields.contactor_pressure_psi'), { allowNull: true })
-  ],
-  reboiler_temp_f: [
-    numberRange(0, undefined, t('production.fpu.fields.reboiler_temp_f'), { allowNull: true })
-  ],
-  circulation_rate_gph: [
-    numberRange(0, undefined, t('production.fpu.fields.circulation_rate_gph'), { allowNull: true })
-  ],
-  gtc_a_seal_gas: [
-    numberRange(0, undefined, t('production.fpu.fields.gtc_a_seal_gas'), { allowNull: true })
-  ],
-  gtc_b_seal_gas: [
-    numberRange(0, undefined, t('production.fpu.fields.gtc_b_seal_gas'), { allowNull: true })
-  ],
+  date: [notFutureDate],
   remarks: [
-    { min: 0, max: 500, message: t('common.validation.max.string', { attribute: t('common.fields.remarks'), max: 500 }), trigger: 'blur' }
+    { max: 500, message: 'Remarks cannot exceed 500 characters', trigger: 'blur' }
   ]
 })
 
-/* -------------------- CALCULATIONS -------------------- */
-const calculateMetrics = () => {
-  const totalGas = Number(form.total_gas_rate_mmscfd) || 0
-  const fuelGas = Number(form.fuel_gas_rate_mmscfd) || 0
-  const flareHP = Number(form.flare_hp_rate_mmscfd) || 0
-  const flareLP = Number(form.flare_lp_rate_mmscfd) || 0
+// ============================================
+// AUTO-CALCULATIONS
+// ============================================
 
-  // Total flare rate (HP + LP)
-  calculatedMetrics.totalFlareRate = (flareHP + flareLP).toFixed(4)
-
-  // Export gas rate (Total - Fuel - Flare)
-  calculatedMetrics.exportGasRate = (totalGas - fuelGas - flareHP - flareLP).toFixed(4)
-
-  // Flare percentage of total production
-  if (totalGas > 0) {
-    calculatedMetrics.flarePercentage = (((flareHP + flareLP) / totalGas) * 100).toFixed(2)
-  } else {
-    calculatedMetrics.flarePercentage = '0.00'
-  }
-
-  // Gas balance check (should be close to 0)
-  const balance = totalGas - fuelGas - flareHP - flareLP - parseFloat(calculatedMetrics.exportGasRate)
-  calculatedMetrics.gasBalance = balance.toFixed(4)
+// Calculate total flare = HP + LP
+const calculateTotalFlare = () => {
+  const hp = form.flare_hp_mmscfd || 0
+  const lp = form.flare_lp_mmscfd || 0
+  form.total_flare_gas_mmscfd = hp + lp
 }
 
-// Watch for changes in gas rates to auto-calculate
-watch([
-  () => form.total_gas_rate_mmscfd, 
-  () => form.fuel_gas_rate_mmscfd, 
-  () => form.flare_hp_rate_mmscfd, 
-  () => form.flare_lp_rate_mmscfd
-], () => {
-  calculateMetrics()
-}, { deep: true })
+// Convert Liters to Barrels (1 bbl = 158.987 L)
+const convertLitersToBbls = () => {
+  if (form.condensate_produced_lts) {
+    form.condensate_produced_bbls = form.condensate_produced_lts / 158.987
+    calculateCondensateTotal()
+  } else {
+    form.condensate_produced_bbls = null
+  }
+}
 
-/* -------------------- HELPERS -------------------- */
-const sanitizeNumeric = (v) => (v === '' || v === null || v === undefined ? null : Number(v))
+// Calculate condensate total = produced + skimmed
+const calculateCondensateTotal = () => {
+  const produced = form.condensate_produced_bbls || 0
+  const skimmed = form.condensate_skimmed_bbls || 0
+  form.condensate_production_total_bbls = produced + skimmed
+}
 
-/* -------------------- SUBMIT -------------------- */
+// ============================================
+// DATA LOADING
+// ============================================
+
+// Load wells when vessel changes
+const loadWells = async () => {
+  if (!form.vessel_id) return
+  
+  try {
+    loading.value = true
+    form.well_flows = []
+    
+    // NOTE: Replace axios with your HTTP client
+    const { data } = await axios.get(`/master/wells`, { 
+      params: { vessel_id: form.vessel_id } 
+    })
+    
+    const wells = data?.data || data
+    if (wells && wells.length > 0) {
+      wells.forEach(well => {
+        form.well_flows.push({
+          well_id: well.id,
+          well: {
+            id: well.id,
+            code: well.code,
+            name: well.name,
+          },
+          gas_flow_rate_mmscfd: null,
+        })
+      })
+    }
+  } catch (e) {
+    console.error('Load wells error:', e)
+    ElMessage.error('Failed to load wells')
+  } finally {
+    loading.value = false
+  }
+}
+
+// Load existing data (edit mode)
+const loadData = async () => {
+  if (!isEdit.value) return
+  
+  try {
+    loading.value = true
+    
+    // NOTE: Replace axios with your HTTP client
+    const { data } = await axios.get(`/production/vessel-operation/${route.params.id}`)
+    const d = data?.data || data
+    
+    if (d) {
+      // Basic info
+      form.vessel_id = d.vessel_id
+      form.date = d.date
+      
+      // Gas Operations
+      form.inlet_gas_mmscfd = d.inlet_gas_mmscfd
+      form.total_sales_gas_mmscfd = d.total_sales_gas_mmscfd
+      form.fuel_gas_mmscfd = d.fuel_gas_mmscfd
+      form.flare_hp_mmscfd = d.flare_hp_mmscfd
+      form.flare_lp_mmscfd = d.flare_lp_mmscfd
+      form.total_flare_gas_mmscfd = d.total_flare_gas_mmscfd
+      form.gas_export_uptime = d.gas_export_uptime
+      form.inlet_pressure_psi = d.inlet_pressure_psi
+      form.inlet_temp_f = d.inlet_temp_f
+      form.outlet_pressure_psi = d.outlet_pressure_psi
+      form.outlet_temp_f = d.outlet_temp_f
+      
+      // Condensate Operations
+      form.condensate_produced_lts = d.condensate_produced_lts
+      form.condensate_produced_bbls = d.condensate_produced_bbls
+      form.condensate_skimmed_bbls = d.condensate_skimmed_bbls
+      form.condensate_production_total_bbls = d.condensate_production_total_bbls
+      form.condensate_stock_bbls = d.condensate_stock_bbls
+      form.condensate_consumed_gtg_bbls = d.condensate_consumed_gtg_bbls
+      form.condensate_temp_f = d.condensate_temp_f
+      form.condensate_uptime = d.condensate_uptime
+      
+      // Diesel & Water
+      form.diesel_fuel_mopu_ltr = d.diesel_fuel_mopu_ltr
+      form.diesel_fuel_hcml_ltr = d.diesel_fuel_hcml_ltr
+      form.produced_water_total_bbls = d.produced_water_total_bbls
+      form.produced_water_offspec_bbls = d.produced_water_offspec_bbls
+      form.produced_water_overboard_bbls = d.produced_water_overboard_bbls
+      form.water_oiw_content_ppm = d.water_oiw_content_ppm
+      
+      // Well Flows
+      if (d.well_flows && d.well_flows.length > 0) {
+        form.well_flows = d.well_flows.map(wf => ({
+          well_id: wf.well_id,
+          well: wf.well,
+          gas_flow_rate_mmscfd: wf.gas_flow_rate_mmscfd
+        }))
+      }
+      
+      form.remarks = d.remarks || ''
+    }
+  } catch (e) {
+    console.error('Load error:', e)
+    ElMessage.error('Failed to load data')
+    onBack()
+  } finally {
+    loading.value = false
+  }
+}
+
+// ============================================
+// FORM SUBMIT
+// ============================================
 const onSubmit = async () => {
   if (!formRef.value) return
+  
   formRef.value.validate(async (valid) => {
     if (!valid) {
-      return ElMessage({ message: t('common.errors.validation_failed'), type: 'error' })
+      return ElMessage({ message: 'Please correct the form errors', type: 'error' })
     }
 
     try {
       loading.value = true
 
-      // Build process_data JSON from individual fields
-      const processData = {}
-      
-      // TEG System data
-      if (form.contactor_pressure_psi || form.reboiler_temp_f || form.circulation_rate_gph) {
-        processData.teg_system = {}
-        if (form.contactor_pressure_psi) processData.teg_system.contactor_pressure = form.contactor_pressure_psi
-        if (form.reboiler_temp_f) processData.teg_system.reboiler_temp = form.reboiler_temp_f
-        if (form.circulation_rate_gph) processData.teg_system.circulation_rate = form.circulation_rate_gph
-      }
-      
-      // Compression system data
-      if (form.gtc_a_seal_gas || form.gtc_b_seal_gas) {
-        processData.compression = {}
-        if (form.gtc_a_seal_gas) processData.compression.gtc_a_seal_gas = form.gtc_a_seal_gas
-        if (form.gtc_b_seal_gas) processData.compression.gtc_b_seal_gas = form.gtc_b_seal_gas
-      }
-
-      const payload = {
-        vessel_id: form.vessel_id,
-        reading_date: form.reading_date,
-        reading_hour: form.reading_hour,
-
-        inlet_pressure_psi: sanitizeNumeric(form.inlet_pressure_psi),
-        inlet_temp_f: sanitizeNumeric(form.inlet_temp_f),
-        outlet_pressure_psi: sanitizeNumeric(form.outlet_pressure_psi),
-        outlet_temp_f: sanitizeNumeric(form.outlet_temp_f),
-
-        total_gas_rate_mmscfd: sanitizeNumeric(form.total_gas_rate_mmscfd),
-        fuel_gas_rate_mmscfd: sanitizeNumeric(form.fuel_gas_rate_mmscfd),
-        flare_hp_rate_mmscfd: sanitizeNumeric(form.flare_hp_rate_mmscfd),
-        flare_lp_rate_mmscfd: sanitizeNumeric(form.flare_lp_rate_mmscfd),
-
-        process_data: Object.keys(processData).length > 0 ? processData : null,
-
-        remarks: form.remarks || null
-      }
-
-      // endpoint sesuai dengan struktur database
       const url = isEdit.value
-        ? `/production/fpu-operations/${route.params.id}`
-        : '/production/fpu-operations'
+        ? `/production/vessel-operation/${route.params.id}/update`
+        : '/production/vessel-operation/store'
       const method = isEdit.value ? 'put' : 'post'
 
-      const { status, data } = await axios({ method, url, data: payload })
+      // NOTE: Replace axios with your HTTP client
+      const { status, data } = await axios({ method, url, data: form })
 
       if (status === 200 || status === 201) {
-        ElMessage({ message: t('common.messages.saved'), type: 'success' })
+        ElMessage({ message: 'Data saved successfully', type: 'success' })
         const id = data?.id || data?.data?.id
         if (id) {
-          router.replace({ path: `/production/fpu-operations/${id}` })
+          router.replace({ path: `/production/operation/${id}` })
         } else {
-          router.push({ name: 'production.fpu-operations.index' })
+          router.push({ name: 'production.operation.index' })
         }
       }
     } catch (error) {
       console.error('Submit error:', error)
       if (error?.response?.status === 422) {
         const errors = error.response.data.errors
-        let msg = t('common.errors.validation_failed')
+        let msg = 'Validation failed'
         if (errors) {
           const first = Object.values(errors)[0]
           if (first && first[0]) msg = first[0]
         }
         ElMessage({ message: msg, type: 'error' })
       } else if (error?.response?.status === 409) {
-        ElMessage({ 
-          message: t('production.fpu.errors.duplicate_reading'), 
-          type: 'error' 
-        })
+        ElMessage({ message: 'Duplicate entry: Operation for this vessel and date already exists', type: 'error' })
       } else {
-        ElMessage({ message: t('common.errors.server_error'), type: 'error' })
+        ElMessage({ message: 'Server error occurred', type: 'error' })
       }
     } finally {
       loading.value = false
@@ -832,149 +1015,57 @@ const onSubmit = async () => {
   })
 }
 
-/* -------------------- LOAD DATA (edit mode) -------------------- */
-const loadData = async () => {
-  if (!isEdit.value) return
-  try {
-    loading.value = true
-    const { data } = await axios.get(`/production/fpu-operations/${route.params.id}`)
-    const d = data?.data || data
-    if (d) {
-      Object.assign(form, {
-        vessel_id: d.vessel_id ?? user.value?.vessel_id,
-        reading_date: d.reading_date ?? dayjs().format('YYYY-MM-DD'),
-        reading_hour: d.reading_hour ?? getCurrentHour(),
+// ============================================
+// ACTIONS
+// ============================================
 
-        inlet_pressure_psi: d.inlet_pressure_psi ?? null,
-        inlet_temp_f: d.inlet_temp_f ?? null,
-        outlet_pressure_psi: d.outlet_pressure_psi ?? null,
-        outlet_temp_f: d.outlet_temp_f ?? null,
-
-        total_gas_rate_mmscfd: d.total_gas_rate_mmscfd ?? null,
-        fuel_gas_rate_mmscfd: d.fuel_gas_rate_mmscfd ?? null,
-        flare_hp_rate_mmscfd: d.flare_hp_rate_mmscfd ?? null,
-        flare_lp_rate_mmscfd: d.flare_lp_rate_mmscfd ?? null,
-
-        // Extract from process_data JSON
-        contactor_pressure_psi: d.process_data?.teg_system?.contactor_pressure ?? null,
-        reboiler_temp_f: d.process_data?.teg_system?.reboiler_temp ?? null,
-        circulation_rate_gph: d.process_data?.teg_system?.circulation_rate ?? null,
-
-        gtc_a_seal_gas: d.process_data?.compression?.gtc_a_seal_gas ?? null,
-        gtc_b_seal_gas: d.process_data?.compression?.gtc_b_seal_gas ?? null,
-
-        remarks: d.remarks ?? ''
-      })
-      
-      // Calculate derived metrics
-      calculateMetrics()
-    }
-  } catch (e) {
-    console.error('Load error:', e)
-    ElMessage.error(t('common.errors.server_error'))
-    onBack()
-  } finally {
-    loading.value = false
-  }
-}
-
-/* -------------------- ACTIONS -------------------- */
+// Back to list
 const onBack = () => {
-  router.push({ name: 'production.fpu-operations.index' })
+  router.push({ name: 'production.operation.index' })
 }
 
+// Duplicate current entry
 const onDuplicate = () => {
   const duplicateData = { ...form }
-  duplicateData.reading_date = dayjs().format('YYYY-MM-DD')
-  duplicateData.reading_hour = getCurrentHour()
-  duplicateData.remarks = `Copy of: ${form.remarks || 'Previous reading'}`
+  duplicateData.date = dayjs().format('YYYY-MM-DD')
+  duplicateData.remarks = `Copy of: ${form.remarks || 'Previous entry'}`
   
   router.push({ 
-    name: 'production.fpu-operations.create',
+    name: 'production.operation.create',
     query: { duplicate: JSON.stringify(duplicateData) }
   })
 }
 
-const onCopyPreviousReading = async () => {
-  try {
-    loading.value = true
-    // Get previous reading for the same time
-    const { data } = await axios.get('/production/fpu-operations/latest', {
-      params: { 
-        vessel_id: form.vessel_id,
-        reading_hour: form.reading_hour
-      }
-    })
-    
-    if (data?.data) {
-      const prev = data.data
-      // Copy all process parameters but keep current date/hour
-      Object.assign(form, {
-        inlet_pressure_psi: prev.inlet_pressure_psi,
-        inlet_temp_f: prev.inlet_temp_f,
-        outlet_pressure_psi: prev.outlet_pressure_psi,
-        outlet_temp_f: prev.outlet_temp_f,
-        
-        contactor_pressure_psi: prev.process_data?.teg_system?.contactor_pressure,
-        reboiler_temp_f: prev.process_data?.teg_system?.reboiler_temp,
-        circulation_rate_gph: prev.process_data?.teg_system?.circulation_rate,
-        
-        gtc_a_seal_gas: prev.process_data?.compression?.gtc_a_seal_gas,
-        gtc_b_seal_gas: prev.process_data?.compression?.gtc_b_seal_gas
-      })
-      
-      ElMessage({ message: t('production.fpu.messages.copied_previous'), type: 'success' })
-    } else {
-      ElMessage({ message: t('production.fpu.messages.no_previous_data'), type: 'info' })
-    }
-  } catch (e) {
-    console.error('Copy previous error:', e)
-    ElMessage.error(t('common.errors.server_error'))
-  } finally {
-    loading.value = false
-  }
-}
-
-/* -------------------- LIFECYCLE -------------------- */
+// ============================================
+// LIFECYCLE
+// ============================================
 onMounted(() => {
   // Handle duplicate data from query
   if (route.query.duplicate) {
     try {
       const duplicateData = JSON.parse(route.query.duplicate)
       Object.assign(form, duplicateData)
-      calculateMetrics()
     } catch (e) {
       console.error('Error parsing duplicate data:', e)
     }
   }
   
+  // Load wells if vessel is pre-selected
+  if (form.vessel_id) {
+    loadWells()
+  }
+  
+  // Load existing data (edit mode)
   loadData()
 })
 </script>
 
 <style scoped>
-/* Custom styling for calculated fields */
-.el-input.is-disabled .el-input__inner {
-  background-color: #f5f7fa;
-  border-color: #e4e7ed;
-  color: #606266;
+.base-table :deep(.el-input) {
+  width: 100%;
 }
 
-/* Gas balance warning */
-.border-red-500 {
-  border-color: #ef4444 !important;
-}
-
-/* Section headers */
-h3 {
-  border-bottom: 2px solid #f0f0f0;
-  padding-bottom: 8px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .el-col {
-    margin-bottom: 16px !important;
-  }
+.base-table :deep(.el-input__inner) {
+  text-align: right;
 }
 </style>

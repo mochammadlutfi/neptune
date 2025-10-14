@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Production Operations Routes
@@ -44,18 +45,20 @@ Route::namespace('Production')->prefix('/production')->name('production.')->grou
 
     Route::prefix('/sales-gas-metering')->name('sales-gas-metering.')->group(function () {
         Route::get('/', 'SalesGasMeteringController@index')->name('index');
+        Route::get('/hourly-detail', 'SalesGasMeteringController@hourlyDetail')->name('hourlyDetail');
+        Route::get('/daily-statistics', 'SalesGasMeteringController@dailyStatistics')->name('dailyStatistics');
         Route::post('/store', 'SalesGasMeteringController@store')->name('store');
         Route::get('/{id}', 'SalesGasMeteringController@show')->name('show');
         Route::put('/{id}/update', 'SalesGasMeteringController@update')->name('update');
         Route::delete('/{id}/delete', 'SalesGasMeteringController@destroy')->name('delete');
     });
 
-    Route::prefix('/daily')->name('daily.')->group(function () {
-        Route::get('/', 'DailyProductionController@index')->name('index');
-        Route::post('/store', 'DailyProductionController@store')->name('store');
-        Route::get('/{id}', 'DailyProductionController@show')->name('show');
-        Route::put('/{id}/update', 'DailyProductionController@update')->name('update');
-        Route::delete('/{id}/delete', 'DailyProductionController@destroy')->name('delete');
+    Route::prefix('/vessel-operation')->name('vessel-operation.')->group(function () {
+        Route::get('/', 'VesselOperationController@index')->name('index');
+        Route::post('/store', 'VesselOperationController@store')->name('store');
+        Route::get('/{id}', 'VesselOperationController@show')->name('show');
+        Route::put('/{id}/update', 'VesselOperationController@update')->name('update');
+        Route::delete('/{id}/delete', 'VesselOperationController@destroy')->name('delete');
     });
 
     // Daily Summary

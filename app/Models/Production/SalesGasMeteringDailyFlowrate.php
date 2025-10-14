@@ -7,23 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Master\Vessel;
 use App\Models\Master\GasBuyer;
 
-class SalesGasMeteringFlowrate extends Model
+class SalesGasMeteringDailyFlowrate extends Model
 {
     use HasFactory;
 
-    protected $table = 'gas_sales_metering_flowrates';
+    protected $table = 'gas_sales_metering_daily_flowrates';
 
     protected $fillable = [
-        'gas_sales_metering_id',
+        'gas_sales_metering_daily_id',
         'vessel_id',
-        'gas_buyer_id',
+        'buyer_id',
         'backup_stream',
         'primary_stream',
     ];
 
     public function metering()
     {
-        return $this->belongsTo(SalesGasMetering::class, 'gas_sales_metering_id');
+        return $this->belongsTo(SalesGasMeteringDaily::class, 'gas_sales_metering_daily_id');
     }
 
     public function vessel()
@@ -33,6 +33,6 @@ class SalesGasMeteringFlowrate extends Model
 
     public function buyer()
     {
-        return $this->belongsTo(GasBuyer::class, 'gas_buyer_id');
+        return $this->belongsTo(GasBuyer::class, 'buyer_id');
     }
 }

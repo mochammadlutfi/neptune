@@ -22,6 +22,8 @@ class WellController extends Controller
 
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
+
+        // $user = auth()->user();
         $query = Well::with('vessel');
 
         // Apply filters
@@ -29,26 +31,12 @@ class WellController extends Controller
             $query->byVessel($request->vessel_id);
         }
 
-        if ($request->filled('type')) {
-            $query->byType($request->type);
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->filled('artificial_lift')) {
-            $query->where('artificial_lift', $request->artificial_lift);
-        }
-
         // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->search;
+        if ($request->filled('q')) {
+            $search = $request->q;
             $query->where(function ($q) use ($search) {
                 $q->where('code', 'LIKE', '%' . $search . '%')
                   ->orWhere('name', 'LIKE', '%' . $search . '%')
-                  ->orWhere('api_number', 'LIKE', '%' . $search . '%')
-                  ->orWhere('reservoir_name', 'LIKE', '%' . $search . '%')
                   ->orWhereHas('vessel', function($q) use ($search) {
                       $q->where('name', 'LIKE', '%' . $search . '%');
                   });
@@ -88,23 +76,6 @@ class WellController extends Controller
                 'data' => WellResource::collection($wells)
             ]);
         }
-    }
-
-    /**
-     * Get wells statistics
-     */
-    public function stats()
-    {
-        $stats = [
-            'total' => Well::count(),
-            'active' => Well::where('status', 'Active')->count(),
-            'shut_in' => Well::where('status', 'Shut-in')->count(),
-            'suspended' => Well::where('status', 'Suspended')->count(),
-            'testing' => Well::where('status', 'Testing')->count(),
-            'abandoned' => Well::where('status', 'Abandoned')->count()
-        ];
-
-        return response()->json($stats);
     }
 
     /**
@@ -175,11 +146,9 @@ class WellController extends Controller
             
             $validatedData = $request->validated();
             // $data->update($validatedData);
+            $data->vessel_id = $validatedData['vessel_id'];
+            $data->code = $validatedData['code'];
             $data->name = $validatedData['name'];
-            $data->type = $validatedData['type'];
-            $data->max_oil_rate = $validatedData['max_oil_rate'];
-            $data->max_gas_rate = $validatedData['max_gas_rate'];
-            $data->status = $validatedData['status'];
             $data->save();
             $originalAttributes = $data->getOriginal();
 

@@ -186,12 +186,12 @@ export const useUser = defineStore('user', () => {
       error.value = null
       
       const response = await userApi.updateVessel(vesselId)
-      
+      console.log('response ', response.data.data.vessel)
       // Update user data dengan vessel baru
-      if (user.value) {
+      // if (user.value) {
         user.value.vessel_id = response.data.data.vessel_id
-        user.value.vessel = response.data.data.updateVessel
-      }
+        user.value.vessel = response.data.data.vessel
+      // }
       
       return true // Return boolean untuk success indicator
     } catch (err) {

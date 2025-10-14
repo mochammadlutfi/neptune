@@ -14,9 +14,16 @@ class GasBuyerResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'vessel_id' => $this->vessel_id,
+            'vessel' => $this->whenLoaded('vessel', function () {
+                return [
+                    'id' => $this->vessel->id,
+                    'name' => $this->vessel->name,
+                    'code' => $this->vessel->code,
+                ];
+            }),
             'code' => $this->code,
             'name' => $this->name,
-            'type' => $this->type,
             'is_active' => $this->is_active,
             'status_label' => $this->is_active ? 'Active' : 'Inactive',
             'created_at' => $this->created_at,

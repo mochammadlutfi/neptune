@@ -79,6 +79,12 @@
                             
                             <el-table-column prop="email" :label="$t('settings.user.fields.email')" sortable min-width="200" />
 
+                            <el-table-column prop="vessel_id" :label="$t('settings.user.fields.vessel_id')" min-width="150">
+                                <template #default="scope">
+                                    {{ scope.row.vessel?.name || '-' }}
+                                </template>
+                            </el-table-column>
+
                             <el-table-column prop="phone" :label="$t('settings.user.fields.phone')" min-width="150">
                                 <template #default="scope">
                                     {{ scope.row.phone || '-' }}
@@ -171,15 +177,10 @@
                     </div>
 
                     <!-- Pagination -->
-            <Pagination
-                :current-page="params.page"
-                :page-size="params.limit"
-                :total-results="data?.total || 0"
-                :from="data?.from || 0"
-                :to="data?.to || 0"
-                @update:page-size="(size) => { params.limit = size; changePage(1) }"
-                @page-change="changePage"
-            />
+                    <Pagination :current-page="data?.current_page || 1" :per-page="data?.per_page || 25"
+                        :total="data?.total || 0" :last-page="data?.last_page || 1" :from="data?.from || 0"
+                        :to="data?.to || 0"
+                        @page-change="handlePageChange" @per-page-change="handlePerPageChange" />
                 </template>
             </el-skeleton>
         </el-card>
@@ -257,19 +258,19 @@ const getUserStatusType = (status) => {
     }
 };
 
-// Data fetching
-const fetchStats = async () => {
-    isLoadingStats.value = true;
+const bulkExport = async () => {
     try {
-        const response = await axios.get('/settings/user/stats');
-        stats.value = response.data.result || {};
+        const response = await axios.post('/settings/user/bulk-export', params.value);
+        if (response.data.success) {
+            ElMessage.success(t('common.success.bulk_export_success'));
+            window.location.href = response.data.url;
+        } else {
+            ElMessage.error(t('common.errors.bulk_export_failed'));
+        }
     } catch (error) {
-        console.error('Failed to fetch stats:', error);
-        stats.value = {};
-    } finally {
-        isLoadingStats.value = false;
+        ElMessage.error(t('common.errors.server_error'));
     }
-};
+}
 
 const fetchData = async ({ queryKey }) => {
     const [_key, queryParams] = queryKey;
@@ -301,9 +302,15 @@ const sortChange = (sortObj) => {
     refetch();
 };
 
-const changePage = (newPage) => {
-    params.value.page = newPage;
-    refetch();
+const handlePageChange = (page) => {
+  params.value.page = page;
+  refetch();
+};
+
+const handlePerPageChange = (perPage) => {
+  params.value.limit = perPage;
+  params.value.page = 1;
+  refetch();
 };
 
 const onSelectionChange = (selection) => {
@@ -374,7 +381,6 @@ const onDelete = (id) => {
             await axios.delete(`/settings/user/${id}/delete`);
             ElMessage.success(t('common.success.item_deleted'));
             refetch();
-            fetchStats();
         } catch (error) {
             ElMessage.error(t('common.errors.delete_failed'));
         }
@@ -390,7 +396,6 @@ watch(() => params.value.q, () => {
 
 // Lifecycle
 onMounted(() => {
-    fetchStats();
     refetch();
 });
 </script>

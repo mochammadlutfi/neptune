@@ -113,6 +113,14 @@ const navigation = reactive([
                 metadata: {
                     description: "master.gas_buyer_desc"
                 }
+            },
+            {
+                name: "master.tank.title",
+                to: "/master/tank",
+                permission: "master-tank.view",  
+                metadata: {
+                    description: "master.tank_desc"
+                }
             }
         ]
     },

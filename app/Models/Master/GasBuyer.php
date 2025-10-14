@@ -27,13 +27,11 @@ class GasBuyer extends Model
     {
         return $this->belongsTo(Vessel::class, 'vessel_id');
     }
-
-    /**
-     * Scope untuk filter fuel type aktif
-     */
-    public function scopeActive($query)
+    
+    public function scopeByVessel($query, $vesselId)
     {
-        return $query->where('is_active', true);
+        return $query->where('vessel_id', $vesselId);
     }
+
 
 }

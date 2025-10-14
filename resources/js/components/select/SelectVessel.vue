@@ -6,6 +6,8 @@
         filterable 
         clearable 
         remote
+        :disabled="disabled"
+        :readonly="readonly"
         :placeholder="placeholder"
         @change="selectChange"
         autocomplete="off"
@@ -28,13 +30,14 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import axios from 'axios';
+import { readonly } from 'vue';
 
 const emit = defineEmits(['update:modelValue', 'data'])
 
 // Define props
 const props = defineProps({
     modelValue: {
-        type: [Number, String],
+        type: [Number, String, Array],
     },
     placeholder: {
         type: String,
@@ -43,6 +46,18 @@ const props = defineProps({
     status: {
         type: String,
         default: null // active, inactive, all
+    },
+    allowed_ids : {
+        type: Array,
+        default: null
+    },
+    disabled: {
+        type: Boolean,
+        default: false
+    },
+    readonly : {
+        type : Boolean,
+        default : false
     }
 });
 
@@ -64,7 +79,8 @@ const fetchData = async () => {
         const response = await axios.get('/master/vessels', {
             params: {
                 status: props.status,
-                per_page: 100 // Get more contracts for selection
+                per_page: 100,
+                allowed_ids: props.allowed_ids
             }
         });
         

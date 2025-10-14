@@ -5,7 +5,7 @@ namespace App\Http\Requests\Production;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class GasSalesMeteringRequest extends FormRequest
+class SalesGasMeteringRequest extends FormRequest
 {
     /**
      * Menentukan apakah user diizinkan untuk melakukan request ini.
@@ -23,20 +23,22 @@ class GasSalesMeteringRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reading_time' => 'required|date',
-            'export_pressure_psi' => 'required|numeric|min:0',
-            'export_temp_f' => 'required|numeric',
-            'flowrate_mmscfd' => 'required|numeric|min:0',
-            'total_volume_mmscf' => 'required|numeric|min:0',
-            'heating_value_btu_scf' => 'required|numeric|min:0',
-            'specific_gravity' => 'required|numeric|min:0',
-            'h2s_content_ppm' => 'required|numeric|min:0',
-            'co2_content_percent' => 'required|numeric|min:0|max:100',
-            'buyer_name' => 'nullable|string|max:255',
-            'nomination_mmscf' => 'required|numeric|min:0',
-            'actual_delivery_mmscf' => 'required|numeric|min:0',
-            'variance_percent' => 'nullable|numeric',
-            'remarks' => 'nullable|string|max:1000',
+            'vessel_id' => 'required|exists:vessels,id',
+            'date' => 'required|date_format:Y-m-d',
+            'time' => 'required|date_format:H:i:s',
+            'pressure_psig' => 'required|numeric',
+            'temperature_f' => 'required|numeric',
+            'h2o_lb_mmscf' => 'required|numeric',
+            'hcdp' => 'required',
+            'co2_mol_pct' => 'required|numeric',
+            'ghv' => 'required|numeric',
+            'specific_gravity' => 'required|numeric',
+            'ejgp_pressure_psig' => 'nullable|numeric',
+            'remarks' => 'nullable',
+            'total_flow_rate' => 'required|numeric',
+            'flowrates.*.buyer_id' => 'required|exists:gas_buyers,id',
+            'flowrates.*.primary_stream' => 'required|numeric',
+            'flowrates.*.backup_stream' => 'nullable|numeric',
         ];
     }
 
